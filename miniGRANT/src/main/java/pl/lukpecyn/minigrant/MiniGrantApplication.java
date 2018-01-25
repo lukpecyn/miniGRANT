@@ -4,9 +4,11 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import javax.annotation.PostConstruct;
+import javax.sql.DataSource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -19,7 +21,7 @@ public class MiniGrantApplication {
 	
 	@Value("${app.name}")
 	public String appName;
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(MiniGrantApplication.class);
 
 	public static void main(String[] args) {

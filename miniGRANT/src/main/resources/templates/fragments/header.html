@@ -43,10 +43,10 @@
               		</li>
               	</ul-->
               	<!-- Logout -->
-           		<a href="/admin" class="btn btn-success navbar-btn navbar-right" sec:authorize="hasRole('ROLE_ADMIN')">Administracja</a>
+           		<!--a href="/admin" class="btn btn-success navbar-btn navbar-right" sec:authorize="hasRole('ROLE_ADMIN')">Administracja</a>
               	<form class="nav navbar-form navbar-right" sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">	
         			<input class="btn btn-danger" type="submit" value="Wyloguj"/>
-        		</form>
+        		</form-->
         		<!--p class="navbar-text navbar-right" sec:authorize="isAuthenticated()" sec:authentication="name">Username 1</p-->
         		<p class="navbar-text navbar-right" sec:authorize="isAuthenticated()">
         			<strong sec:authorize="hasRole('ROLE_ADMIN')" th:text="${fullname}">Fullname</strong>
@@ -54,7 +54,7 @@
         		</p>
               	
               	<!-- Login -->
-              	<a href="/login" class="btn btn-info navbar-btn navbar-right" sec:authorize="isAnonymous()">Zaloguj się</a>
+              	<!--a href="/login" class="btn btn-info navbar-btn navbar-right" sec:authorize="isAnonymous()">Zaloguj się</a-->
 			</div>
 		</div>
 	</nav>

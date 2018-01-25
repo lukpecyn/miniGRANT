@@ -7,6 +7,7 @@
 <body>
 	<div th:replace="fragments/header :: myHeader"> Header </div>
 	<div class="container">
+		<a href="grant_form" class="btn btn-primary" >Nowy grant</a>
 		<table class="table">
     		<thead>
     			<tr>
@@ -17,7 +18,12 @@
     			</tr>
     		</thead>
     		<tbody>
-    	
+				<tr th:each="grant : ${grantList}">
+					<td th:text="${grant.getName()}" />
+					<td th:text="${grant.getDateBegin()}" />
+					<td th:text="${grant.getDateEnd()}" />
+					<td th:text="${grant.getStatusText()}" />
+				</tr>    	
     		</tbody>
     	</table>
 	</div>
