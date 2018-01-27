@@ -7,7 +7,7 @@
 <body>
 	<div th:replace="fragments/header :: myHeader"> Header </div>
 	<div class="container">
-		<a href="grant_form" class="btn btn-primary" >Nowy grant</a>
+		<a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-primary" >Popraw grant</a>
 		<table class="table">
     		<thead>
     			<tr>
@@ -18,9 +18,8 @@
     			</tr>
     		</thead>
     		<tbody>
-				<tr th:each="grant : ${grantList}">
-					<td> <a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}" /></td>
-					<!--td th:text="${grant.getName()}" /-->
+				<tr>
+					<td th:text="${grant.getName()}" />
 					<td th:text="${grant.getDateBegin()}" />
 					<td th:text="${grant.getDateEnd()}" />
 					<td th:text="${grant.getStatusText()}" />

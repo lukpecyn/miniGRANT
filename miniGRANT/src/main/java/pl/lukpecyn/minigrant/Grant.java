@@ -56,9 +56,9 @@ public class Grant {
 	public String getStatusText() {
 		switch (this.status) {
 			case 0:
-				return "Planowany";
+				return "Projekt";
 			case 10:
-				return "Rozpoczęty";
+				return "Trwający";
 			case 20:
 				return "Zakończony";
 			case 30: 

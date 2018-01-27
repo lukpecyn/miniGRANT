@@ -36,16 +36,30 @@ public class GrantService {
 				Grant g = new Grant();
 				g.setId(rs.getInt("id"));
 				g.setName(rs.getString("name"));
-				g.setDateBegin(rs.getString("dateBegin"));
-				g.setDateEnd(rs.getString("dateEnd"));
+				g.setDateBegin(rs.getString("date_begin"));
+				g.setDateEnd(rs.getString("date_end"));
 				g.setStatus(rs.getInt("status"));
 				return g;
 			}
 		}); 		
 	}
 	
-	public List<Grant> getGrantsList() {
+	public List<Grant> getGrantsListByDateBegin() {
 		return jdbcTemplate.query("SELECT * FROM grants ORDER BY date_begin DESC,name", new RowMapper<Grant>(){
+		      public Grant mapRow(ResultSet rs, int arg1) throws SQLException {
+		        Grant g = new Grant();
+		        g.setId(rs.getInt("id"));
+		        g.setName(rs.getString("name"));
+		        g.setDateBegin(rs.getString("date_begin"));
+		        g.setDateEnd(rs.getString("date_end"));
+		        g.setStatus(rs.getInt("status"));
+		        return g;
+		      }
+		    });
+	}
+	
+	public List<Grant> getGrantsListByName() {
+		return jdbcTemplate.query("SELECT * FROM grants ORDER BY name", new RowMapper<Grant>(){
 		      public Grant mapRow(ResultSet rs, int arg1) throws SQLException {
 		        Grant g = new Grant();
 		        g.setId(rs.getInt("id"));

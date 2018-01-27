@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,16 +32,16 @@ public class MiniGrantController {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
-		List<Grant> grantList = grantService.getGrantsList();
+		List<Grant> grantList = grantService.getGrantsListByDateBegin();
 		model.addAttribute("grantList", grantList);
 		return "index";
 	}
 	
-	@GetMapping("/grant_form")
-	public String grantFormGet(Grant grant, Model model, @RequestParam(value="id", required=false, defaultValue="-1") long idGrant) {
+	@GetMapping({"grant_form", "/grant/{idGrant}/grant_form"})
+	public String grantFormGet(Grant grant, Model model, @PathVariable(value="idGrant", required=false) Integer idGrant) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
-		if(idGrant>=0){
+		if(idGrant!=null){
 			grant = grantService.getGrant(idGrant);
 		}
 		if(grant.getName()!=null) {
@@ -49,7 +50,7 @@ public class MiniGrantController {
 		return "grant_form";
 	}
 	
-	@PostMapping("/grant_form")
+	@PostMapping({"grant_form", "/grant/{idGrant}/grant_form"})
 	public String grantFormPost(Grant grant, Model model) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
@@ -60,10 +61,21 @@ public class MiniGrantController {
 				return "redirect:/";
 			}else{
 				grantService.updateGrant(grant);
-				return "redirect:/grant?id="+grant.getId();
+				return "redirect:/grant/"+grant.getId();
 			}
 		}else{
 			return "redirect:/";
 		}
 	}
+
+	@RequestMapping(value = "/grant/{idGrant}")
+	public String grant(Model model, @PathVariable("idGrant") long idGrant) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		Grant grant = grantService.getGrant(idGrant);
+		model.addAttribute("grant", grant);
+		return "grant";
+	}
+	
 }
