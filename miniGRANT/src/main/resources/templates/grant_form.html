@@ -9,6 +9,7 @@
 	<div class="container">
 		 <ul class="breadcrumb">
   			<li><a href="/">miniGRANT</a></li>
+  			<li th:if="${grant.getId()>=0}"><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/> </li>
   			<li class="active">Dane grantu</li>
 		</ul>
 		<form class="form-horizontal" action="/grant_form" th:action="@{/grant_form}" th:object="${grant}" method="post">
@@ -33,11 +34,12 @@
 				<label class="control-label col-sm-2" for="status">Status</label>
 				<div class="col-sm-4">
 					<select th:field="*{status}" class="form-control" id="status">
-						<option value="0">Projekt</option>
-						<option value="10">Trwający</option>
+						<option th:each="grantStatus : ${grantStatusList}" th:value="${grantStatus.getId()}" th:text="${grantStatus.getName()}" />
+						<!--option value="0">Projekt</option>
+						<option value="10">Realizacja</option>
 						<option value="20">Zakończony</option>
 						<option value="30">Rozliczony</option>
-						<option value="99">Zarchiwizowany</option>
+						<option value="99">Zarchiwizowany</option-->
 					</select>
 				</div>
 			</div>

@@ -7,25 +7,87 @@
 <body>
 	<div th:replace="fragments/header :: myHeader"> Header </div>
 	<div class="container">
-		<a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-primary" >Popraw grant</a>
+	<ul class="breadcrumb">
+  			<li><a href="/">miniGRANT</a></li>
+  			<li th:if="${grant.getId()>=0}"><span th:text="${grant.getName()}" /></li>
+		</ul>		
 		<table class="table">
     		<thead>
     			<tr>
-	    			<th>Nazwa grantu</th>
+    				<td colspan="3"><a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-primary" >Popraw grant</a></td>
+    				<td align="center" colspan="4"><strong>Planowane wydatki<br />(pozostało)</strong></td>
+    			</tr>
+    			<tr>
     				<th>Data początkowa</th>
 	    			<th>Data końcowa</th>
-    				<th>Status</th>
+    				<th width="90%">Status</th>
+    				<th>Dotacja</th>
+    				<th><nobr>Udział własny</nobr></th>
+    				<th>Wolontariat</th>
+    				<th>SUMA</th>
     			</tr>
     		</thead>
     		<tbody>
 				<tr>
-					<td th:text="${grant.getName()}" />
 					<td th:text="${grant.getDateBegin()}" />
 					<td th:text="${grant.getDateEnd()}" />
-					<td th:text="${grant.getStatusText()}" />
+					<!--td th:text="${grant.getStatusText()}" /-->
+					<td> <span th:each="grantStatus : ${grantStatusList}" th:if="${grantStatus.getId()==grant.getStatus()}" th:text="${grantStatus.getName()}" /></td>
+					<td th:text="${grant.getDotation().toString()}" align="right" />
+					<td th:text="${grant.getOwn().toString()}" align="right" />
+					<td th:text="${grant.getVolunteerism().toString()}"  align="right"/>
+					<td align="right"><strong th:text="${grant.getDotation().add(grant.getOwn().add(grant.getVolunteerism())).toString()}" /></td>
 				</tr>    	
     		</tbody>
     	</table>
+    	<ul class="nav nav-tabs">
+  			<li class="active"><a data-toggle="tab" href="#estimates">Preliminarz</a></li>
+  			<li><a data-toggle="tab" href="#costs">Realizacja</a></li>
+		</ul>	
+				
+		<div class="tab-content">
+			<div id="estimates" class="tab-pane fade in active">
+				<table class="table">
+    				<thead>
+    					<tr>
+    						<td colspan="2"><a th:href="${grant.getId()} + @{/budget_form}" class="btn btn-primary" >Nowa pozycja</a></td>
+    						<td align="center" colspan="4"><strong>Planowane wydatki<br />(pozostało)</strong></td>
+    					</tr>
+    					<tr>
+    						<th><nobr>Pozycja kosztorysu</nobr></th>
+    						<th width="80%">Opis</th>
+    						<th align="right">Dotacja</th>
+    						<th align="right"><nobr>Udział własny</nobr></th>
+    						<th align="right">Wolontariat</th>
+    						<th align="right">SUMA</th>
+    					</tr>
+    				</thead>
+    				<tbody>
+						<tr th:each="budget : ${budgetList}">
+					<td th:text="${budget.getCostType().getName()}"/>
+					<!--td> <a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}" /></td-->
+					<td th:text="${budget.getDescription()}" />
+					<td align="right" th:text="${budget.getDotation()}" />
+					<td align="right" th:text="${budget.getOwn()}" />
+					<td align="right" th:text="${budget.getVolunteerism()}" />
+					<td align="right"> <strong th:text="${budget.getSum()}" /> </td>
+				</tr>    	
+    		</tbody>
+    				
+    			</table>
+    		</div>
+			<div id="costs" class="tab-pane fade">
+				<table class="table">
+    				<thead>
+    					<tr>
+    						<th>Dokument</th>
+    						<th width="90%">Opis</th>
+    						<th>Kwota</th>
+    					</tr>
+    				</thead>
+    			</table>
+			</div>				
+		</div>
 	</div>
 	<div th:replace="fragments/footer :: myFooter"> Footer </div>
 </body>

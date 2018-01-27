@@ -1,5 +1,7 @@
 package pl.lukpecyn.minigrant;
 
+import java.math.BigDecimal;
+
 public class Grant {
 
 	private Integer id;
@@ -8,9 +10,13 @@ public class Grant {
 	private String dateEnd;
 	private String description;
 	private Integer status;
+	private BigDecimal dotation;
+	private BigDecimal own;
+	private BigDecimal volunteerism;
 
 	public Grant() {
 		id=-1;
+		
 	}
 	public void setId(Integer i) {
 		this.id = i;
@@ -53,12 +59,12 @@ public class Grant {
 	public Integer getStatus() {
 		return this.status;
 	}
-	public String getStatusText() {
+/*	public String getStatusText() {
 		switch (this.status) {
 			case 0:
 				return "Projekt";
 			case 10:
-				return "Trwający";
+				return "Realizacja";
 			case 20:
 				return "Zakończony";
 			case 30: 
@@ -68,5 +74,27 @@ public class Grant {
 			default:
 				return "Nieznany";
 		}
+	}
+*/
+	
+	public void setDotation(BigDecimal bd) {
+		this.dotation = bd;
+	}
+	public BigDecimal getDotation() {
+		return this.dotation;
+	}
+
+	public void setOwn(BigDecimal bd) {
+		this.own = bd;
+	}
+	public BigDecimal getOwn() {
+		return this.own;
+	}
+
+	public void setVolunteerism(BigDecimal bd) {
+		this.volunteerism = bd;
+	}
+	public BigDecimal getVolunteerism() {
+		return this.volunteerism;
 	}
 }

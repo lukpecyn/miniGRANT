@@ -27,10 +27,21 @@ public class MiniGrantController {
 	@Autowired
 	GrantService grantService;
 	
+	@Autowired
+	BudgetService budgetService;
+
+	@Autowired
+	CostTypeService costTypeService;
+
+	@Autowired
+	GrantStatusService grantStatusService;
+
 	@RequestMapping("/")
 	public String grantList(Model model) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
+		
+		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
 		
 		List<Grant> grantList = grantService.getGrantsListByDateBegin();
 		model.addAttribute("grantList", grantList);
@@ -41,6 +52,9 @@ public class MiniGrantController {
 	public String grantFormGet(Grant grant, Model model, @PathVariable(value="idGrant", required=false) Integer idGrant) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
+		
+		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
+		
 		if(idGrant!=null){
 			grant = grantService.getGrant(idGrant);
 		}
@@ -72,10 +86,54 @@ public class MiniGrantController {
 	public String grant(Model model, @PathVariable("idGrant") long idGrant) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
-		
+
+		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
 		Grant grant = grantService.getGrant(idGrant);
 		model.addAttribute("grant", grant);
+		
+		List<Budget> budgetList = budgetService.getBudgetForGrantList(idGrant);
+		model.addAttribute("budgetList", budgetList);
 		return "grant";
 	}
-	
+
+	@GetMapping({"/grant/{idGrant}/budget_form","/grant/{idGrant}/{idBudget}/budget_form"})
+	public String budgetFormGet(Budget budget, Model model, @PathVariable(value="idGrant", required=false) Integer idGrant, @PathVariable(value="idBudget", required=false) Integer idBudget) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		if(idGrant!=null) {
+			Grant grant = grantService.getGrant(idGrant);
+			model.addAttribute("grant", grant);
+
+			if(idBudget!=null){
+				budget = budgetService.getBudget(idBudget);
+			}
+			if(budget.getId()!=null) {
+				model.addAttribute("budget", budget);
+			}
+			
+			List<CostType> costTypeList = costTypeService.getCostTypeList();
+			model.addAttribute("costTypeList", costTypeList);
+			return "budget_form";
+		}
+		else return "/";
+	}
+
+	@PostMapping({"/grant/{idGrant}/budget_form","/grant/{idGrant}/{idBudget}/budget_form"})
+	public String budgetFormPost(Budget budget, Model model) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+				
+		if(budget.getId()!=null){
+			if(budget.getId()<0){
+				budgetService.addBudget(budget);
+			}else{
+				//grantService.updateGrant(grant);
+			}
+		}else{
+			return "redirect:/";
+		}
+		return "redirect:/grant/"+budget.getIdGrant();
+	}
+
 }

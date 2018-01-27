@@ -23,7 +23,8 @@
 					<!--td th:text="${grant.getName()}" /-->
 					<td th:text="${grant.getDateBegin()}" />
 					<td th:text="${grant.getDateEnd()}" />
-					<td th:text="${grant.getStatusText()}" />
+					<!--td th:text="${grant.getStatusText()}" /-->
+					<td> <span th:each="grantStatus : ${grantStatusList}" th:if="${grantStatus.getId()==grant.getStatus()}" th:text="${grantStatus.getName()}" /></td>
 				</tr>    	
     		</tbody>
     	</table>

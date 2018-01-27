@@ -1,5 +1,6 @@
 package pl.lukpecyn.minigrant;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -31,7 +32,8 @@ public class GrantService {
 	}
 
 	public Grant getGrant(long idGrant) {
-		return (Grant)jdbcTemplate.queryForObject("SELECT * FROM grants WHERE id=?", new Object[]{idGrant}, new RowMapper<Grant>(){
+		String sql = "SELECT g.id, g.name, g.date_begin, g.date_end, g.status, COALESCE(b.dotation,0) AS dotation, COALESCE(b.own,0) AS own, COALESCE(b.volunteerism,0) AS volunteerism FROM grants g LEFT JOIN (SELECT grant_id, SUM(dotation) AS dotation, SUM(own) AS own, SUM(volunteerism) AS volunteerism FROM budgets GROUP BY grant_id) b ON g.id=b.grant_id WHERE g.id=?";
+		return (Grant)jdbcTemplate.queryForObject(sql, new Object[]{idGrant}, new RowMapper<Grant>(){
 			public Grant mapRow(ResultSet rs, int arg1) throws SQLException {
 				Grant g = new Grant();
 				g.setId(rs.getInt("id"));
@@ -39,6 +41,9 @@ public class GrantService {
 				g.setDateBegin(rs.getString("date_begin"));
 				g.setDateEnd(rs.getString("date_end"));
 				g.setStatus(rs.getInt("status"));
+				g.setDotation(rs.getBigDecimal("dotation"));
+				g.setOwn(rs.getBigDecimal("own"));
+				g.setVolunteerism(rs.getBigDecimal("volunteerism"));
 				return g;
 			}
 		}); 		
