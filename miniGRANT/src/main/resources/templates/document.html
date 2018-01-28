@@ -8,7 +8,7 @@
 	<div th:replace="fragments/header :: myHeader"> Header </div>
 	<div class="container">
 		<ul class="breadcrumb">
-  			<li><a href="/">miniGRANT</a></li>
+  			<li><a href="/">Granty</a></li>
   			<li><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/> </li>
   			<li>Dokumenty</li>
   			<li class="active" th:text="${document.getName()}"/>
@@ -41,7 +41,7 @@
 		<div class="tab-content">
 			<div id="estimates" class="tab-pane fade in active">
 				<p />
-				<a th:href="${grant.getId()} + @{/budget_form}" class="btn btn-primary" >Nowa pozycja</a>
+				<a th:href="${grant.getId()} + @{/budget_form}" class="btn btn-primary" >Dodaj pozycję z kosztorysu</a>
 				<table class="table">
     				<thead>
     					<tr>
