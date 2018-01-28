@@ -7,7 +7,11 @@
 	<body>
 		<div th:fragment="myFooter" align="center">
   			<hr/>
-    		<small>(ver. <span th:text="${appVersion}" />) &copy; 2018 by Łukasz Pecyna</small>
+    		<small>
+    			(ver. <span th:text="${appVersion}" />) &copy; 2018 by <strong><a href="mailto:lukpecyn@poczta.onet.pl">Łukasz Pecyna</a></strong><br />
+    			<!--a href="http://lukpecyn.pl">http://lukpecyn.pl</a-->
+    		</small> 
+    		
 		</div>
 	</body>
 </html>

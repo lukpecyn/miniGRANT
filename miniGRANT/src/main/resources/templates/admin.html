@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+<head th:replace="fragments/header :: Head">
+    <title>miniGRANT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div th:replace="fragments/header :: myHeader"> Header </div>
+	<div class="container">
+		<ul class="breadcrumb">
+  			<li><a href="/">miniGRANT</a></li>
+  			<li class="active">Administracja</li>
+		</ul>		
+		
+		<ul class="nav nav-tabs">
+  			<li class="active"><a data-toggle="tab" href="#cost_types">Rodzaje kosztów</a></li>
+  			<!--li><a data-toggle="tab" href="#costs">Realizacja</a></li-->
+		</ul>	
+		<div class="tab-content">
+			<div id="cost_type" class="tab-pane fade in active">
+				<p />
+				<a th:href="@{/admin/cost_type_form}" class="btn btn-primary" >Nowy rodzaj kosztów</a>
+				<table class="table">
+    				<thead>
+    					<tr>
+			    			<th>Rodzaj kosztów</th>
+    						<th width="70%">Opis</th>
+    					</tr>
+		    		</thead>
+    				<tbody>
+						<tr th:each="costType : ${costTypeList}">
+							<td> <a th:href="@{/admin/cost_type/} + ${costType.getId()}" th:text="${costType.getName()}" /></td>
+							<td th:text="${costType.getDescription()}" />
+						</tr>    	
+		    		</tbody>
+    			</table>
+    		</div>
+    		<!--div id="costs" class="tab-pane fade">
+    			kolejna zakładka
+    		</div-->
+    	</div>
+	</div>
+	<div th:replace="fragments/footer :: myFooter"> Footer </div>
+</body>
+</html>

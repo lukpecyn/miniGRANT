@@ -23,11 +23,11 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="date-begin">Data rozpoczęcia grantu</label>
 				<div class="col-sm-4">
-					<input th:field="*{dateBegin}" class="form-control" id="date-begin" type="text" placeholder="Wprowadź datę rozpoczęcia grantu" required="required" pattern="\d{4]-\d{2}-\d{2}" />
+					<input th:field="*{dateBegin}" class="form-control" id="date-begin" type="text" placeholder="RRRR-MM-DD" required="required" pattern="\d{4]-\d{2}-\d{2}" />
 				</div>
 				<label class="control-label col-sm-2" for="date-end">Data zakończenia grantu</label>
 				<div class="col-sm-4">
-					<input th:field="*{dateEnd}" class="form-control" id="date-end" type="text" placeholder="Wprowadź datę zakończenia grantu" required="required" pattern="\d{4]-\d{2}-\d{2}" />
+					<input th:field="*{dateEnd}" class="form-control" id="date-end" type="text" placeholder="RRRR-MM-DD" required="required" pattern="\d{4]-\d{2}-\d{2}" />
 				</div>
 			</div>
 			<div class="form-group" th:if="${grant.getId()>=0}">

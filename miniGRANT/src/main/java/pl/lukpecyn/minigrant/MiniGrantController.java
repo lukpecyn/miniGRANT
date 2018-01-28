@@ -36,6 +36,9 @@ public class MiniGrantController {
 	@Autowired
 	GrantStatusService grantStatusService;
 
+	@Autowired
+	DocumentService documentService;
+	
 	@RequestMapping("/")
 	public String grantList(Model model) {
 		model.addAttribute("appVersion", appVersion);
@@ -46,6 +49,17 @@ public class MiniGrantController {
 		List<Grant> grantList = grantService.getGrantsListByDateBegin();
 		model.addAttribute("grantList", grantList);
 		return "index";
+	}
+
+	@RequestMapping("/admin")
+	public String admin(Model model) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+
+		List<CostType> costTypeList = costTypeService.getCostTypeList();
+		model.addAttribute("costTypeList", costTypeList);
+		
+		return "admin";
 	}
 	
 	@GetMapping({"grant_form", "/grant/{idGrant}/grant_form"})
@@ -83,7 +97,7 @@ public class MiniGrantController {
 	}
 
 	@RequestMapping(value = "/grant/{idGrant}")
-	public String grant(Model model, @PathVariable("idGrant") long idGrant) {
+	public String showGrant(Model model, @PathVariable("idGrant") long idGrant) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 
@@ -93,6 +107,10 @@ public class MiniGrantController {
 		
 		List<Budget> budgetList = budgetService.getBudgetForGrantList(idGrant);
 		model.addAttribute("budgetList", budgetList);
+		
+		List<Document> documentList = documentService.getDocumentForGrantList(idGrant);
+		model.addAttribute("documentList", documentList);
+		
 		return "grant";
 	}
 
@@ -134,6 +152,58 @@ public class MiniGrantController {
 			return "redirect:/";
 		}
 		return "redirect:/grant/"+budget.getIdGrant();
+	}
+
+	@GetMapping({"/grant/{idGrant}/document_form","/grant/{idGrant}/document/{idDocument}/document_form"})
+	public String documentFormGet(Document document, Model model, @PathVariable(value="idGrant", required=false) Integer idGrant, @PathVariable(value="idDocument", required=false) Integer idDocument) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		if(idGrant!=null) {
+			Grant grant = grantService.getGrant(idGrant);
+			model.addAttribute("grant", grant);
+
+			if(idDocument!=null){
+				document = documentService.getDocument(idDocument);
+			}
+			if(document.getId()!=null) {
+				model.addAttribute("document", document);
+			}
+			
+			return "document_form";
+		}
+		else return "/";
+	}
+
+	@PostMapping({"/grant/{idGrant}/document_form","/grant/{idGrant}/document/{idDocument}/document_form"})
+	public String documentFormPost(Document document, Model model) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+				
+		if(document.getId()!=null){
+			if(document.getId()<0){
+				documentService.addDocument(document);
+			}else{
+				//grantService.updateGrant(grant);
+			}
+		}else{
+			return "redirect:/";
+		}
+		return "redirect:/grant/"+document.getIdGrant();
+	}
+
+	@RequestMapping(value = "/grant/{idGrant}/document/{idDocument}")
+	public String showDocument(Model model, @PathVariable("idGrant") long idGrant, @PathVariable("idDocument") long idDocument) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+
+		Grant grant = grantService.getGrant(idGrant);
+		model.addAttribute("grant", grant);
+		
+		Document document = documentService.getDocument(idDocument);
+		model.addAttribute("document", document);
+			
+		return "document";
 	}
 
 }
