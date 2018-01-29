@@ -1,5 +1,6 @@
 package pl.lukpecyn.minigrant;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -38,6 +39,9 @@ public class MiniGrantController {
 
 	@Autowired
 	DocumentService documentService;
+
+	@Autowired
+	PaymentService paymentService;
 	
 	@RequestMapping("/")
 	public String grantList(Model model) {
@@ -202,7 +206,19 @@ public class MiniGrantController {
 		
 		Document document = documentService.getDocument(idDocument);
 		model.addAttribute("document", document);
-			
+
+		List<Payment> paymentList = paymentService.getPaymentForDocumentList(idDocument);
+		model.addAttribute("paymentList", paymentList);
+		
+		BigDecimal unpaid = document.getValue();
+		logger.info("Unpaid (1) = " + unpaid.toString());
+		for (Payment payment : paymentList) {
+			logger.info("Unpaid (2) = " + unpaid.toString() + " - " + payment.getSum().toString());
+			unpaid = unpaid.subtract(payment.getSum());
+			logger.info("Unpaid (3) = " + unpaid.toString());
+		}
+		logger.info("Unpaid (4) = " + unpaid.toString());
+		model.addAttribute("unpaid", unpaid);
 		return "document";
 	}
 

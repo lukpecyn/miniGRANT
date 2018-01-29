@@ -28,8 +28,8 @@
     		<tbody>
 				<tr>
 					<td th:text="${document.getDescription()}" />
-					<td th:text="${document.getValue()}" />
-					<td />
+					<td th:text="${document.getValue()}" align="right"/>
+					<td th:text="${unpaid}" align="right"/>
 				</tr>    	
     		</tbody>
     	</table>
@@ -53,16 +53,16 @@
     						<th align="right">SUMA</th>
     					</tr>
     				</thead>
-    				<!--tbody>
-						<tr th:each="budget : ${budgetList}">
-							<td th:text="${budget.getCostType().getName()}"/>
-							<td th:text="${budget.getDescription()}" />
-							<td align="right" th:text="${budget.getDotation()}" />
-							<td align="right" th:text="${budget.getOwn()}" />
-							<td align="right" th:text="${budget.getVolunteerism()}" />
-							<td align="right"> <strong th:text="${budget.getSum()}" /> </td>
+    				<tbody>
+						<tr th:each="payment: ${paymentList}">
+							<td th:text="${payment.getBudget().getCostType().getName()}"/>
+							<td th:text="${payment.getBudget().getDescription()}" />
+							<td align="right" th:text="${payment.getDotation()}" />
+							<td align="right" th:text="${payment.getOwn()}" />
+							<td align="right" th:text="${payment.getVolunteerism()}" />
+							<!--td align="right"> <strong th:text="${payment.getSum()}" /> </td-->
 						</tr>    	
-    				</tbody-->    				
+    				</tbody>    				
     			</table>
     		</div>
 			<!--div id="costs" class="tab-pane fade">

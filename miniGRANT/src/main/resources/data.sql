@@ -12,3 +12,6 @@ INSERT INTO budgets(grant_id,cost_type_id,description,dotation,own,volunteerism)
 
 INSERT INTO documents(grant_id,name,description,value) VALUES(0,'123/2018','Jakaś faktura',100.00);
 INSERT INTO documents(grant_id,name,description,value) VALUES(1,'124/2018','Jakaś inna faktura',250.00);
+
+INSERT INTO payments(budget_id,document_id,dotation,own,volunteerism) VALUES(0,0,10.00,10.00,0.00);
+INSERT INTO payments(budget_id,document_id,dotation,own,volunteerism) VALUES(1,0,20.00,30.00,0.00);
