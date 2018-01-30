@@ -27,9 +27,9 @@ CREATE TABLE IF NOT EXISTS budgets (
 	cost_type_id INTEGER NOT NULL,
 	description LONGVARCHAR,
 	dotation DECIMAL(12,2),
-	own DECIMAL(12,2),
-	volunteerism DECIMAL(12,2),
-	
+	contribution_own DECIMAL(12,2),
+	contribution_personal DECIMAL(12,2),
+	contribution_inkind DECIMAL(12,2),
 	CONSTRAINT fk_budgets_grant FOREIGN KEY(grant_id) REFERENCES grants(id),
 	CONSTRAINT fk_budgets_cost_type FOREIGN KEY (cost_type_id) REFERENCES cost_types(id)
 );
@@ -50,9 +50,10 @@ CREATE TABLE IF NOT EXISTS payments (
 	id INTEGER IDENTITY PRIMARY KEY,
 	budget_id INTEGER,
 	document_id INTEGER,
-	dotation DECIMAL(12,2),
-	own DECIMAL(12,2),
-	volunteerism DECIMAL(12,2),
+	dotation DECIMAL(12,2), --dotacja
+	contribution_own DECIMAL(12,2), --wkład własny 
+	contribution_personal DECIMAL(12,2), --koszty osobowe (wolontariat, itp.)
+	contribution_inkind DECIMAL(12,2), --koszty rzeczowe (użyczenie sprzętu własnego lub obcego)
 
 	CONSTRAINT fk_payments_budget FOREIGN KEY(budget_id) REFERENCES budgets(id),
 	CONSTRAINT fk_payments_document FOREIGN KEY(document_id) REFERENCES documents(id)	

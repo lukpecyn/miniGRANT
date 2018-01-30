@@ -22,8 +22,9 @@
 	    			<th>Data końcowa</th>
     				<th width="90%">Status</th>
     				<th>Dotacja</th>
-    				<th><nobr>Udział własny</nobr></th>
-    				<th>Wolontariat</th>
+    				<th><nobr>Wkład własny</nobr></th>
+    				<th><nobr>Wkład osobowy</nobr></th>
+    				<th><nobr>Wkład rzeczowy</nobr></th>
     				<th>SUMA</th>
     			</tr>
     		</thead>
@@ -34,9 +35,10 @@
 					<!--td th:text="${grant.getStatusText()}" /-->
 					<td> <span th:each="grantStatus : ${grantStatusList}" th:if="${grantStatus.getId()==grant.getStatus()}" th:text="${grantStatus.getName()}" /></td>
 					<td th:text="${grant.getDotation().toString()}" align="right" />
-					<td th:text="${grant.getOwn().toString()}" align="right" />
-					<td th:text="${grant.getVolunteerism().toString()}"  align="right"/>
-					<td align="right"><strong th:text="${grant.getDotation().add(grant.getOwn().add(grant.getVolunteerism())).toString()}" /></td>
+					<td th:text="${grant.getContributionOwn().toString()}" align="right" />
+					<td th:text="${grant.getContributionPersonal().toString()}"  align="right"/>
+					<td th:text="${grant.getContributionInkind().toString()}" align="right" />
+					<td align="right"><strong th:text="${grant.getDotation().add(grant.getContributionOwn().add(grant.getContributionPersonal().add(grant.getContributionInkind()))).toString()}" /></td>
 				</tr>    	
     		</tbody>
     	</table>
@@ -57,8 +59,9 @@
     						<th width="20%"><nobr>Pozycja</nobr></th>
     						<th width="70%">Opis</th>
     						<th align="right">Dotacja</th>
-    						<th align="right"><nobr>Udział własny</nobr></th>
-    						<th align="right">Wolontariat</th>
+    						<th align="right"><nobr>Wkład własny</nobr></th>
+	    					<th align="right"><nobr>Wkład osobowy</nobr></th>
+    						<th align="right"><nobr>Wkład rzeczowy</nobr></th>
     						<th align="right">SUMA</th>
     					</tr>
     				</thead>
@@ -68,8 +71,9 @@
 							<!--td> <a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}" /></td-->
 							<td th:text="${budget.getDescription()}" />
 							<td align="right" th:text="${budget.getDotation()}" />
-							<td align="right" th:text="${budget.getOwn()}" />
-							<td align="right" th:text="${budget.getVolunteerism()}" />
+							<td align="right" th:text="${budget.getContributionOwn()}" />
+							<td align="right" th:text="${budget.getContributionPersonal()}" />
+							<td align="right" th:text="${budget.getContributionInkind()}" />
 							<td align="right"> <strong th:text="${budget.getSum()}" /> </td>
 						</tr>    	
     				</tbody>    				

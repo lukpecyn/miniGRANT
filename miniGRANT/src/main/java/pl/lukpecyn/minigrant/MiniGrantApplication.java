@@ -30,7 +30,7 @@ public class MiniGrantApplication {
 	
 	@PostConstruct
 	public void init() throws UnknownHostException, SocketException {
-		System.out.println(">=== " + appName + " v" + appVersion + " ===<");
+		System.out.println(">=== " + appName + " ver. " + appVersion + " ===<");
 		logger.info(appName + " v" + appVersion);
 	}
 

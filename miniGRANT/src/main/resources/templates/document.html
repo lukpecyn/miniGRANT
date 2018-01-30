@@ -21,14 +21,16 @@
     			</tr-->
     			<tr>
     				<th width="90%">Opis</th>
-	    			<th>Kwota</th>
-	    			<th>Nierozliczone</th>
+	    			<th>Wartość</th>
+	    			<th>Rozliczono</th>
+	    			<th>Pozostało</th>
     			</tr>
     		</thead>
     		<tbody>
 				<tr>
 					<td th:text="${document.getDescription()}" />
 					<td th:text="${document.getValue()}" align="right"/>
+					<td th:text="${paid}" align="right"/>
 					<td th:text="${unpaid}" align="right"/>
 				</tr>    	
     		</tbody>
@@ -48,8 +50,9 @@
     						<th width="20%"><nobr>Pozycja</nobr></th>
     						<th width="70%">Opis</th>
     						<th align="right">Dotacja</th>
-    						<th align="right"><nobr>Udział własny</nobr></th>
-    						<th align="right">Wolontariat</th>
+    						<th align="right"><nobr>Wkład własny</nobr></th>
+	    					<th align="right"><nobr>Wkład osobowy</nobr></th>
+    						<th align="right"><nobr>Wkład rzeczowy</nobr></th>
     						<th align="right">SUMA</th>
     					</tr>
     				</thead>
@@ -58,8 +61,9 @@
 							<td th:text="${payment.getBudget().getCostType().getName()}"/>
 							<td th:text="${payment.getBudget().getDescription()}" />
 							<td align="right" th:text="${payment.getDotation()}" />
-							<td align="right" th:text="${payment.getOwn()}" />
-							<td align="right" th:text="${payment.getVolunteerism()}" />
+							<td align="right" th:text="${payment.getContributionOwn()}" />
+							<td align="right" th:text="${payment.getContributionPersonal()}" />
+							<td align="right" th:text="${payment.getContributionInkind()}" />
 							<td align="right"> <strong th:text="${payment.getSum()}" /> </td>
 						</tr>    	
     				</tbody>    				

@@ -22,8 +22,8 @@ public class PaymentService {
 	DocumentService documentService;
 	
 	public int addPayment(Payment payment) {
-		String sql ="INSERT INTO payment(budget_id,document_id,dotation,own,volunteerism) VALUES(?,?,?,?,?)";
-		return jdbcTemplate.update(sql,payment.getBudget().getId(),payment.getDocument().getId(),payment.getDotation(),payment.getOwn(),payment.getVolunteerism());
+		String sql ="INSERT INTO payment(budget_id,document_id,dotation,contribution_own,contribution_personal,contribution_inkind) VALUES(?,?,?,?,?,?)";
+		return jdbcTemplate.update(sql,payment.getBudget().getId(),payment.getDocument().getId(),payment.getDotation(),payment.getContributionOwn(),payment.getContributionPersonal(),payment.getContributionInkind());
 	}
 	
 	public Payment getPayment(long idPayment) {
@@ -34,8 +34,9 @@ public class PaymentService {
 				p.setBudget(budgetService.getBudget(rs.getInt("budget_id")));
 				p.setDocument(documentService.getDocument(rs.getInt("document_id")));
 				p.setDotation(rs.getBigDecimal("dotation"));
-				p.setOwn(rs.getBigDecimal("own"));
-				p.setVolunteerism(rs.getBigDecimal("volunteerism"));
+				p.setContributionOwn(rs.getBigDecimal("contribution_own"));
+				p.setContributionPersonal(rs.getBigDecimal("contribution_personal"));
+				p.setContributionInkind(rs.getBigDecimal("contribution_inkind"));
 				return p;
 			}
 		}); 		
@@ -49,8 +50,9 @@ public class PaymentService {
 					p.setBudget(budgetService.getBudget(rs.getInt("budget_id")));
 					p.setDocument(documentService.getDocument(rs.getInt("document_id")));
 					p.setDotation(rs.getBigDecimal("dotation"));
-					p.setOwn(rs.getBigDecimal("own"));
-					p.setVolunteerism(rs.getBigDecimal("volunteerism"));
+					p.setContributionOwn(rs.getBigDecimal("contribution_own"));
+					p.setContributionPersonal(rs.getBigDecimal("contribution_personal"));
+					p.setContributionInkind(rs.getBigDecimal("contribution_inkind"));
 					return p;
 		      }
 		    });
@@ -64,8 +66,9 @@ public class PaymentService {
 					p.setBudget(budgetService.getBudget(rs.getInt("budget_id")));
 					p.setDocument(documentService.getDocument(rs.getInt("document_id")));
 					p.setDotation(rs.getBigDecimal("dotation"));
-					p.setOwn(rs.getBigDecimal("own"));
-					p.setVolunteerism(rs.getBigDecimal("volunteerism"));
+					p.setContributionOwn(rs.getBigDecimal("contribution_own"));
+					p.setContributionPersonal(rs.getBigDecimal("contribution_personal"));
+					p.setContributionInkind(rs.getBigDecimal("contribution_inkind"));
 					return p;
 		      }
 		    });

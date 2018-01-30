@@ -19,8 +19,8 @@ public class BudgetService {
 	CostTypeService costTypeService;
 	
 	public int addBudget(Budget budget) {
-		String sql ="INSERT INTO budgets(grant_id,cost_type_id,description,dotation,own,volunteerism) VALUES(?,?,?,?,?,?)";
-		return jdbcTemplate.update(sql,budget.getIdGrant(),budget.getCostType().getId(),budget.getDescription(),budget.getDotation(),budget.getOwn(),budget.getVolunteerism());
+		String sql ="INSERT INTO budgets(grant_id,cost_type_id,description,dotation,contribution_own,contribution_personal,contribution_inkind) VALUES(?,?,?,?,?,?,?)";
+		return jdbcTemplate.update(sql,budget.getIdGrant(),budget.getCostType().getId(),budget.getDescription(),budget.getDotation(),budget.getContributionOwn(),budget.getContributionPersonal(),budget.getContributionInkind());
 	}
 	
 	public Budget getBudget(long idBudget) {
@@ -34,8 +34,9 @@ public class BudgetService {
 				b.setCostType(costTypeService.getCostType(rs.getInt("cost_type_id")));
 				b.setDescription(rs.getString("description"));
 				b.setDotation(rs.getBigDecimal("dotation"));
-				b.setOwn(rs.getBigDecimal("own"));
-				b.setVolunteerism(rs.getBigDecimal("volunteerism"));
+				b.setContributionOwn(rs.getBigDecimal("contribution_own"));
+				b.setContributionPersonal(rs.getBigDecimal("contribution_personal"));
+				b.setContributionInkind(rs.getBigDecimal("contribution_inkind"));
 				return b;
 			}
 		}); 		
@@ -51,8 +52,9 @@ public class BudgetService {
 					b.setCostType(costTypeService.getCostType(rs.getInt("cost_type_id")));
 					b.setDescription(rs.getString("description"));
 					b.setDotation(rs.getBigDecimal("dotation"));
-					b.setOwn(rs.getBigDecimal("own"));
-					b.setVolunteerism(rs.getBigDecimal("volunteerism"));
+					b.setContributionOwn(rs.getBigDecimal("contribution_own"));
+					b.setContributionPersonal(rs.getBigDecimal("contribution_personal"));
+					b.setContributionInkind(rs.getBigDecimal("contribution_inkind"));
 					return b;
 		      }
 		    });

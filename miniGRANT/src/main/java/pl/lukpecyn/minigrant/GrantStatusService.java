@@ -18,9 +18,9 @@ public class GrantStatusService {
 		grantStatusList = new ArrayList<GrantStatus>();
 
 		grantStatusList.add(new GrantStatus(0,"Projekt"));
-		grantStatusList.add(new GrantStatus(10,"Realizacja"));
-		grantStatusList.add(new GrantStatus(20,"Zakończony"));
-		grantStatusList.add(new GrantStatus(30,"Rozliczony"));
+		grantStatusList.add(new GrantStatus(10,"W trakcie realizacji"));
+		grantStatusList.add(new GrantStatus(20,"Zakończony - nierozliczony"));
+		grantStatusList.add(new GrantStatus(30,"Zakończony - rozliczony"));
 		grantStatusList.add(new GrantStatus(99,"Zarchiwizowany"));
 	}
 	public List<GrantStatus> getGrantStatusList() {

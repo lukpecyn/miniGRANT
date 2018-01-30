@@ -13,11 +13,15 @@ public class Payment {
 	Budget budget;
 	Document document;
 	BigDecimal dotation;
-	BigDecimal own;
-	BigDecimal volunteerism;
+	BigDecimal contributionOwn;
+	BigDecimal contributionPersonal;
+	BigDecimal contributionInkind;
 	
 	public Payment() {
 		this.id=-1;
+		contributionOwn = new BigDecimal("0.00");
+		contributionPersonal = new BigDecimal("0.00");
+		contributionInkind = new BigDecimal("0.00");
 	}
 	
 	public void setId(Integer i) {
@@ -48,22 +52,30 @@ public class Payment {
 		return this.dotation;
 	}
 
-	public void setOwn(BigDecimal bd) {
-		this.own = bd;
+	public void setContributionOwn(BigDecimal bd) {
+		this.contributionOwn = bd;
 	}
-	public BigDecimal getOwn() {
-		return this.own;
+	public BigDecimal getContributionOwn() {
+		return this.contributionOwn;
 	}
 
-	public void setVolunteerism(BigDecimal bd) {
-		this.volunteerism = bd;
-	}	public BigDecimal getVolunteerism() {
-		return this.volunteerism;
+	public void setContributionPersonal(BigDecimal bd) {
+		this.contributionPersonal = bd;
+	}	
+	public BigDecimal getContributionPersonal() {
+		return this.contributionPersonal;
 	}
-	
+
+	public void setContributionInkind(BigDecimal bd) {
+		this.contributionInkind = bd;
+	}
+	public BigDecimal getContributionInkind() {
+		return this.contributionInkind;
+	}
+
 	public BigDecimal getSum() {
-		logger.info("Payment sum = " + dotation.add(own.add(volunteerism)).toString());
-		return dotation.add(own.add(volunteerism));
+		logger.info("Payment sum = " + dotation.add(contributionOwn.add(contributionPersonal.add(contributionInkind))).toString());
+		return dotation.add(contributionOwn.add(contributionPersonal.add(contributionInkind)));
 	}
 
 	

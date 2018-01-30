@@ -11,9 +11,10 @@ public class Grant {
 	private String description;
 	private Integer status;
 	private BigDecimal dotation;
-	private BigDecimal own;
-	private BigDecimal volunteerism;
-
+	private BigDecimal contributionOwn;
+	private BigDecimal contributionPersonal;
+	private BigDecimal contributionInkind;
+	
 	public Grant() {
 		id=-1;
 		
@@ -59,23 +60,6 @@ public class Grant {
 	public Integer getStatus() {
 		return this.status;
 	}
-/*	public String getStatusText() {
-		switch (this.status) {
-			case 0:
-				return "Projekt";
-			case 10:
-				return "Realizacja";
-			case 20:
-				return "Zakończony";
-			case 30: 
-				return "Rozliczony";
-			case 99:
-				return "Zarchiwizowany";
-			default:
-				return "Nieznany";
-		}
-	}
-*/
 	
 	public void setDotation(BigDecimal bd) {
 		this.dotation = bd;
@@ -84,17 +68,24 @@ public class Grant {
 		return this.dotation;
 	}
 
-	public void setOwn(BigDecimal bd) {
-		this.own = bd;
+	public void setContributionOwn(BigDecimal bd) {
+		this.contributionOwn = bd;
 	}
-	public BigDecimal getOwn() {
-		return this.own;
+	public BigDecimal getContributionOwn() {
+		return this.contributionOwn;
 	}
 
-	public void setVolunteerism(BigDecimal bd) {
-		this.volunteerism = bd;
+	public void setContributionPersonal(BigDecimal bd) {
+		this.contributionPersonal = bd;
 	}
-	public BigDecimal getVolunteerism() {
-		return this.volunteerism;
+	public BigDecimal getContributionPersonal() {
+		return this.contributionPersonal;
+	}
+
+	public void setContributionInkind(BigDecimal bd) {
+		this.contributionInkind = bd;
+	}
+	public BigDecimal getContributionInkind() {
+		return this.contributionInkind;
 	}
 }

@@ -32,7 +32,7 @@ public class GrantService {
 	}
 
 	public Grant getGrant(long idGrant) {
-		String sql = "SELECT g.id, g.name, g.date_begin, g.date_end, g.status, COALESCE(b.dotation,0) AS dotation, COALESCE(b.own,0) AS own, COALESCE(b.volunteerism,0) AS volunteerism FROM grants g LEFT JOIN (SELECT grant_id, SUM(dotation) AS dotation, SUM(own) AS own, SUM(volunteerism) AS volunteerism FROM budgets GROUP BY grant_id) b ON g.id=b.grant_id WHERE g.id=?";
+		String sql = "SELECT g.id, g.name, g.date_begin, g.date_end, g.status, COALESCE(b.dotation,0) AS dotation, COALESCE(b.contribution_own,0) AS contribution_own, COALESCE(b.contribution_personal,0) AS contribution_personal, COALESCE(b.contribution_inkind,0) AS contribution_inkind FROM grants g LEFT JOIN (SELECT grant_id, SUM(dotation) AS dotation, SUM(contribution_own) AS contribution_own, SUM(contribution_personal) AS contribution_personal, SUM(contribution_inkind) AS contribution_inkind FROM budgets GROUP BY grant_id) b ON g.id=b.grant_id WHERE g.id=?";
 		return (Grant)jdbcTemplate.queryForObject(sql, new Object[]{idGrant}, new RowMapper<Grant>(){
 			public Grant mapRow(ResultSet rs, int arg1) throws SQLException {
 				Grant g = new Grant();
@@ -42,8 +42,9 @@ public class GrantService {
 				g.setDateEnd(rs.getString("date_end"));
 				g.setStatus(rs.getInt("status"));
 				g.setDotation(rs.getBigDecimal("dotation"));
-				g.setOwn(rs.getBigDecimal("own"));
-				g.setVolunteerism(rs.getBigDecimal("volunteerism"));
+				g.setContributionOwn(rs.getBigDecimal("contribution_own"));
+				g.setContributionPersonal(rs.getBigDecimal("contribution_personal"));
+				g.setContributionInkind(rs.getBigDecimal("contribution_Inkind"));
 				return g;
 			}
 		}); 		

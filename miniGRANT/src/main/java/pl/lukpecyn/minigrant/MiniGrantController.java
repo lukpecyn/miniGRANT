@@ -210,15 +210,16 @@ public class MiniGrantController {
 		List<Payment> paymentList = paymentService.getPaymentForDocumentList(idDocument);
 		model.addAttribute("paymentList", paymentList);
 		
-		BigDecimal unpaid = document.getValue();
-		logger.info("Unpaid (1) = " + unpaid.toString());
+		BigDecimal paid = new BigDecimal("0.00");
+		logger.info("Paid (1) = " + paid.toString());
 		for (Payment payment : paymentList) {
-			logger.info("Unpaid (2) = " + unpaid.toString() + " - " + payment.getSum().toString());
-			unpaid = unpaid.subtract(payment.getSum());
-			logger.info("Unpaid (3) = " + unpaid.toString());
+			logger.info("Paid (2) = " + paid.toString() + " + " + payment.getSum().toString());
+			paid = paid.add(payment.getSum());
+			logger.info("Paid (3) = " + paid.toString());
 		}
-		logger.info("Unpaid (4) = " + unpaid.toString());
-		model.addAttribute("unpaid", unpaid);
+		logger.info("Paid (4) = " + paid.toString());
+		model.addAttribute("paid", paid);
+		model.addAttribute("unpaid", (document.getValue().subtract(paid)));
 		return "document";
 	}
 

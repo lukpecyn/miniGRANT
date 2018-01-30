@@ -8,14 +8,16 @@ public class Budget {
 	CostType costType;
 	String description;
 	BigDecimal dotation;
-	BigDecimal own;
-	BigDecimal volunteerism;
+	BigDecimal contributionOwn;
+	BigDecimal contributionPersonal;
+	BigDecimal contributionInkind;
 	
 	public Budget() {
 		id = -1;
 		dotation = new BigDecimal("0.00");
-		own = new BigDecimal("0.00");
-		volunteerism = new BigDecimal("0.00");
+		contributionOwn = new BigDecimal("0.00");
+		contributionPersonal = new BigDecimal("0.00");
+		contributionInkind = new BigDecimal("0.00");
 	}
 	
 	public void setId(Integer i) {
@@ -53,20 +55,28 @@ public class Budget {
 		return this.dotation;
 	}
 
-	public void setOwn(BigDecimal bd) {
-		this.own = bd;
+	public void setContributionOwn(BigDecimal bd) {
+		this.contributionOwn = bd;
 	}
-	public BigDecimal getOwn() {
-		return this.own;
+	public BigDecimal getContributionOwn() {
+		return this.contributionOwn;
 	}
 
-	public void setVolunteerism(BigDecimal bd) {
-		this.volunteerism = bd;
-	}	public BigDecimal getVolunteerism() {
-		return this.volunteerism;
+	public void setContributionPersonal(BigDecimal bd) {
+		this.contributionPersonal = bd;
+	}	
+	public BigDecimal getContributionPersonal() {
+		return this.contributionPersonal;
 	}
 	
 	public BigDecimal getSum() {
-		return dotation.add(own.add(volunteerism));
+		return dotation.add(contributionOwn.add(contributionPersonal.add(contributionInkind)));
+	}
+
+	public void setContributionInkind(BigDecimal bd) {
+		this.contributionInkind = bd;
+	}
+	public BigDecimal getContributionInkind() {
+		return this.contributionInkind;
 	}
 }

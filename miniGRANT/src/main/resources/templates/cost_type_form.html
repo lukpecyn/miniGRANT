@@ -35,13 +35,13 @@
 				<div class="col-sm-2">
 					<input th:field="*{dotation}" class="form-control" id="dotation" type="text" placeholder="kwota dotacji" required="required" pattern="^\d+(\.\d{1,2})?" />
 				</div>
-				<label class="control-label col-sm-2" for="own">Koszty własne</label>
+				<label class="control-label col-sm-2" for="contribution_own">Koszty własne</label>
 				<div class="col-sm-2">
-					<input th:field="*{own}" class="form-control" id="own" type="text" placeholder="Kwota pokryta ze środków własnych" required="required" pattern="^\d+(\.\d{1,2})?" />
+					<input th:field="*{ContributionOwn}" class="form-control" id="contribution_own" type="text" placeholder="Kwota pokryta ze środków własnych" required="required" pattern="^\d+(\.\d{1,2})?" />
 				</div>
-				<label class="control-label col-sm-2" for="volunteerism">Wolontariat</label>
+				<label class="control-label col-sm-2" for="contribution_personal">Wolontariat</label>
 				<div class="col-sm-2">
-					<input th:field="*{volunteerism}" class="form-control" id="volunteerism" type="text" placeholder="Koszty wolontariatu" required="required" pattern="^\d+(\.\d{1,2})?" />
+					<input th:field="*{contributionPersonal}" class="form-control" id="contribution_personal" type="text" placeholder="Koszty wolontariatu" required="required" pattern="^\d+(\.\d{1,2})?" />
 				</div>
 			</div>
 			
