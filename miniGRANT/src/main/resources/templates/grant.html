@@ -8,13 +8,28 @@
 	<div th:replace="fragments/header :: myHeader"> Header </div>
 	<div class="container">
 	<ul class="breadcrumb">
-  			<li><a href="/">Granty</a></li>
-  			<li class="active" th:if="${grant.getId()>=0}"><span th:text="${grant.getName()}" /></li>
-		</ul>		
+  		<li><a href="/">Granty</a></li>
+  		<li class="active" th:if="${grant.getId()>=0}"><span th:text="${grant.getName()}" /></li>
+	</ul>
+	<a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-primary" >Popraw grant</a>		
+		<table class="table">
+			<thead>
+				<tr>
+					<th width="50%">Beneficjent</th>
+					<th width="50%">Grantodawca</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td th:text="${grant.getBeneficiary().getName()}" />
+					<td th:text="${grant.getDonor().getName()}" />
+				</tr>
+			</tbody>
+		</table>
 		<table class="table">
     		<thead>
     			<tr>
-    				<td colspan="3"><a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-primary" >Popraw grant</a></td>
+    				<td colspan="3"></td>
     				<td align="center" colspan="4"><strong>Planowane wydatki<br />(pozostało)</strong></td>
     			</tr>
     			<tr>

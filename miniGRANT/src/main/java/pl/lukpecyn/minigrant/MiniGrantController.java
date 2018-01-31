@@ -33,7 +33,13 @@ public class MiniGrantController {
 
 	@Autowired
 	CostTypeService costTypeService;
+	
+	@Autowired
+	DonorService donorService;
 
+	@Autowired
+	BeneficiaryService beneficiaryService;
+	
 	@Autowired
 	GrantStatusService grantStatusService;
 
@@ -62,6 +68,12 @@ public class MiniGrantController {
 
 		List<CostType> costTypeList = costTypeService.getCostTypeList();
 		model.addAttribute("costTypeList", costTypeList);
+		
+		List<Donor> donorList = donorService.getDonorList();
+		model.addAttribute("donorList", donorList);
+
+		List<Beneficiary> beneficiaryList = beneficiaryService.getBeneficiaryList();
+		model.addAttribute("beneficiaryList", beneficiaryList);
 		
 		return "admin";
 	}
@@ -108,7 +120,7 @@ public class MiniGrantController {
 		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
 		Grant grant = grantService.getGrant(idGrant);
 		model.addAttribute("grant", grant);
-		
+				
 		List<Budget> budgetList = budgetService.getBudgetForGrantList(idGrant);
 		model.addAttribute("budgetList", budgetList);
 		

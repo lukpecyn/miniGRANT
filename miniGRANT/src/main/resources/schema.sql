@@ -1,16 +1,34 @@
+DROP TABLE IF EXISTS donors CASCADE;
+DROP TABLE IF EXISTS beneficiaries CASCADE;
 DROP TABLE IF EXISTS grants CASCADE;
 DROP TABLE IF EXISTS cost_types CASCADE;
 DROP TABLE IF EXISTS budgets CASCADE;
 DROP TABLE IF EXISTS documents CASCADE;
 DROP TABLE IF EXISTS payments CASCADE;
 
+CREATE TABLE IF NOT EXISTS donors(
+	id INTEGER IDENTITY PRIMARY KEY,
+	name VARCHAR_IGNORECASE(128) NOT NULL,
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_donors_name ON donors(name);
+
+CREATE TABLE IF NOT EXISTS beneficiaries(
+	id INTEGER IDENTITY PRIMARY KEY,
+	name VARCHAR_IGNORECASE(128) NOT NULL,
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_beneficiaries_name ON beneficiaries(name);
+
 CREATE TABLE IF NOT EXISTS grants(
 	id INTEGER IDENTITY PRIMARY KEY,
+	donor_id INTEGER,
+	beneficiary_id INTEGER,
 	name VARCHAR_IGNORECASE(128) NOT NULL,
 	date_begin DATE NOT NULL,
 	date_end DATE NOT NULL,
 	description LONGVARCHAR,
-	status INTEGER NOT NULL
+	status INTEGER NOT NULL,
+	CONSTRAINT fk_grants_donor FOREIGN KEY(donor_id) REFERENCES donors(id),
+	CONSTRAINT fk_grants_beneficiary FOREIGN KEY(beneficiary_id) REFERENCES beneficiaries(id),
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_grants_date_begin_name ON grants(date_begin, date_end, name);
 
@@ -52,10 +70,11 @@ CREATE TABLE IF NOT EXISTS payments (
 	document_id INTEGER,
 	dotation DECIMAL(12,2), --dotacja
 	contribution_own DECIMAL(12,2), --wkład własny 
-	contribution_personal DECIMAL(12,2), --koszty osobowe (wolontariat, itp.)
-	contribution_inkind DECIMAL(12,2), --koszty rzeczowe (użyczenie sprzętu własnego lub obcego)
+	contribution_personal DECIMAL(12,2), --wkład osobowy (wolontariat, itp.)
+	contribution_inkind DECIMAL(12,2), --wkłąd rzeczowy (użyczenie sprzętu własnego lub obcego)
 
 	CONSTRAINT fk_payments_budget FOREIGN KEY(budget_id) REFERENCES budgets(id),
 	CONSTRAINT fk_payments_document FOREIGN KEY(document_id) REFERENCES documents(id)	
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_payments_budget_document ON payments(budget_id,document_id);
+
