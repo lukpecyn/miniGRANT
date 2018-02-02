@@ -22,7 +22,12 @@ public class BudgetService {
 		String sql ="INSERT INTO budgets(grant_id,cost_type_id,description,dotation,contribution_own,contribution_personal,contribution_inkind) VALUES(?,?,?,?,?,?,?)";
 		return jdbcTemplate.update(sql,budget.getIdGrant(),budget.getCostType().getId(),budget.getDescription(),budget.getDotation(),budget.getContributionOwn(),budget.getContributionPersonal(),budget.getContributionInkind());
 	}
-	
+
+	public int updateBudget(Budget budget) {
+		String sql ="UPDATE budgets SET grant_id=?, cost_type_id=?, description=?, dotation=?, contribution_own=?, contribution_personal=?, contribution_inkind=? WHERE id=?";
+		return jdbcTemplate.update(sql,budget.getIdGrant(),budget.getCostType().getId(),budget.getDescription(),budget.getDotation(),budget.getContributionOwn(),budget.getContributionPersonal(),budget.getContributionInkind(), budget.getId());
+	}
+
 	public Budget getBudget(long idBudget) {
 		return (Budget)jdbcTemplate.queryForObject("SELECT * FROM budgets WHERE id=?", new Object[]{idBudget}, new RowMapper<Budget>(){
 			public Budget mapRow(ResultSet rs, int arg1) throws SQLException {

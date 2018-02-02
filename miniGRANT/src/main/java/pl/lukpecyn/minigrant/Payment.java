@@ -24,6 +24,17 @@ public class Payment {
 		contributionInkind = new BigDecimal("0.00");
 	}
 	
+	public Payment(Integer id, Budget budget, Document document, BigDecimal dotation, BigDecimal contributionOwn, BigDecimal contributionPersonal, BigDecimal contributionInkind) {
+		this.id = id;
+		this.budget = budget;
+		this.document = document;
+		this.dotation = dotation;
+		this.contributionOwn = contributionOwn;
+		this.contributionPersonal = contributionPersonal;
+		this.contributionInkind = contributionInkind;
+	}
+	
+	
 	public void setId(Integer i) {
 		this.id = i;
 	}
@@ -74,7 +85,6 @@ public class Payment {
 	}
 
 	public BigDecimal getSum() {
-		logger.info("Payment sum = " + dotation.add(contributionOwn.add(contributionPersonal.add(contributionInkind))).toString());
 		return dotation.add(contributionOwn.add(contributionPersonal.add(contributionInkind)));
 	}
 

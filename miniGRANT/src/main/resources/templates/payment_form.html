@@ -7,16 +7,16 @@
 <body>
 	<div th:replace="fragments/header :: myHeader"> Test </div>
 	<div class="container">
-		 <ul class="breadcrumb">
+		<ul class="breadcrumb">
   			<li><a href="/">Granty</a></li>
-  			<li><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/> </li>
-  			<li>Kosztorys</li>
-  			<li th:if="${budget.getId()>=0}"><a th:href="@{/grant/} + ${grant.getId()} + @{/budget/} + ${budget.getId()}" th:text="${budget.getCostType().getName()}"/> </li>
-  			<li class="active">Dane kosztorysu</li>
-		</ul>
-		<form class="form-horizontal" action="budget_form" th:action="@{budget_form}" th:object="${budget}" method="post">
+  			<li><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/></li>
+  			<li>Dokumenty</li>
+  			<li><a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()}" th:text="${document.getName()}"/></li>
+  			<li class="active">Rozliczenie</li>
+		</ul>		
+		<form class="form-horizontal" action="payment_form" th:action="@{payment_form}" th:object="${payment}" method="post">
 			<input type="hidden" th:field="*{id}" />
-			<input type="hidden" th:field="*{idGrant}" th:value="${grant.getId()}"/>
+			<!--input type="hidden" th:field="*{idGrant}" th:value="${grant.getId()}"/>
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="status">Rodzaj kosztu</label>
 				<div class="col-sm-4">
@@ -63,7 +63,7 @@
     	  				<input Type="button" class="btn btn-danger" VALUE="Anuluj" onClick="history.go(-1);return true;" />
     	  			</div>
     			</div>
-  			</div>
+  			</div-->
 		</form> 
 		
     </div>

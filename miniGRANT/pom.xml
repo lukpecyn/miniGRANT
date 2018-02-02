@@ -5,11 +5,11 @@
 
 	<groupId>pl.lukpecyn</groupId>
 	<artifactId>miniGRANT</artifactId>
-	<version>0.0.1.1</version>
+	<version>0.1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>miniGRANT</name>
-	<description>Grant Management System</description>
+	<description>Simple Grant Management System</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

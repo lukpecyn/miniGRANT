@@ -11,18 +11,27 @@
   		<li><a href="/">Granty</a></li>
   		<li class="active" th:if="${grant.getId()>=0}"><span th:text="${grant.getName()}" /></li>
 	</ul>
-	<a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-primary" >Popraw grant</a>		
+	<a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-primary" >Popraw grant</a>
+			
 		<table class="table">
 			<thead>
-				<tr>
+				<!--tr>
 					<th width="50%">Beneficjent</th>
 					<th width="50%">Grantodawca</th>
+				</tr-->
+				<tr>
+					<th>Beneficjent</th>
+					<td width="90%" th:text="${grant.getBeneficiary().getName()}" />
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<td th:text="${grant.getBeneficiary().getName()}" />
+					<th>Grantodawca</th>
 					<td th:text="${grant.getDonor().getName()}" />
+				</tr>
+				<tr>
+					<th>Opis</th>
+					<td th:text="${grant.getDescription()}" />
 				</tr>
 			</tbody>
 		</table>
@@ -55,7 +64,7 @@
 					<td th:text="${grant.getContributionInkind().toString()}" align="right" />
 					<td align="right"><strong th:text="${grant.getDotation().add(grant.getContributionOwn().add(grant.getContributionPersonal().add(grant.getContributionInkind()))).toString()}" /></td>
 				</tr>    	
-    		</tbody>
+    		</tbody>    		
     	</table>
     	<ul class="nav nav-tabs">
   			<li class="active"><a data-toggle="tab" href="#estimates">Kosztorys</a></li>
@@ -82,7 +91,7 @@
     				</thead>
     				<tbody>
 						<tr th:each="budget : ${budgetList}">
-							<td th:text="${budget.getCostType().getName()}"/>
+							<td> <a th:href="${grant.getId()} + @{/budget/} + ${budget.getId()} + @{/budget_form}" th:text="${budget.getCostType().getName()}"/> </td>
 							<!--td> <a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}" /></td-->
 							<td th:text="${budget.getDescription()}" />
 							<td align="right" th:text="${budget.getDotation()}" />

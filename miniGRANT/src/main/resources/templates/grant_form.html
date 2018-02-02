@@ -15,6 +15,22 @@
 		<form class="form-horizontal" action="/grant_form" th:action="@{/grant_form}" th:object="${grant}" method="post">
 			<input type="hidden" th:field="*{id}" />
 			<div class="form-group">
+				<label class="control-label col-sm-2" for="beneficiary">Beneficjent</label>
+				<div class="col-sm-10">
+					<select th:field="*{beneficiary.id}" class="form-control" id="beneficiary">
+						<option th:each="beneficiary : ${beneficiaryList}" th:value="${beneficiary.getId()}" th:text="${beneficiary.getName()}" />
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="donor">Grantodawca</label>
+				<div class="col-sm-10">
+					<select th:field="*{donor.id}" class="form-control" id="donor">
+						<option th:each="donor : ${donorList}" th:value="${donor.getId()}" th:text="${donor.getName()}" />
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
 				<label class="control-label col-sm-2" for="name">Nazwa</label>
 				<div class="col-sm-10">
 					<input th:field="*{name}" class="form-control" id="name" type="text" placeholder="Wprowadź nazwę grantu" required="required" />
@@ -35,12 +51,13 @@
 				<div class="col-sm-4">
 					<select th:field="*{status}" class="form-control" id="status">
 						<option th:each="grantStatus : ${grantStatusList}" th:value="${grantStatus.getId()}" th:text="${grantStatus.getName()}" />
-						<!--option value="0">Projekt</option>
-						<option value="10">Realizacja</option>
-						<option value="20">Zakończony</option>
-						<option value="30">Rozliczony</option>
-						<option value="99">Zarchiwizowany</option-->
 					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-sm-2" for="description">Opis</label>
+				<div class="col-sm-10">
+					<textarea th:field="*{description}" class="form-control" id="description" type="text" placeholder="Krótka informacja na tema grantu"/>
 				</div>
 			</div>
 			

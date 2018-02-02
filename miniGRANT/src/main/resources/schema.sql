@@ -1,3 +1,4 @@
+/*
 DROP TABLE IF EXISTS donors CASCADE;
 DROP TABLE IF EXISTS beneficiaries CASCADE;
 DROP TABLE IF EXISTS grants CASCADE;
@@ -5,6 +6,7 @@ DROP TABLE IF EXISTS cost_types CASCADE;
 DROP TABLE IF EXISTS budgets CASCADE;
 DROP TABLE IF EXISTS documents CASCADE;
 DROP TABLE IF EXISTS payments CASCADE;
+*/
 
 CREATE TABLE IF NOT EXISTS donors(
 	id INTEGER IDENTITY PRIMARY KEY,
@@ -77,4 +79,3 @@ CREATE TABLE IF NOT EXISTS payments (
 	CONSTRAINT fk_payments_document FOREIGN KEY(document_id) REFERENCES documents(id)	
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_payments_budget_document ON payments(budget_id,document_id);
-

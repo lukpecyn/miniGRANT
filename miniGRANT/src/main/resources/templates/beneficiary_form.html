@@ -10,22 +10,16 @@
 		 <ul class="breadcrumb">
   			<li><a href="/">Granty</a></li>
   			<li><a href="/admin">Administracja</a></li>
-  			<li>Rodzaje kosztów</li>
-  			<li th:if="${costType.getId()>=0}"><a th:href="@{/admin/cost_type/} + ${costType.getId()}" th:text="${costType.getName()}"/> </li>
-  			<li class="active">Definicja rodzaju kosztu</li>
+  			<li>Grantodawcy</li>
+  			<li th:if="${beneficiary.getId()>=0}"><a th:href="@{/admin/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}"/> </li>
+  			<li class="active">Definicja grantodawcy</li>
 		</ul>
-		<form class="form-horizontal" th:action="@{cost_type_form}" th:object="${costType}" method="post">
+		<form class="form-horizontal" th:action="@{beneficiary_form}" th:object="${beneficiary}" method="post">
 			<input type="hidden" th:field="*{id}" />
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="name">Nazwa</label>
 				<div class="col-sm-10">
-					<input th:field="*{name}" class="form-control" id="name" type="text" placeholder="Nazwa kosztu" required="required" />
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="control-label col-sm-2" for="description">Opis</label>
-				<div class="col-sm-10">
-					<input th:field="*{description}" class="form-control" id="description" type="text" placeholder="Opis kosztu" required="required" />
+					<input th:field="*{name}" class="form-control" id="name" type="text" placeholder="Nazwa grantodawcy" required="required" />
 				</div>
 			</div>
 			

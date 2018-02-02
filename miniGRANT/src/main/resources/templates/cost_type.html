@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html>
+<head th:replace="fragments/header :: Head">
+    <title>miniGRANT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div th:replace="fragments/header :: myHeader"> Header </div>
+	<div class="container">
+		<ul class="breadcrumb">
+  			<li><a href="/">Granty</a></li>
+  			<li><a href="/admin">Administracja</a></li>
+  			<li>Rodzaje kosztów</li>
+  			<li><a th:href="@{/admin/cost_type/} + ${costType.getId()}" th:text="${costType.getName()}"/> </li>
+		</ul>		
+		<table class="table">
+			<p />
+			<a th:href="${costType.getId()} + @{/cost_type_form}" class="btn btn-primary" >Popraw rodzaj kosztu</a>
+    		<thead>
+    			<tr>
+    				<th>Nazwa</th>
+    				<th>Opis</th>
+    			</tr>
+    		</thead>
+    		<tbody>
+				<tr>
+					<td th:text="${costType.getName()}" />
+					<td th:text="${costType.getDescription()}" />
+				</tr>    	
+    		</tbody>
+    	</table>
+	</div>
+	<div th:replace="fragments/footer :: myFooter"> Footer </div>
+</body>
+</html>

@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-public class MiniGrantController {
+public class PaymentController {
 
 	@Value("${app.version}")
 	public String appVersion;
 	@Value("${app.name}")
 	public String appName;
 
-	private static final Logger logger = LoggerFactory.getLogger(MiniGrantController.class);
+	private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
 	@Autowired
 	GrantService grantService;
@@ -49,15 +49,35 @@ public class MiniGrantController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@RequestMapping("/")
-	public String grantList(Model model) {
+	@GetMapping({"/grant/{idGrant}/document/{idDocument}/payment_form","/grant/{idGrant}/document/{idDocument}/payment/{idPayment}/payment_form"})
+	public String paymentFormGet(Payment payment, 
+			Model model, 
+			@PathVariable(value="idGrant", required=true) Integer idGrant, 
+			@PathVariable(value="idDocument", required=true) Integer idDocument,
+			@PathVariable(value="idPayment", required=false) Integer idPayment) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
-		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
+		Document document = new Document();
 		
-		List<Grant> grantList = grantService.getGrantsListByDateBegin();
-		model.addAttribute("grantList", grantList);
-		return "index";
-	}	
+		if(idPayment!=null) {
+			payment = paymentService.getPayment(idPayment);
+			if(payment.getId()!=null) {
+				model.addAttribute("payment", payment);
+			
+				document = documentService.getDocument(payment.getDocument().getId());
+				model.addAttribute("document", document);
+			} 
+		} else {
+			document = documentService.getDocument(idDocument);
+			model.addAttribute("document", document);
+		}
+		
+		Grant grant = grantService.getGrant(document.getIdGrant());
+		model.addAttribute("grant", grant);
+
+		return "payment_form";
+
+	}
+
 }

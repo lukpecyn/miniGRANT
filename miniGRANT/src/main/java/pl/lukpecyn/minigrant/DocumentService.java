@@ -20,6 +20,11 @@ public class DocumentService {
 		return jdbcTemplate.update(sql,document.getIdGrant(),document.getName(),document.getDescription(),document.getValue());		
 	}
 
+	public int updateDocument(Document document) {
+		String sql = "UPDATE documents SET grant_id=?, name=?, description=?, value=? WHERE id=?";
+		return jdbcTemplate.update(sql,document.getIdGrant(),document.getName(),document.getDescription(),document.getValue(), document.getId());		
+	}
+
 	public Document getDocument(long idDocument) {
 		return (Document)jdbcTemplate.queryForObject("SELECT * FROM documents WHERE id=?", new Object[]{idDocument}, new RowMapper<Document>(){
 			public Document mapRow(ResultSet rs, int arg1) throws SQLException {
