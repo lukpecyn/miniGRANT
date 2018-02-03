@@ -13,9 +13,11 @@
   			<li>Dokumenty</li>
   			<li class="active" th:text="${document.getName()}"/>
 		</ul>
+		<div th:if="${message==null}">
+			<a th:href="${document.getId()} + @{/document_form}" class="btn btn-warning" >Popraw</a>
+			<a th:href="${document.getId()} + @{/document_delete}" class="btn btn-danger" >Usuń</a>
+		</div>
 		<div class="alert alert-danger" th:if="${message!=null}" th:text="${message}"/>		
-		<a th:href="${document.getId()} + @{/document_form}" class="btn btn-warning" >Popraw</a>
-		<a th:href="${document.getId()} + @{/document_delete}" class="btn btn-danger" >Usuń</a>
 		<table class="table">
     		<thead>
     			<tr>
@@ -58,7 +60,7 @@
     				</thead>
     				<tbody>
 						<tr th:each="payment: ${paymentList}">
-							<td><a th:href="@{/grant/} + ${grant.getId()} + @{/budget/} + ${payment.getBudget().getCostType().getId()}" th:text="${payment.getBudget().getCostType().getName()}"/> </td>
+							<td><a th:href="@{/grant/} + ${grant.getId()} + @{/budget/} + ${payment.getBudget().getId()}" th:text="${payment.getBudget().getCostType().getName()}"/> </td>
 							<td th:text="${payment.getBudget().getDescription()}" />
 							<td align="right" th:text="${payment.getDotation()}" />
 							<td align="right" th:text="${payment.getContributionOwn()}" />
@@ -67,8 +69,8 @@
 							<td align="right"> <strong th:text="${payment.getSum()}" /> </td>
 							<td>
 								<nobr>
-									<a th:href="${document.getId()} + @{/payment/} + ${payment.getId()} + @{/payment_form}" class="btn btn-warning" >Popraw</a>
-									<a th:href="${document.getId()} + @{/payment/} + ${payment.getId()} + @{/payment_delete}" class="btn btn-danger" >Wycofaj</a>
+									<a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()} + @{/payment/} + ${payment.getId()} + @{/payment_form}" class="btn btn-warning" >Popraw</a>
+									<a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()} + @{/payment/} + ${payment.getId()} + @{/payment_delete}" class="btn btn-danger" >Wycofaj</a>
 								</nobr>
 							</td>	
 						</tr>    	

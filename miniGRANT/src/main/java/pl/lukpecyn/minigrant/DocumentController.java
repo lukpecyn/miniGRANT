@@ -136,7 +136,7 @@ public class DocumentController {
 			
 			if(paymentService.getPaymentForDocumentCount(document.getId())>0) {
 				model.addAttribute("message", "Nie można usunąć dokumentu!!! Najpierw usuń istniejące rozliczenia dla tego dokumentu z listy poniżej.");
-				/*
+				
 				List<Payment> paymentList = paymentService.getPaymentForDocumentList(idDocument);
 				model.addAttribute("paymentList", paymentList);
 				
@@ -147,8 +147,8 @@ public class DocumentController {
 				model.addAttribute("paid", paid);
 				model.addAttribute("unpaid", (document.getValue().subtract(paid)));
 				return "document";
-				*/
-				return "redirect:/grant/" + idGrant + "/document/" +idDocument;
+				
+				//return "redirect:/grant/" + idGrant + "/document/" +idDocument;
 			} else {
 				documentService.deleteDocument(idDocument);
 				return "redirect:/grant/" + idGrant;

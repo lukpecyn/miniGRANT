@@ -132,7 +132,6 @@ public class BudgetController {
 		model.addAttribute("contributionOwnPaid", contributionOwnPaid);
 		model.addAttribute("contributionPersonalPaid", contributionPersonalPaid);
 		model.addAttribute("contributionInkindPaid", contributionInkindPaid);
-		//model.addAttribute("unpaid", (budget.getSum().subtract(paid)));
 		
 		return "budget";
 	}
@@ -153,20 +152,30 @@ public class BudgetController {
 			model.addAttribute("grant", grant);
 			
 			if(paymentService.getPaymentForBudgetCount(budget.getId())>0) {
-				model.addAttribute("message", "Nie można usunąć dokumentu!!! Najpierw usuń istniejące rozliczenia dla tego dokumentu z listy poniżej.");
-				/*
-				List<Payment> paymentList = paymentService.getPaymentForDocumentList(idDocument);
+				model.addAttribute("message", "Nie można usunąć pozycji kosztorysu!!! Najpierw usuń istniejące rozliczenia dla tej pozycji z listy poniżej.");
+				
+				List<Payment> paymentList = paymentService.getPaymentForBudgetList(idBudget);
 				model.addAttribute("paymentList", paymentList);
 				
-				BigDecimal paid = new BigDecimal("0.00");
+				BigDecimal dotationPaid = new BigDecimal("0.00");
+				BigDecimal contributionOwnPaid = new BigDecimal("0.00");
+				BigDecimal contributionPersonalPaid = new BigDecimal("0.00");
+				BigDecimal contributionInkindPaid = new BigDecimal("0.00");
+				
 				for (Payment payment : paymentList) {
-					paid = paid.add(payment.getSum());
+					dotationPaid = dotationPaid.add(payment.getDotation());
+					contributionOwnPaid = contributionOwnPaid.add(payment.getContributionOwn());
+					contributionPersonalPaid = contributionPersonalPaid.add(payment.getContributionPersonal());
+					contributionInkindPaid = contributionInkindPaid.add(payment.getContributionInkind());
 				}
-				model.addAttribute("paid", paid);
-				model.addAttribute("unpaid", (document.getValue().subtract(paid)));
-				return "document";
-				*/
-				return "redirect:/grant/" + idGrant + "/budget/" +idBudget;
+				model.addAttribute("dotationPaid", dotationPaid);
+				model.addAttribute("contributionOwnPaid", contributionOwnPaid);
+				model.addAttribute("contributionPersonalPaid", contributionPersonalPaid);
+				model.addAttribute("contributionInkindPaid", contributionInkindPaid);
+
+				return "budget";
+				
+				//return "redirect:/grant/" + idGrant + "/budget/" +idBudget;
 			} else {
 				budgetService.deleteBudget(idBudget);
 				return "redirect:/grant/" + idGrant;
