@@ -101,6 +101,24 @@ public class GrantController {
 		
 		List<Document> documentList = documentService.getDocumentForGrantList(idGrant);
 		model.addAttribute("documentList", documentList);
+
+		BigDecimal dotationPaid = new BigDecimal("0.00");
+		BigDecimal contributionOwnPaid = new BigDecimal("0.00");
+		BigDecimal contributionPersonalPaid = new BigDecimal("0.00");
+		BigDecimal contributionInkindPaid = new BigDecimal("0.00");
+		for(Budget budget : budgetList) {
+			List<Payment> paymentList = paymentService.getPaymentForBudgetList(budget.getId());
+			for (Payment payment : paymentList) {
+				dotationPaid = dotationPaid.add(payment.getDotation());
+				contributionOwnPaid = contributionOwnPaid.add(payment.getContributionOwn());
+				contributionPersonalPaid = contributionPersonalPaid.add(payment.getContributionPersonal());
+				contributionInkindPaid = contributionInkindPaid.add(payment.getContributionInkind());
+			}
+		}
+		model.addAttribute("dotationPaid", dotationPaid);
+		model.addAttribute("contributionOwnPaid", contributionOwnPaid);
+		model.addAttribute("contributionPersonalPaid", contributionPersonalPaid);
+		model.addAttribute("contributionInkindPaid", contributionInkindPaid);			
 		
 		return "grant";
 	}

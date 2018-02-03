@@ -104,4 +104,9 @@ public class Grant {
 	public BigDecimal getContributionInkind() {
 		return this.contributionInkind;
 	}
+
+	public BigDecimal getSum() {
+		return dotation.add(contributionOwn.add(contributionPersonal.add(contributionInkind)));
+	}
+
 }

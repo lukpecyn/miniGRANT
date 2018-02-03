@@ -97,4 +97,82 @@ public class BudgetController {
 		}
 		return "redirect:/grant/"+idGrant;
 	}
+
+	@RequestMapping({"/grant/{idGrant}/budget/{idBudget}"})
+	public String budgetShow(Grant grant,
+			Budget budget,
+			Model model,
+			@PathVariable(value="idGrant", required=true) Integer idGrant, 
+			@PathVariable(value="idBudget", required=false) Integer idBudget) {
+
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		budget = budgetService.getBudget(idBudget);
+		model.addAttribute("budget", budget);
+		
+		grant = grantService.getGrant(budget.idGrant);
+		model.addAttribute("grant", grant);
+		
+		List<Payment> paymentList = paymentService.getPaymentForBudgetList(idBudget);
+		model.addAttribute("paymentList", paymentList);
+		
+		BigDecimal dotationPaid = new BigDecimal("0.00");
+		BigDecimal contributionOwnPaid = new BigDecimal("0.00");
+		BigDecimal contributionPersonalPaid = new BigDecimal("0.00");
+		BigDecimal contributionInkindPaid = new BigDecimal("0.00");
+		
+		for (Payment payment : paymentList) {
+			dotationPaid = dotationPaid.add(payment.getDotation());
+			contributionOwnPaid = contributionOwnPaid.add(payment.getContributionOwn());
+			contributionPersonalPaid = contributionPersonalPaid.add(payment.getContributionPersonal());
+			contributionInkindPaid = contributionInkindPaid.add(payment.getContributionInkind());
+		}
+		model.addAttribute("dotationPaid", dotationPaid);
+		model.addAttribute("contributionOwnPaid", contributionOwnPaid);
+		model.addAttribute("contributionPersonalPaid", contributionPersonalPaid);
+		model.addAttribute("contributionInkindPaid", contributionInkindPaid);
+		//model.addAttribute("unpaid", (budget.getSum().subtract(paid)));
+		
+		return "budget";
+	}
+
+	@RequestMapping("/grant/{idGrant}/budget/{idBudget}/budget_delete")
+	public String deleteDocument(Model model, 
+			@PathVariable(value="idGrant", required=true) Integer idGrant, 
+			@PathVariable(value="idBudget", required=true) Integer idBudget) {
+
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+
+		if(idBudget!=null) {
+			Budget budget = budgetService.getBudget(idBudget);
+			model.addAttribute("budget", budget);
+			
+			Grant grant = grantService.getGrant(budget.getIdGrant());
+			model.addAttribute("grant", grant);
+			
+			if(paymentService.getPaymentForBudgetCount(budget.getId())>0) {
+				model.addAttribute("message", "Nie można usunąć dokumentu!!! Najpierw usuń istniejące rozliczenia dla tego dokumentu z listy poniżej.");
+				/*
+				List<Payment> paymentList = paymentService.getPaymentForDocumentList(idDocument);
+				model.addAttribute("paymentList", paymentList);
+				
+				BigDecimal paid = new BigDecimal("0.00");
+				for (Payment payment : paymentList) {
+					paid = paid.add(payment.getSum());
+				}
+				model.addAttribute("paid", paid);
+				model.addAttribute("unpaid", (document.getValue().subtract(paid)));
+				return "document";
+				*/
+				return "redirect:/grant/" + idGrant + "/budget/" +idBudget;
+			} else {
+				budgetService.deleteBudget(idBudget);
+				return "redirect:/grant/" + idGrant;
+			}			
+		}
+		
+		return "redirect:/";
+	}
 }

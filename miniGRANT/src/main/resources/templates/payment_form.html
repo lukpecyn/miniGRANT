@@ -13,22 +13,17 @@
   			<li>Dokumenty</li>
   			<li><a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()}" th:text="${document.getName()}"/></li>
   			<li class="active">Rozliczenie</li>
+  			<li th:if="${payment.getId()>=0}" th:text="${payment.getBudget().getCostType().getName()}" />
 		</ul>		
 		<form class="form-horizontal" action="payment_form" th:action="@{payment_form}" th:object="${payment}" method="post">
 			<input type="hidden" th:field="*{id}" />
-			<!--input type="hidden" th:field="*{idGrant}" th:value="${grant.getId()}"/>
+			<input type="hidden" th:field="*{document.id}" th:value="${document.getId()}"/>
 			<div class="form-group">
-				<label class="control-label col-sm-2" for="status">Rodzaj kosztu</label>
+				<label class="control-label col-sm-2" for="budget">Pozycja kosztorysu</label>
 				<div class="col-sm-4">
-					<select th:field="*{costType.id}" class="form-control" id="status" >
-						<option th:each="costType : ${costTypeList}" th:value="${costType.getId()}" th:text="${costType.getName()}"/>
+					<select th:field="*{budget.id}" class="form-control" id="budget" >
+						<option th:each="budget : ${budgetList}" th:value="${budget.getId()}" th:text="${budget.getCostType().getName()}"/>
 					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="control-label col-sm-2" for="description">Opis</label>
-				<div class="col-sm-10">
-					<input th:field="*{description}" class="form-control" id="description" type="text" placeholder="Opis kosztu" required="required" />
 				</div>
 			</div>
 			<div class="form-group">
@@ -63,7 +58,7 @@
     	  				<input Type="button" class="btn btn-danger" VALUE="Anuluj" onClick="history.go(-1);return true;" />
     	  			</div>
     			</div>
-  			</div-->
+  			</div>
 		</form> 
 		
     </div>

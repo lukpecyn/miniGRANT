@@ -10,7 +10,7 @@
 		 <ul class="breadcrumb">
   			<li><a href="/">Granty</a></li>
   			<li th:if="${grant.getId()>=0}"><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/> </li>
-  			<li class="active">Dane grantu</li>
+  			<li class="active">Definicja grantu</li>
 		</ul>
 		<form class="form-horizontal" action="/grant_form" th:action="@{/grant_form}" th:object="${grant}" method="post">
 			<input type="hidden" th:field="*{id}" />

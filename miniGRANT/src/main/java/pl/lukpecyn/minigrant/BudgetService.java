@@ -28,8 +28,13 @@ public class BudgetService {
 		return jdbcTemplate.update(sql,budget.getIdGrant(),budget.getCostType().getId(),budget.getDescription(),budget.getDotation(),budget.getContributionOwn(),budget.getContributionPersonal(),budget.getContributionInkind(), budget.getId());
 	}
 
+	public int deleteBudget(Integer idBudget) {
+		String sql = "DELETE FROM budgets WHERE id=?";
+		return jdbcTemplate.update(sql,idBudget);
+	}
+
 	public Budget getBudget(long idBudget) {
-		return (Budget)jdbcTemplate.queryForObject("SELECT * FROM budgets WHERE id=?", new Object[]{idBudget}, new RowMapper<Budget>(){
+		return (Budget)jdbcTemplate.queryForObject("SELECT id,grant_id,cost_type_id,description,dotation,contribution_own,contribution_personal,contribution_inkind FROM budgets WHERE id=?", new Object[]{idBudget}, new RowMapper<Budget>(){
 			public Budget mapRow(ResultSet rs, int arg1) throws SQLException {
 				//CostType ct = costTypeService.getCostType(rs.getInt("cost_type_id"));
 				Budget b = new Budget();
@@ -48,7 +53,7 @@ public class BudgetService {
 	}
 	
 	public List<Budget> getBudgetForGrantList(long idGrant) {
-		return jdbcTemplate.query("SELECT * FROM budgets WHERE grant_id=? ", new Object[]{idGrant}, new RowMapper<Budget>(){
+		return jdbcTemplate.query("SELECT id,grant_id,cost_type_id,description,dotation,contribution_own,contribution_personal,contribution_inkind FROM budgets WHERE grant_id=? ", new Object[]{idGrant}, new RowMapper<Budget>(){
 		      public Budget mapRow(ResultSet rs, int arg1) throws SQLException {
 		    	  	//CostType ct = costTypeService.getCostType(rs.getInt("cost_type_id"));
 					Budget b = new Budget();

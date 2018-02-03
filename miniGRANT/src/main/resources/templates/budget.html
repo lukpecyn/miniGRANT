@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html>
+<head th:replace="fragments/header :: Head">
+    <title>miniGRANT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div th:replace="fragments/header :: myHeader"> Header </div>
+	<div class="container">
+		<ul class="breadcrumb">
+  			<li><a href="/">Granty</a></li>
+  			<li><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/> </li>
+  			<li>Kosztorys</li>
+  			<li class="active" th:text="${budget.getCostType().getName()}"/>
+		</ul>		
+
+		<!--a th:href="${budget.getId()} + @{/budget_form}" class="btn btn-primary" >Popraw pozycję kosztorysu</a-->
+		<a th:href="${budget.getId()} + @{/budget_form}" class="btn btn-warning" >Popraw</a>
+		<a th:href="${budget.getId()} + @{/budget_delete}" class="btn btn-danger" >Usuń</a>
+				
+		<table class="table">
+    		<thead>
+    			<tr>
+    				<th width="20%"><nobr>Pozycja</nobr></th>
+    				<th width="70%">Opis</th>
+    				<th align="right">Dotacja</th>
+    				<th align="right"><nobr>Wkład własny</nobr></th>
+					<th align="right"><nobr>Wkład osobowy</nobr></th>
+    				<th align="right"><nobr>Wkład rzeczowy</nobr></th>
+    				<th align="right">SUMA</th>
+    			</tr>
+    		</thead>
+    		<tbody>
+				<tr class="info">
+					<td th:text="${budget.getCostType().getName()}"/>
+					<td th:text="${budget.getDescription()}" />
+					<td align="right" th:text="${budget.getDotation()}" />
+					<td align="right" th:text="${budget.getContributionOwn()}" />
+					<td align="right" th:text="${budget.getContributionPersonal()}" />
+					<td align="right" th:text="${budget.getContributionInkind()}" />
+					<td align="right"> <strong th:text="${budget.getSum()}" /> </td>
+				</tr>
+				<tr class="success">
+					<td colspan="2">Rozliczone</td>
+					<td align="right" th:text="${dotationPaid}" />
+					<td align="right" th:text="${contributionOwnPaid}" />
+					<td align="right" th:text="${contributionPersonalPaid}" />
+					<td align="right" th:text="${contributionInkindPaid}" />
+					<td align="right"><strong th:text="${dotationPaid.add(contributionOwnPaid.add(contributionPersonalPaid.add(contributionInkindPaid)))}" /> </td>
+				</tr>    	
+				<tr class="danger">
+					<td colspan="2">Pozostało</td>
+					<td align="right" th:text="${budget.getDotation().subtract(dotationPaid)}" />
+					<td align="right" th:text="${budget.getContributionOwn().subtract(contributionOwnPaid)}" />
+					<td align="right" th:text="${budget.getContributionPersonal().subtract(contributionPersonalPaid)}" />
+					<td align="right" th:text="${budget.getContributionInkind().subtract(contributionInkindPaid)}" />
+					<td align="right"><strong th:text="${budget.getSum().subtract(dotationPaid.add(contributionOwnPaid.add(contributionPersonalPaid.add(contributionInkindPaid))))}" /> </td>
+				</tr>    	
+    		</tbody>    				
+    	</table>
+	
+    	<ul class="nav nav-tabs">
+  			<li class="active"><a data-toggle="tab" href="#estimates">Rozliczenie</a></li>
+  			<!--li><a data-toggle="tab" href="#costs">Realizacja</a></li-->
+		</ul>	
+				
+		<div class="tab-content">
+			<div id="estimates" class="tab-pane fade in active">
+				<p />
+				<!--a th:href="${document.getId()} + @{/payment_form}" class="btn btn-primary" >Rozlicz dokument</a-->
+	<table class="table">
+    		<thead>
+    			<tr>
+    				<th>Nazwa</th>
+    				<th width="90%">Opis</th>
+	    			<th align="right">Wartość</th>
+	   				<th align="right">Dotacja</th>
+    				<th align="right"><nobr>Wkład własny</nobr></th>
+					<th align="right"><nobr>Wkład osobowy</nobr></th>
+    				<th align="right"><nobr>Wkład rzeczowy</nobr></th>
+	    			<th align="right">Nierozliczone</th>
+    			</tr>
+    		</thead>
+    		<tbody>
+				<tr th:each="payment : ${paymentList}">
+					<td><a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${payment.getDocument().getId()}" th:text="${payment.getDocument().getName()}" /> </td>
+					<td th:text="${payment.getDocument().getDescription()}" />
+					<td align="right"><strong th:text="${payment.getDocument().getValue()}" /> </td>
+					<td align="right" th:text="${payment.getDotation()}" />
+					<td align="right" th:text="${payment.getContributionOwn()}" />
+					<td align="right" th:text="${payment.getContributionPersonal()}" />
+					<td align="right" th:text="${payment.getContributionInkind()}" />
+					<td align="right"><strong th:text="${payment.getDocument().getValue().subtract(payment.getSum())}" /> </td>
+				</tr>
+    		</tbody>
+    	</table>
+    		</div>
+			<!--div id="costs" class="tab-pane fade">
+			<p />
+			<a th:href="${grant.getId()} + @{/document_form}" class="btn btn-primary" >Nowy dokument</a>
+				<table class="table">
+    				<thead>
+    					<tr>
+    						<th>Dokument</th>
+    						<th width="90%">Opis</th>
+    						<th>Kwota</th>
+    					</tr>
+    				</thead>
+    				<tbody>
+    					<tr th:each="document : ${documentList}">
+    						<td> <a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()}" th:text="${document.getName()}" /> </td>
+    						<td th:text="${document.getDescription()}" />
+    						<td th:text="${document.getValue()}" align="right"/>
+    					</tr>
+    				</tbody>
+    			</table>
+			</div-->				
+		</div>
+	</div>
+	<div th:replace="fragments/footer :: myFooter"> Footer </div>
+</body>
+</html>

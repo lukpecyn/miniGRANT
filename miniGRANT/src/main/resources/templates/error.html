@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html>
+<head th:replace="fragments/header :: Head">
+    <title>miniGRANT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div th:replace="fragments/header :: myHeader"> Header </div>
+	<div class="container">
+		<div class="alert alert-danger">
+			<strong>Error <span th:text="${status}" /></strong> <span th:text="${error}" />
+		</div>
+		<table class="table">
+			<tr>
+				<th>Timestamp:</th>
+				<td th:text="${timestamp}" />
+			</tr>
+			<tr>
+				<th>Path:</th>
+				<td th:text="${path}" />
+			</tr>
+			<!--tr>
+				<th>Status:</th>
+				<td th:text="${status}" />
+			</tr>
+			<tr>
+				<th>Error:</th>
+				<td th:text="${error}" />
+			</tr-->
+			<tr>
+				<th>Exception:</th>
+				<td th:text="${exception}" />
+			</tr>
+			<tr>
+				<th>Message:</th>
+				<td th:text="${message}" />
+			</tr>
+			<tr>
+				<th>Trace:</th>
+				<td><code th:text="${trace}" /> </td>
+			</tr>
+		</table>
+	</div>
+	<div th:replace="fragments/footer :: myFooter"> Footer </div>
+</body>
+</html>

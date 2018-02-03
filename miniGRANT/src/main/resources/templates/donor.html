@@ -11,7 +11,7 @@
   			<li><a href="/">Granty</a></li>
   			<li><a href="/admin">Administracja</a></li>
   			<li>Grantodawcy</li>
-  			<li><a th:href="@{/admin/donor/} + ${donor.getId()}" th:text="${donor.getName()}"/> </li>
+  			<li class="active" th:text="${donor.getName()}"/>
 		</ul>		
 		<table class="table">
 			<p />

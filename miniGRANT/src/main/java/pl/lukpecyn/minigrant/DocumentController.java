@@ -86,16 +86,18 @@ public class DocumentController {
 			}else{
 				documentService.updateDocument(document);
 			}
+			return "redirect:/grant/"+document.getIdGrant() + "/document/" + document.getId();
 		}else{
 			return "redirect:/" + idGrant;
 		}
-		return "redirect:/grant/"+document.getIdGrant();
+		//return "redirect:/";
 	}
 
 	@RequestMapping(value = "/grant/{idGrant}/document/{idDocument}")
 	public String showDocument(Model model, 
 			@PathVariable("idGrant") long idGrant, 
 			@PathVariable("idDocument") long idDocument) {
+
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
@@ -109,15 +111,50 @@ public class DocumentController {
 		model.addAttribute("paymentList", paymentList);
 		
 		BigDecimal paid = new BigDecimal("0.00");
-		logger.debug("Paid (1) = " + paid.toString());
 		for (Payment payment : paymentList) {
-			logger.debug("Paid (2) = " + paid.toString() + " + " + payment.getSum().toString());
 			paid = paid.add(payment.getSum());
-			logger.debug("Paid (3) = " + paid.toString());
 		}
-		logger.debug("Paid (4) = " + paid.toString());
 		model.addAttribute("paid", paid);
 		model.addAttribute("unpaid", (document.getValue().subtract(paid)));
 		return "document";
 	}	
+
+	@RequestMapping("/grant/{idGrant}/document/{idDocument}/document_delete")
+	public String deleteDocument(Model model, 
+			@PathVariable(value="idGrant", required=true) Integer idGrant, 
+			@PathVariable(value="idDocument", required=true) Integer idDocument) {
+
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+
+		if(idDocument!=null) {
+			Document document = documentService.getDocument(idDocument);
+			model.addAttribute("document", document);
+			
+			Grant grant = grantService.getGrant(document.getIdGrant());
+			model.addAttribute("grant", grant);
+			
+			if(paymentService.getPaymentForDocumentCount(document.getId())>0) {
+				model.addAttribute("message", "Nie można usunąć dokumentu!!! Najpierw usuń istniejące rozliczenia dla tego dokumentu z listy poniżej.");
+				/*
+				List<Payment> paymentList = paymentService.getPaymentForDocumentList(idDocument);
+				model.addAttribute("paymentList", paymentList);
+				
+				BigDecimal paid = new BigDecimal("0.00");
+				for (Payment payment : paymentList) {
+					paid = paid.add(payment.getSum());
+				}
+				model.addAttribute("paid", paid);
+				model.addAttribute("unpaid", (document.getValue().subtract(paid)));
+				return "document";
+				*/
+				return "redirect:/grant/" + idGrant + "/document/" +idDocument;
+			} else {
+				documentService.deleteDocument(idDocument);
+				return "redirect:/grant/" + idGrant;
+			}			
+		}
+		
+		return "redirect:/";
+	}
 }

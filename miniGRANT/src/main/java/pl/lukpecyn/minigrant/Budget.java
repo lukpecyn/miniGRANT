@@ -68,10 +68,6 @@ public class Budget {
 	public BigDecimal getContributionPersonal() {
 		return this.contributionPersonal;
 	}
-	
-	public BigDecimal getSum() {
-		return dotation.add(contributionOwn.add(contributionPersonal.add(contributionInkind)));
-	}
 
 	public void setContributionInkind(BigDecimal bd) {
 		this.contributionInkind = bd;
@@ -79,4 +75,9 @@ public class Budget {
 	public BigDecimal getContributionInkind() {
 		return this.contributionInkind;
 	}
+
+	public BigDecimal getSum() {
+		return dotation.add(contributionOwn.add(contributionPersonal.add(contributionInkind)));
+	}
+
 }

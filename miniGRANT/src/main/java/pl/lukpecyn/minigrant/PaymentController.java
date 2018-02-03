@@ -50,16 +50,15 @@ public class PaymentController {
 	PaymentService paymentService;
 	
 	@GetMapping({"/grant/{idGrant}/document/{idDocument}/payment_form","/grant/{idGrant}/document/{idDocument}/payment/{idPayment}/payment_form"})
-	public String paymentFormGet(Payment payment, 
+	public String paymentFormGet(Payment payment,
+			Document document,
 			Model model, 
 			@PathVariable(value="idGrant", required=true) Integer idGrant, 
 			@PathVariable(value="idDocument", required=true) Integer idDocument,
 			@PathVariable(value="idPayment", required=false) Integer idPayment) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
-		
-		Document document = new Document();
-		
+				
 		if(idPayment!=null) {
 			payment = paymentService.getPayment(idPayment);
 			if(payment.getId()!=null) {
@@ -71,13 +70,58 @@ public class PaymentController {
 		} else {
 			document = documentService.getDocument(idDocument);
 			model.addAttribute("document", document);
+			
+			payment.setDocument(document);
+			model.addAttribute("payment", payment);
 		}
-		
+						
 		Grant grant = grantService.getGrant(document.getIdGrant());
 		model.addAttribute("grant", grant);
 
-		return "payment_form";
+		List<Budget> budgetList = budgetService.getBudgetForGrantList(grant.getId());
+		model.addAttribute("budgetList", budgetList);
 
+		return "payment_form";
 	}
 
+	@PostMapping({"/grant/{idGrant}/document/{idDocument}/payment_form","/grant/{idGrant}/document/{idDocument}/payment/{idPayment}/payment_form"})
+	public String paymentFormPost(Payment payment,
+			Model model, 
+			@PathVariable(value="idGrant", required=true) Integer idGrant, 
+			@PathVariable(value="idDocument", required=true) Integer idDocument,
+			@PathVariable(value="idPayment", required=false) Integer idPayment) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+
+		if(payment!=null) {
+			Document document = documentService.getDocument(payment.getDocument().getId());
+			Grant grant = grantService.getGrant(document.getIdGrant());
+
+			if(payment.getId()>=0) {
+				paymentService.updatePayment(payment);
+			} else {
+				paymentService.addPayment(payment);
+			}
+		return "redirect:/grant/" + grant.getId() + "/document/" + document.getId();
+		}
+		return "redirect:/";
+	}
+
+	@RequestMapping("/grant/{idGrant}/document/{idDocument}/payment/{idPayment}/payment_delete")
+	public String deletePayment(Model model, 
+			@PathVariable(value="idGrant", required=true) Integer idGrant, 
+			@PathVariable(value="idDocument", required=true) Integer idDocument,
+			@PathVariable(value="idPayment", required=true) Integer idPayment) {
+		
+		if(idPayment!=null) {
+			Payment payment = paymentService.getPayment(idPayment);
+			Document document = payment.getDocument();
+			Grant grant = grantService.getGrant(document.getIdGrant());
+			paymentService.deletePayment(idPayment);
+			
+			return "redirect:/grant/" + grant.getId() + "/document/" + document.getId();
+		}
+		
+		return "redirect:/";
+	}
 }

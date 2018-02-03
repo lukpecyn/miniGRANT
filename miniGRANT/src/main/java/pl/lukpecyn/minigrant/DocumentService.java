@@ -25,6 +25,11 @@ public class DocumentService {
 		return jdbcTemplate.update(sql,document.getIdGrant(),document.getName(),document.getDescription(),document.getValue(), document.getId());		
 	}
 
+	public int deleteDocument(Integer idDocument) {
+		String sql = "DELETE FROM documents WHERE id=?";
+		return jdbcTemplate.update(sql,idDocument);
+	}
+
 	public Document getDocument(long idDocument) {
 		return (Document)jdbcTemplate.queryForObject("SELECT * FROM documents WHERE id=?", new Object[]{idDocument}, new RowMapper<Document>(){
 			public Document mapRow(ResultSet rs, int arg1) throws SQLException {
