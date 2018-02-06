@@ -1,8 +1,12 @@
 package pl.lukpecyn.minigrant;
 
 import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class Budget {
+
 	Integer id;
 	Integer idGrant;
 	CostType costType;
@@ -11,6 +15,10 @@ public class Budget {
 	BigDecimal contributionOwn;
 	BigDecimal contributionPersonal;
 	BigDecimal contributionInkind;
+	BigDecimal paidDotation;
+	BigDecimal paidContributionOwn;
+	BigDecimal paidContributionPersonal;
+	BigDecimal paidContributionInkind;
 	
 	public Budget() {
 		id = -1;
@@ -18,10 +26,15 @@ public class Budget {
 		contributionOwn = new BigDecimal("0.00");
 		contributionPersonal = new BigDecimal("0.00");
 		contributionInkind = new BigDecimal("0.00");
+		paidDotation = new BigDecimal("0.00");
+		paidContributionOwn = new BigDecimal("0.00");
+		paidContributionPersonal = new BigDecimal("0.00");
+		paidContributionInkind = new BigDecimal("0.00");
 	}
 	
 	public void setId(Integer i) {
 		this.id = i;
+		//paidDotation = paymentService.getPaymentForBudgetDotationSum(this.id);
 	}
 	public Integer getId() {
 		return this.id;
@@ -76,8 +89,39 @@ public class Budget {
 		return this.contributionInkind;
 	}
 
+	public void setPaidDotation(BigDecimal bd) {
+		this.paidDotation = bd;
+	}
+	public BigDecimal getPaidDotation() {
+		return this.paidDotation;
+	}
+
+	public void setPaidContributionOwn(BigDecimal bd) {
+		this.paidContributionOwn = bd;
+	}
+	public BigDecimal getPaidContributionOwn() {
+		return this.paidContributionOwn;
+	}
+
+	public void setPaidContributionPersonal(BigDecimal bd) {
+		this.paidContributionPersonal = bd;
+	}	
+	public BigDecimal getPaidContributionPersonal() {
+		return this.paidContributionPersonal;
+	}
+
+	public void setPaidContributionInkind(BigDecimal bd) {
+		this.paidContributionInkind = bd;
+	}
+	public BigDecimal getPaidContributionInkind() {
+		return this.paidContributionInkind;
+	}
+	
 	public BigDecimal getSum() {
 		return dotation.add(contributionOwn.add(contributionPersonal.add(contributionInkind)));
 	}
-
+	
+	public BigDecimal getPaidSum() {
+		return paidDotation.add(paidContributionOwn.add(paidContributionPersonal.add(paidContributionInkind)));
+	}
 }

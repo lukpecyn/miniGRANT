@@ -1,5 +1,6 @@
 package pl.lukpecyn.minigrant;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -12,7 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PaymentService {
+public class  PaymentService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(PaymentController.class);
 
@@ -116,4 +117,39 @@ public class PaymentService {
 		});
 	}
 
+	public BigDecimal getPaymentForBudgetDotationSum(long idBudget) {
+		String sql = "SELECT COALESCE(SUM(dotation),0) AS dotation_sum FROM payments WHERE budget_id=?";
+		return (BigDecimal)jdbcTemplate.queryForObject(sql, new Object[]{idBudget}, new RowMapper<BigDecimal>() {
+			public BigDecimal mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getBigDecimal("dotation_sum");
+			}
+		});
+	}
+
+	public BigDecimal getPaymentForBudgetContributionOwnSum(long idBudget) {
+		String sql = "SELECT COALESCE(SUM(contribution_own),0) AS contribution_own_sum FROM payments WHERE budget_id=?";
+		return (BigDecimal)jdbcTemplate.queryForObject(sql, new Object[]{idBudget}, new RowMapper<BigDecimal>() {
+			public BigDecimal mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getBigDecimal("contribution_own_sum");
+			}
+		});
+	}
+
+	public BigDecimal getPaymentForBudgetContributionPersonalSum(long idBudget) {
+		String sql = "SELECT COALESCE(SUM(contribution_personal),0) AS contribution_personal_sum FROM payments WHERE budget_id=?";
+		return (BigDecimal)jdbcTemplate.queryForObject(sql, new Object[]{idBudget}, new RowMapper<BigDecimal>() {
+			public BigDecimal mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getBigDecimal("contribution_personal_sum");
+			}
+		});
+	}
+	
+	public BigDecimal getPaymentForBudgetContributionInkindSum(long idBudget) {
+		String sql = "SELECT COALESCE(SUM(contribution_inkind),0) AS contribution_inkind_sum FROM payments WHERE budget_id=?";
+		return (BigDecimal)jdbcTemplate.queryForObject(sql, new Object[]{idBudget}, new RowMapper<BigDecimal>() {
+			public BigDecimal mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getBigDecimal("contribution_inkind_sum");
+			}
+		});
+	}
 }

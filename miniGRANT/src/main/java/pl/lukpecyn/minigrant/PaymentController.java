@@ -74,7 +74,8 @@ public class PaymentController {
 			payment.setDocument(document);
 			model.addAttribute("payment", payment);
 		}
-						
+
+		
 		Grant grant = grantService.getGrant(document.getIdGrant());
 		model.addAttribute("grant", grant);
 

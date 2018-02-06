@@ -10,12 +10,12 @@
 		<ul class="breadcrumb">
   			<li><a href="/">Granty</a></li>
   			<li><a href="/admin">Administracja</a></li>
-  			<li>Grantodawcy</li>
+  			<li>Beneficjenci</li>
   			<li class="active" th:text="${beneficiary.getName()}" />
 		</ul>		
 		<table class="table">
 			<p />
-			<a th:href="${beneficiary.getId()} + @{/beneficiary_form}" class="btn btn-primary" >Popraw grantodawcę</a>
+			<a th:href="${beneficiary.getId()} + @{/beneficiary_form}" class="btn btn-primary" >Popraw beneficjenta</a>
     		<thead>
     			<tr>
     				<th>Nazwa</th>

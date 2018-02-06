@@ -23,7 +23,7 @@ public class GrantService {
 	private BeneficiaryService beneficiaryService;
 
 	public int addGrant(Grant grant) {
-		String sql = "INSERT INTO grants(donor_id,beneficiary_id,name,description,date_begin,date_end,status) VALUES(?,?,?,?,?,?)";
+		String sql = "INSERT INTO grants(donor_id,beneficiary_id,name,description,date_begin,date_end,status) VALUES(?,?,?,?,?,?,?)";
 		return jdbcTemplate.update(sql,grant.getDonor().getId(),grant.getBeneficiary().getId(),grant.getName(),grant.getDescription(),grant.getDateBegin(),grant.getDateEnd(),grant.getStatus());
 	}
 	

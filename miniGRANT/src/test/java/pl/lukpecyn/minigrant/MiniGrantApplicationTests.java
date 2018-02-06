@@ -11,6 +11,7 @@ public class MiniGrantApplicationTests {
 
 	@Test
 	public void contextLoads() {
+	
 	}
 
 }

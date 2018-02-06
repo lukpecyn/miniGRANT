@@ -19,6 +19,7 @@ public class Payment {
 	
 	public Payment() {
 		this.id=-1;
+		dotation = new BigDecimal("0.00");
 		contributionOwn = new BigDecimal("0.00");
 		contributionPersonal = new BigDecimal("0.00");
 		contributionInkind = new BigDecimal("0.00");

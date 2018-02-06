@@ -49,7 +49,7 @@ public class MiniGrantController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@RequestMapping("/")
+	@RequestMapping({"/","/grant"})
 	public String grantList(Model model) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);

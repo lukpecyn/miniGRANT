@@ -18,6 +18,9 @@ public class BudgetService {
 	@Autowired
 	CostTypeService costTypeService;
 	
+	@Autowired
+	PaymentService paymentService;
+	
 	public int addBudget(Budget budget) {
 		String sql ="INSERT INTO budgets(grant_id,cost_type_id,description,dotation,contribution_own,contribution_personal,contribution_inkind) VALUES(?,?,?,?,?,?,?)";
 		return jdbcTemplate.update(sql,budget.getIdGrant(),budget.getCostType().getId(),budget.getDescription(),budget.getDotation(),budget.getContributionOwn(),budget.getContributionPersonal(),budget.getContributionInkind());
@@ -65,6 +68,11 @@ public class BudgetService {
 					b.setContributionOwn(rs.getBigDecimal("contribution_own"));
 					b.setContributionPersonal(rs.getBigDecimal("contribution_personal"));
 					b.setContributionInkind(rs.getBigDecimal("contribution_inkind"));
+					
+					b.setPaidDotation(paymentService.getPaymentForBudgetDotationSum(b.getId()));
+					b.setPaidContributionOwn(paymentService.getPaymentForBudgetContributionOwnSum(b.getId()));
+					b.setPaidContributionPersonal(paymentService.getPaymentForBudgetContributionPersonalSum(b.getId()));
+					b.setPaidContributionInkind(paymentService.getPaymentForBudgetContributionInkindSum(b.getId()));
 					return b;
 		      }
 		    });

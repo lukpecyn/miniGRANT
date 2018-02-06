@@ -49,9 +49,9 @@
     			</tr>
     		</thead>
     		<tbody>
-				<tr class="info">
-					<td th:text="${grant.getDateBegin()}" />
-					<td th:text="${grant.getDateEnd()}" />
+				<tr class="info text-info">
+					<td rowspan="3" th:text="${grant.getDateBegin()}" />
+					<td rowspan="3" th:text="${grant.getDateEnd()}" />
 					<!--td th:text="${grant.getStatusText()}" /-->
 					<td> <span th:each="grantStatus : ${grantStatusList}" th:if="${grantStatus.getId()==grant.getStatus()}" th:text="${grantStatus.getName()}" /></td>
 					<td th:text="${grant.getDotation().toString()}" align="right" />
@@ -60,21 +60,21 @@
 					<td th:text="${grant.getContributionInkind().toString()}" align="right" />
 					<td align="right"><strong th:text="${grant.getDotation().add(grant.getContributionOwn().add(grant.getContributionPersonal().add(grant.getContributionInkind()))).toString()}" /></td>
 				</tr>
-				<tr class="success">
-					<td colspan="3">Rozliczone</td>
+				<tr class="success text-success">
+					<td align="right">Rozliczone</td>
 					<td align="right" th:text="${dotationPaid}" />
 					<td align="right" th:text="${contributionOwnPaid}" />
 					<td align="right" th:text="${contributionPersonalPaid}" />
 					<td align="right" th:text="${contributionInkindPaid}" />
-					<td align="right" th:text="${dotationPaid.add(contributionOwnPaid.add(contributionPersonalPaid.add(contributionInkindPaid)))}" />
+					<td align="right"><strong th:text="${dotationPaid.add(contributionOwnPaid.add(contributionPersonalPaid.add(contributionInkindPaid)))}" /> </td>
 				</tr>    	
-				<tr class="danger">
-					<td colspan="3">Pozostało</td>
+				<tr class="danger text-danger">
+					<td align="right">Pozostało</td>
 					<td align="right" th:text="${grant.getDotation().subtract(dotationPaid)}" />
 					<td align="right" th:text="${grant.getContributionOwn().subtract(contributionOwnPaid)}" />
 					<td align="right" th:text="${grant.getContributionPersonal().subtract(contributionPersonalPaid)}" />
 					<td align="right" th:text="${grant.getContributionInkind().subtract(contributionInkindPaid)}" />
-					<td align="right" th:text="${grant.getSum().subtract(dotationPaid.add(contributionOwnPaid.add(contributionPersonalPaid.add(contributionInkindPaid))))}" />
+					<td align="right"><strong th:text="${grant.getSum().subtract(dotationPaid.add(contributionOwnPaid.add(contributionPersonalPaid.add(contributionInkindPaid))))}" /> </td>
 				</tr>    	
     		</tbody>    		
     	</table>
@@ -85,12 +85,10 @@
 				
 		<div class="tab-content">
 			<div id="estimates" class="tab-pane fade in active">
+				<p />
+				<a th:href="${grant.getId()} + @{/budget_form}" class="btn btn-primary" >Nowa pozycja</a>
 				<table class="table">
     				<thead>
-    					<tr>
-    						<td colspan="2"><a th:href="${grant.getId()} + @{/budget_form}" class="btn btn-primary" >Nowa pozycja</a></td>
-    						<td align="center" colspan="4"><strong>Planowane wydatki<br />(pozostało)</strong></td>
-    					</tr>
     					<tr>
     						<th width="20%"><nobr>Pozycja</nobr></th>
     						<th width="70%">Opis</th>
@@ -101,9 +99,9 @@
     						<th align="right">SUMA</th>
     					</tr>
     				</thead>
-    				<tbody>
-						<tr th:each="budget : ${budgetList}">
-							<td> <a th:href="${grant.getId()} + @{/budget/} + ${budget.getId()}" th:text="${budget.getCostType().getName()}"/> </td>
+    				<tbody th:each="budget : ${budgetList}">
+						<tr class="info text-info">
+							<td rowspan="2"> <a th:href="${grant.getId()} + @{/budget/} + ${budget.getId()}" th:text="${budget.getCostType().getName()}"/> </td>
 							<!--td> <a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}" /></td-->
 							<td th:text="${budget.getDescription()}" />
 							<td align="right" th:text="${budget.getDotation()}" />
@@ -112,6 +110,14 @@
 							<td align="right" th:text="${budget.getContributionInkind()}" />
 							<td align="right"> <strong th:text="${budget.getSum()}" /> </td>
 						</tr>    	
+						<tr class="danger text-danger">
+							<td align="right">Pozostało</td>
+							<td align="right" th:text="${budget.getDotation().subtract(budget.getPaidDotation())}" />
+							<td align="right" th:text="${budget.getContributionOwn().subtract(budget.getPaidContributionOwn())}" />
+							<td align="right" th:text="${budget.getContributionPersonal().subtract(budget.getPaidContributionPersonal())}" />
+							<td align="right" th:text="${budget.getContributionInkind().subtract(budget.getPaidContributionInkind())}" />
+							<td align="right"> <strong th:text="${budget.getSum().subtract(budget.getPaidSum())}" /> </td>
+						</tr>
     				</tbody>    				
     			</table>
     		</div>

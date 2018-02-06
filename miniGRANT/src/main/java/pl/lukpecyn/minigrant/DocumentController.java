@@ -86,7 +86,7 @@ public class DocumentController {
 			}else{
 				documentService.updateDocument(document);
 			}
-			return "redirect:/grant/"+document.getIdGrant() + "/document/" + document.getId();
+			return "redirect:/grant/"+document.getIdGrant();
 		}else{
 			return "redirect:/" + idGrant;
 		}

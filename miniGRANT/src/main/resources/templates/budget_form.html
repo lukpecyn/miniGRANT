@@ -34,25 +34,25 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="dotation">Dotacja</label>
 				<div class="col-sm-2">
-					<input th:field="*{dotation}" class="form-control" id="dotation" type="text" placeholder="kwota dotacji" required="required" pattern="^\d+(\.\d{1,2})?" />
+					<input th:field="*{dotation}" class="form-control" id="dotation" type="number" min="0.00" step="0.01" placeholder="kwota dotacji" required="required" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="contribution_own">Wkład własny</label>
 				<div class="col-sm-2">
-					<input th:field="*{contributionOwn}" class="form-control" id="contribution_own" type="text" placeholder="Kwota pokryta ze środków własnych" required="required" pattern="^\d+(\.\d{1,2})?" />
+					<input th:field="*{contributionOwn}" class="form-control" id="contribution_own" type="number" min="0.00" step="0.01" placeholder="Kwota pokryta ze środków własnych" required="required" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="contribution_personal">Wkład osobowy</label>
 				<div class="col-sm-2">
-					<input th:field="*{contributionPersonal}" class="form-control" id="contribution_personal" type="text" placeholder="Koszty wolontariatu, itp." required="required" pattern="^\d+(\.\d{1,2})?" />
+					<input th:field="*{contributionPersonal}" class="form-control" id="contribution_personal" type="number" min="0.00" step="0.01" placeholder="Koszty wolontariatu, itp." required="required" />
 				</div>
 			</div>
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="contribution_inkind">Wkład rzeczowy</label>
 				<div class="col-sm-2">
-					<input th:field="*{contributionInkind}" class="form-control" id="contribution_inkind" type="text" placeholder="Użyczony sprzęt" required="required" pattern="^\d+(\.\d{1,2})?" />
+					<input th:field="*{contributionInkind}" class="form-control" id="contribution_inkind" type="number" min="0.00" step="0.01" placeholder="Użyczony sprzęt" required="required" />
 				</div>
 			</div>
 			
