@@ -1,4 +1,4 @@
-package pl.lukpecyn.minigrant;
+package pl.lukpecyn.minigrant.controllers;
 
 import java.util.Map;
 

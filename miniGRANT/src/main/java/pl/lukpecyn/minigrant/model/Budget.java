@@ -1,4 +1,4 @@
-package pl.lukpecyn.minigrant;
+package pl.lukpecyn.minigrant.model;
 
 import java.math.BigDecimal;
 import java.util.List;
