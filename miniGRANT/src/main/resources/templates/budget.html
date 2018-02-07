@@ -26,6 +26,7 @@
     			<tr>
     				<th width="20%"><nobr>Pozycja</nobr></th>
     				<th width="70%">Opis</th>
+    				<th />
     				<th align="right">Dotacja</th>
     				<th align="right"><nobr>Wkład własny</nobr></th>
 					<th align="right"><nobr>Wkład osobowy</nobr></th>
@@ -35,8 +36,9 @@
     		</thead>
     		<tbody>
 				<tr class="info text-info">
-					<td th:text="${budget.getCostType().getName()}"/>
-					<td th:text="${budget.getDescription()}" />
+					<td rowspan="3" th:text="${budget.getCostType().getName()}"/>
+					<td rowspan="3" th:text="${budget.getDescription()}" />
+					<td>Planowane</td>
 					<td align="right" th:text="${budget.getDotation()}" />
 					<td align="right" th:text="${budget.getContributionOwn()}" />
 					<td align="right" th:text="${budget.getContributionPersonal()}" />
@@ -44,7 +46,7 @@
 					<td align="right"> <strong th:text="${budget.getSum()}" /> </td>
 				</tr>
 				<tr class="success text-success">
-					<td colspan="2">Rozliczone</td>
+					<td>Rozliczone</td>
 					<td align="right" th:text="${dotationPaid}" />
 					<td align="right" th:text="${contributionOwnPaid}" />
 					<td align="right" th:text="${contributionPersonalPaid}" />
@@ -52,7 +54,7 @@
 					<td align="right"><strong th:text="${dotationPaid.add(contributionOwnPaid.add(contributionPersonalPaid.add(contributionInkindPaid)))}" /> </td>
 				</tr>    	
 				<tr class="danger text-danger">
-					<td colspan="2">Pozostało</td>
+					<td>Pozostało</td>
 					<td align="right" th:text="${budget.getDotation().subtract(dotationPaid)}" />
 					<td align="right" th:text="${budget.getContributionOwn().subtract(contributionOwnPaid)}" />
 					<td align="right" th:text="${budget.getContributionPersonal().subtract(contributionPersonalPaid)}" />
@@ -74,14 +76,14 @@
 	<table class="table">
     		<thead>
     			<tr>
-    				<th>Nazwa</th>
+    				<th>Dokument</th>
     				<th width="90%">Opis</th>
 	    			<th align="right">Wartość</th>
 	   				<th align="right">Dotacja</th>
     				<th align="right"><nobr>Wkład własny</nobr></th>
 					<th align="right"><nobr>Wkład osobowy</nobr></th>
     				<th align="right"><nobr>Wkład rzeczowy</nobr></th>
-	    			<th align="right">Nierozliczone</th>
+	    			<th align="right">Pozostało</th>
 	    			<!--th>Akcje</th-->
     			</tr>
     		</thead>
