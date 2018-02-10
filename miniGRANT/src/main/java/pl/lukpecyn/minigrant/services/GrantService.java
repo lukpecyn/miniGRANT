@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import pl.lukpecyn.minigrant.model.Grant;
+import pl.lukpecyn.minigrant.models.Grant;
 
 @Service
 public class GrantService {

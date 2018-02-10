@@ -10,9 +10,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import pl.lukpecyn.minigrant.model.Beneficiary;
-import pl.lukpecyn.minigrant.model.CostType;
-import pl.lukpecyn.minigrant.model.Donor;
+import pl.lukpecyn.minigrant.models.Beneficiary;
+import pl.lukpecyn.minigrant.models.CostType;
+import pl.lukpecyn.minigrant.models.Donor;
 import pl.lukpecyn.minigrant.services.BeneficiaryService;
 import pl.lukpecyn.minigrant.services.CostTypeService;
 import pl.lukpecyn.minigrant.services.DonorService;

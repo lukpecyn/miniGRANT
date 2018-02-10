@@ -1,4 +1,4 @@
-package pl.lukpecyn.minigrant.model;
+package pl.lukpecyn.minigrant.models;
 
 public class GrantStatus {
 

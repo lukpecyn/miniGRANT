@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import pl.lukpecyn.minigrant.model.CostType;
+import pl.lukpecyn.minigrant.models.CostType;
 
 @Service
 public class CostTypeService {

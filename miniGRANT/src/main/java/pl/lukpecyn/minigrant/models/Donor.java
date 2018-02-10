@@ -1,16 +1,16 @@
-package pl.lukpecyn.minigrant.model;
+package pl.lukpecyn.minigrant.models;
 
 
-public class Beneficiary {
+public class Donor {
 
 	Integer id;
 	String name;
 	
-	public Beneficiary() {
+	public Donor() {
 		id=-1;
 	}
 	
-	public Beneficiary(Integer id, String name) {
+	public Donor(Integer id, String name) {
 		this.id = id;
 		this.name = name;
 	}

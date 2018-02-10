@@ -8,17 +8,27 @@ DROP TABLE IF EXISTS documents CASCADE;
 DROP TABLE IF EXISTS payments CASCADE;
 */
 
-CREATE TABLE IF NOT EXISTS donors(
-	id INTEGER IDENTITY PRIMARY KEY,
-	name VARCHAR_IGNORECASE(128) NOT NULL,
-);
-CREATE UNIQUE INDEX IF NOT EXISTS ix_donors_name ON donors(name);
-
 CREATE TABLE IF NOT EXISTS beneficiaries(
 	id INTEGER IDENTITY PRIMARY KEY,
 	name VARCHAR_IGNORECASE(128) NOT NULL,
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_beneficiaries_name ON beneficiaries(name);
+
+CREATE TABLE IF NOT EXISTS donors(
+	id INTEGER IDENTITY PRIMARY KEY,
+	name VARCHAR_IGNORECASE(128) NOT NULL,
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_donors_name ON donors(name);
+/*
+-- AKtualizacja struktury 'donors'
+IF NOT EXISTS (SELECT * FROM information_schema.system_columns WHERE table_name='donors' AND column_name='beneficiary_id')
+BEGIN
+	ALTER TABLE donors ADD beneficiary_id INTEGER;
+	ALTER TABLE donors ADD CONSTRAINT fk_donors_beneficiary FOREIGN KEY(beneficiary_id) REFERENCES beneficiaries(id);
+	DROP INDEX ix_donors_name ON donors;
+	CREATE UNIQUE INDEX IF NOT EXISTS ix_donors_name ON donors(name,beneficiary_id);
+END;
+*/
 
 CREATE TABLE IF NOT EXISTS grants(
 	id INTEGER IDENTITY PRIMARY KEY,

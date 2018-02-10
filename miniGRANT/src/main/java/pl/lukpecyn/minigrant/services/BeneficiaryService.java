@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
-import pl.lukpecyn.minigrant.model.Beneficiary;
+import pl.lukpecyn.minigrant.models.Beneficiary;
 
 @Service
 public class BeneficiaryService {

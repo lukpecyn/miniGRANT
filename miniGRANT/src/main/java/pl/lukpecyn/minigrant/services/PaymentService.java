@@ -13,7 +13,7 @@ import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
 
 import pl.lukpecyn.minigrant.controllers.PaymentController;
-import pl.lukpecyn.minigrant.model.Payment;
+import pl.lukpecyn.minigrant.models.Payment;
 
 @Service
 public class  PaymentService {

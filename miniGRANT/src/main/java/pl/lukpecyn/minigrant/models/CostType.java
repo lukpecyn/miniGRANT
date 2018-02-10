@@ -1,18 +1,12 @@
-package pl.lukpecyn.minigrant.model;
+package pl.lukpecyn.minigrant.models;
 
-
-public class Donor {
-
+public class CostType {
 	Integer id;
 	String name;
+	String description;
 	
-	public Donor() {
+	public CostType() {
 		id=-1;
-	}
-	
-	public Donor(Integer id, String name) {
-		this.id = id;
-		this.name = name;
 	}
 	
 	public void setId(Integer i) {
@@ -29,4 +23,10 @@ public class Donor {
 		return this.name;
 	}
 	
+	public void setDescription(String s) {
+		this.description =s;
+	}
+	public String getDescription() {
+		return this.description;
+	}
 }

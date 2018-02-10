@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import pl.lukpecyn.minigrant.model.Document;
-import pl.lukpecyn.minigrant.model.Grant;
-import pl.lukpecyn.minigrant.model.Payment;
+import pl.lukpecyn.minigrant.models.Document;
+import pl.lukpecyn.minigrant.models.Grant;
+import pl.lukpecyn.minigrant.models.Payment;
 import pl.lukpecyn.minigrant.services.BeneficiaryService;
 import pl.lukpecyn.minigrant.services.BudgetService;
 import pl.lukpecyn.minigrant.services.CostTypeService;
