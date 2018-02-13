@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.lukpecyn.minigrant.models.Budget;
+import pl.lukpecyn.minigrant.models.CostType;
 import pl.lukpecyn.minigrant.models.Document;
 import pl.lukpecyn.minigrant.models.Grant;
 import pl.lukpecyn.minigrant.models.Payment;
@@ -110,11 +111,50 @@ public class PaymentController {
 		if(payment!=null) {
 			Document document = documentService.getDocument(payment.getDocument().getId());
 			Grant grant = grantService.getGrant(document.getIdGrant());
+			Budget budget = budgetService.getBudget(payment.getBudget().getId());
 
-			if(payment.getId()>=0) {
-				paymentService.updatePayment(payment);
+			BigDecimal unpaidDotation = budget.getDotation().subtract(budget.getPaidDotation());
+			BigDecimal unpaidContributionOwn = budget.getContributionOwn().subtract(budget.getPaidContributionOwn());
+			BigDecimal unpaidContributionPersonal = budget.getContributionPersonal().subtract(budget.getPaidContributionPersonal());
+			BigDecimal unpaidContributionInkind = budget.getContributionInkind().subtract(budget.getPaidContributionInkind());
+			BigDecimal unpaidDocument = document.getValue()
+					.subtract(paymentService.getPaymentForDocumentDotationSum(document.getId())
+							.add(paymentService.getPaymentForDocumentContributionOwnSum(document.getId())
+									.add(paymentService.getPaymentForDocumentContributionPersonalSum(document.getId())
+											.add(paymentService.getPaymentForDocumentContributionInkindSum(document.getId())))));
+			if(idPayment!=null) {
+				payment.setBudget(budget);
+				unpaidDocument.add(payment.getSum());
+			}
+			model.addAttribute("payment", payment);
+
+			if((unpaidDotation.subtract(payment.getDotation()).signum()==-1) ||
+					(unpaidContributionOwn.subtract(payment.getContributionOwn()).signum()==-1) ||
+					(unpaidContributionPersonal.subtract(payment.getContributionPersonal()).signum()==-1) ||
+					(unpaidContributionInkind.subtract(payment.getContributionInkind()).signum()==-1) ||
+					(unpaidDocument.subtract(payment.getDotation().add(payment.getContributionOwn().add(payment.getContributionPersonal().add(payment.getContributionInkind())))).signum()==-1)) {
+				if(unpaidDotation.subtract(payment.getDotation()).signum()==-1) 
+					model.addAttribute("unpaidDotation", unpaidDotation);
+				if(unpaidContributionOwn.subtract(payment.getContributionOwn()).signum()==-1) 
+					model.addAttribute("unpaidContributionOwn", unpaidContributionOwn);
+				if(unpaidContributionPersonal.subtract(payment.getContributionPersonal()).signum()==-1)
+					model.addAttribute("unpaidContributionPersonal", unpaidContributionPersonal);
+				if(unpaidContributionInkind.subtract(payment.getContributionInkind()).signum()==-1)
+					model.addAttribute("unpaidContributionInkind", unpaidContributionInkind);
+				if(unpaidDocument.subtract(payment.getDotation().add(payment.getContributionOwn().add(payment.getContributionPersonal().add(payment.getContributionInkind())))).signum()==-1)
+					model.addAttribute("unpaidDocument", unpaidDocument);
+				model.addAttribute("document", document);
+				
+				model.addAttribute("grant", grant);
+				List<Budget> budgetList = budgetService.getBudgetForGrantList(grant.getId());
+				model.addAttribute("budgetList", budgetList);
+				return "payment_form";
 			} else {
-				paymentService.addPayment(payment);
+				if(payment.getId()>=0) {
+					paymentService.updatePayment(payment);
+				} else {
+					paymentService.addPayment(payment);
+				}
 			}
 		return "redirect:/grant/" + grant.getId() + "/document/" + document.getId();
 		}

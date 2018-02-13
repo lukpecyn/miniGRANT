@@ -11,7 +11,7 @@
   		<li><a href="/">Granty</a></li>
   		<li class="active" th:if="${grant.getId()>=0}"><span th:text="${grant.getName()}" /></li>
 	</ul>
-	<a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-primary" >Popraw grant</a>
+	<a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-warning" >Popraw grant</a>
 			
 		<table class="table">
 			<thead>

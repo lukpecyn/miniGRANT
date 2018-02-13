@@ -51,7 +51,7 @@ public class MiniGrantApplication {
 	@Scheduled(cron="0 0 0 * * *")
 	public void backupDB() {
 		Date date = Calendar.getInstance().getTime();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd.hhmmss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd.HHmmss");
 		String backupPath = "./backup/db_" + sdf.format(date) + ".tgz";
 		String sql = "BACKUP DATABASE TO '" + backupPath + "' BLOCKING";
 		jdbcTemplate.execute(sql);

@@ -26,29 +26,63 @@
 					</select>
 				</div>
 			</div>
-			<div class="form-group">
+			
+			<div th:if="${unpaidDocument!=null}" class="alert alert-danger">Kwota rozliczenia przekracza nierozliczoną wartość <u>dokumentu</u>: <strong th:text="${unpaidDocument}" /></div>
+
+			<div th:if="${unpaidDotation==null}" class="form-group has-success">
 				<label class="control-label col-sm-2" for="dotation">Dotacja</label>
 				<div class="col-sm-2">
 					<input th:field="*{dotation}" class="form-control" id="dotation" type="number" min="0.00" step="0.01" placeholder="kwota dotacji" required="required" />
 				</div>
 			</div>
-			<div class="form-group">
+			<div th:unless="${unpaidDotation==null}" class="form-group has-error">
+				<label class="control-label col-sm-2" for="dotation">Dotacja</label>
+				<div class="col-sm-2">
+					<input th:field="*{dotation}" class="form-control" id="dotation" type="number" min="0.00" step="0.01" placeholder="kwota dotacji" required="required" />
+				</div>
+				<div class="col-sm-7"> <span class="text-danger">Pozostało do rozliczenia według <u>kosztorysu</u>: <strong th:text="${unpaidDotation}" /></span></div>
+			</div>
+			
+			<div th:if="${unpaidContributionOwn==null}" class="form-group has-success">
 				<label class="control-label col-sm-2" for="contribution_own">Wkład własny</label>
 				<div class="col-sm-2">
 					<input th:field="*{contributionOwn}" class="form-control" id="contribution_own" type="number" min="0.00" step="0.01" placeholder="Kwota pokryta ze środków własnych" required="required" />
 				</div>
 			</div>
-			<div class="form-group">
+			<div th:unless="${unpaidContributionOwn==null}" class="form-group has-error">
+				<label class="control-label col-sm-2" for="contribution_own">Wkład własny</label>
+				<div class="col-sm-2">
+					<input th:field="*{contributionOwn}" class="form-control" id="contribution_own" type="number" min="0.00" step="0.01" placeholder="Kwota pokryta ze środków własnych" required="required" />
+				</div>
+				<div class="col-sm-7"><span class="text-danger">Pozostało do rozliczenia według <u>kosztorysu</u>: <strong th:text="${unpaidContributionOwn}" /></span></div>
+			</div>
+
+			<div th:if="${unpaidContributionPersonal==null}" class="form-group has-success">
 				<label class="control-label col-sm-2" for="contribution_personal">Wkład osobowy</label>
 				<div class="col-sm-2">
 					<input th:field="*{contributionPersonal}" class="form-control" id="contribution_personal" type="number" min="0.00" step="0.01" placeholder="Koszty wolontariatu, itp." required="required" />
 				</div>
 			</div>
-			<div class="form-group">
+			<div th:unless="${unpaidContributionPersonal==null}" class="form-group has-error">
+				<label class="control-label col-sm-2" for="contribution_personal">Wkład osobowy</label>
+				<div class="col-sm-2">
+					<input th:field="*{contributionPersonal}" class="form-control" id="contribution_personal" type="number" min="0.00" step="0.01" placeholder="Koszty wolontariatu, itp." required="required" />
+				</div>
+				<div class="col-sm-7"><span class="text-danger">Pozostało do rozliczenia według <u>kosztorysu</u>: <strong th:text="${unpaidContributionPersonal}" /></span></div>
+			</div>
+
+			<div th:if="${unpaidContributionInkind==null}" class="form-group has-success">
 				<label class="control-label col-sm-2" for="contribution_inkind">Wkład rzeczowy</label>
 				<div class="col-sm-2">
 					<input th:field="*{contributionInkind}" class="form-control" id="contribution_inkind" type="number" min="0.00" step="0.01" placeholder="Użyczony sprzęt" required="required" />
 				</div>
+			</div>
+			<div th:unless="${unpaidContributionInkind==null}" class="form-group has-error">
+				<label class="control-label col-sm-2" for="contribution_inkind">Wkład rzeczowy</label>
+				<div class="col-sm-2">
+					<input th:field="*{contributionInkind}" class="form-control" id="contribution_inkind" type="number" min="0.00" step="0.01" placeholder="Użyczony sprzęt" required="required" />
+				</div>
+				<div class="col-sm-7"><span class="text-danger">Pozostało do rozliczenia według <u>kosztorysu</u>: <strong th:text="${unpaidContributionInkind}" /></span></div>
 			</div>
 			
 			<div class="form-group">

@@ -95,6 +95,42 @@ public class  PaymentService {
 		});
 	}
 
+	public BigDecimal getPaymentForDocumentDotationSum(long idDocument) {
+		String sql = "SELECT COALESCE(SUM(dotation),0) AS dotation_sum FROM payments WHERE document_id=?";
+		return (BigDecimal)jdbcTemplate.queryForObject(sql, new Object[]{idDocument}, new RowMapper<BigDecimal>() {
+			public BigDecimal mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getBigDecimal("dotation_sum");
+			}
+		});
+	}
+
+	public BigDecimal getPaymentForDocumentContributionOwnSum(long idDocument) {
+		String sql = "SELECT COALESCE(SUM(contribution_own),0) AS contribution_own_sum FROM payments WHERE document_id=?";
+		return (BigDecimal)jdbcTemplate.queryForObject(sql, new Object[]{idDocument}, new RowMapper<BigDecimal>() {
+			public BigDecimal mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getBigDecimal("contribution_own_sum");
+			}
+		});
+	}
+
+	public BigDecimal getPaymentForDocumentContributionPersonalSum(long idDocument) {
+		String sql = "SELECT COALESCE(SUM(contribution_personal),0) AS contribution_personal_sum FROM payments WHERE document_id=?";
+		return (BigDecimal)jdbcTemplate.queryForObject(sql, new Object[]{idDocument}, new RowMapper<BigDecimal>() {
+			public BigDecimal mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getBigDecimal("contribution_personal_sum");
+			}
+		});
+	}
+	
+	public BigDecimal getPaymentForDocumentContributionInkindSum(long idDocument) {
+		String sql = "SELECT COALESCE(SUM(contribution_inkind),0) AS contribution_inkind_sum FROM payments WHERE document_id=?";
+		return (BigDecimal)jdbcTemplate.queryForObject(sql, new Object[]{idDocument}, new RowMapper<BigDecimal>() {
+			public BigDecimal mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getBigDecimal("contribution_inkind_sum");
+			}
+		});
+	}
+
 	public List<Payment> getPaymentForBudgetList(long idBudget) {
 		return jdbcTemplate.query("SELECT * FROM payments WHERE budget_id=? ", new Object[]{idBudget}, new RowMapper<Payment>(){
 		      public Payment mapRow(ResultSet rs, int arg1) throws SQLException {

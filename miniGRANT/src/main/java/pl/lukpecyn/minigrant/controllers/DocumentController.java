@@ -147,7 +147,7 @@ public class DocumentController {
 			model.addAttribute("grant", grant);
 			
 			if(paymentService.getPaymentForDocumentCount(document.getId())>0) {
-				model.addAttribute("message", "Nie można usunąć dokumentu!!! Najpierw usuń istniejące rozliczenia dla tego dokumentu z listy poniżej.");
+				model.addAttribute("message", "Nie można usunąć dokumentu!!! Najpierw wycofaj istniejące rozliczenia dla tego dokumentu z listy poniżej.");
 				
 				List<Payment> paymentList = paymentService.getPaymentForDocumentList(idDocument);
 				model.addAttribute("paymentList", paymentList);

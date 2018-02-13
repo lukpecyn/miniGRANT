@@ -103,6 +103,10 @@ public class BudgetController {
 			if(budget.getId()<0){
 				budgetService.addBudget(budget);
 			}else{
+				BigDecimal paidDotation = paymentService.getPaymentForBudgetDotationSum(budget.getId());
+				BigDecimal paidContributionOwn = paymentService.getPaymentForBudgetContributionOwnSum(budget.getId());
+				BigDecimal paidContributionPersonal = paymentService.getPaymentForBudgetContributionPersonalSum(budget.getId());
+				BigDecimal paidContributionInkind = paymentService.getPaymentForBudgetContributionInkindSum(budget.getId());
 				budgetService.updateBudget(budget);
 			}
 		}else{
