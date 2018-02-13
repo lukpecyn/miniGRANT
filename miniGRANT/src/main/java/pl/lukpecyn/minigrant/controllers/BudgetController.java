@@ -62,57 +62,72 @@ public class BudgetController {
 	@Autowired
 	PaymentService paymentService;	
 	
-	@GetMapping({"/grant/{idGrant}/budget_form","/grant/{idGrant}/budget/{idBudget}/budget_form"})
-	public String budgetFormGet(Grant grant, 
+	@GetMapping("/grant/{idGrant}/budget_form")
+	public String addBudgetFormGet(Grant grant, 
 			Budget budget, 
 			Model model, 
-			@PathVariable(value="idGrant", required=true) Integer idGrant, 
-			@PathVariable(value="idBudget", required=false) Integer idBudget) {
+			@PathVariable(value="idGrant", required=true) Integer idGrant) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
-		if(idBudget!=null){
-			budget = budgetService.getBudget(idBudget);
-			
-			if(budget.getId()!=null) {
-				grant = grantService.getGrant(budget.getIdGrant());
-			} else {
-				grant = grantService.getGrant(idGrant);
-
-			}
-		} else {
-			grant = grantService.getGrant(idGrant);
-		}
-					
+		grant = grantService.getGrant(idGrant);					
 		model.addAttribute("grant", grant);				
-		model.addAttribute("budget", budget);
-			
+
 		List<CostType> costTypeList = costTypeService.getCostTypeList();
 		model.addAttribute("costTypeList", costTypeList);
+		
 		return "budget_form";
 	}
-
-	@PostMapping({"/grant/{idGrant}/budget_form","/grant/{idGrant}/budget/{idBudget}/budget_form"})
-	public String budgetFormPost(Budget budget, 
-			Model model,
-			@PathVariable(value="idGrant", required=true) Integer idGrant) {
+	
+	@PostMapping("/grant/{idGrant}/budget_form")
+	public String addBudgetFormPost(Budget budget, Model model) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
 		if(budget.getId()!=null){
 			if(budget.getId()<0){
 				budgetService.addBudget(budget);
-			}else{
-				BigDecimal paidDotation = paymentService.getPaymentForBudgetDotationSum(budget.getId());
-				BigDecimal paidContributionOwn = paymentService.getPaymentForBudgetContributionOwnSum(budget.getId());
-				BigDecimal paidContributionPersonal = paymentService.getPaymentForBudgetContributionPersonalSum(budget.getId());
-				BigDecimal paidContributionInkind = paymentService.getPaymentForBudgetContributionInkindSum(budget.getId());
-				budgetService.updateBudget(budget);
 			}
 		}else{
 			return "redirect:/";
 		}
-		return "redirect:/grant/"+idGrant;
+		return "redirect:/grant/{idGrant}";
+	}
+
+	@GetMapping("/grant/{idGrant}/budget/{idBudget}/budget_form")
+	public String updateBudgetFormGet(Model model, 
+			@PathVariable(value="idGrant", required=true) Integer idGrant, 
+			@PathVariable(value="idBudget", required=true) Integer idBudget) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		Budget budget = budgetService.getBudget(idBudget);
+		model.addAttribute("budget", budget);
+
+		Grant grant = grantService.getGrant(budget.getIdGrant());
+		model.addAttribute("grant", grant);				
+			
+		List<CostType> costTypeList = costTypeService.getCostTypeList();
+		model.addAttribute("costTypeList", costTypeList);
+		return "budget_form";
+	}
+
+	@PostMapping("/grant/{idGrant}/budget/{idBudget}/budget_form")
+	public String updateBudgetFormPost(Budget budget, 
+			Model model) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+				
+		if(budget.getId()<0){
+			budgetService.addBudget(budget);
+		}else{
+			BigDecimal paidDotation = paymentService.getPaymentForBudgetDotationSum(budget.getId());
+			BigDecimal paidContributionOwn = paymentService.getPaymentForBudgetContributionOwnSum(budget.getId());
+			BigDecimal paidContributionPersonal = paymentService.getPaymentForBudgetContributionPersonalSum(budget.getId());
+			BigDecimal paidContributionInkind = paymentService.getPaymentForBudgetContributionInkindSum(budget.getId());
+			budgetService.updateBudget(budget);
+		}
+		return "redirect:/grant/{idGrant}";
 	}
 
 	@RequestMapping({"/grant/{idGrant}/budget/{idBudget}"})
@@ -190,15 +205,13 @@ public class BudgetController {
 				model.addAttribute("contributionPersonalPaid", contributionPersonalPaid);
 				model.addAttribute("contributionInkindPaid", contributionInkindPaid);
 
-				return "budget";
-				
+				return "budget";				
 				//return "redirect:/grant/" + idGrant + "/budget/" +idBudget;
 			} else {
 				budgetService.deleteBudget(idBudget);
 				return "redirect:/grant/" + idGrant;
 			}			
 		}
-		
 		return "redirect:/";
 	}
 }
