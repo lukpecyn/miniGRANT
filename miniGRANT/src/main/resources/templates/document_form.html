@@ -11,11 +11,12 @@
   			<li><a href="/">Granty</a></li>
   			<li th:if="${grant.getId()>=0}"><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/> </li>
   			<li>Dokumenty</li>
-  			<li class="active" th:if="${document.getId()>=0}" th:text="${document.getName()}"/>
+  			<li th:if="${document!=null}" th:text="${document.getName()}"/>
+  			<li class="active">Definicja dokumentu</li>
 		</ul>
 		<form class="form-horizontal" action="document_form" th:action="@{document_form}" th:object="${document}" method="post">
 			<input type="hidden" th:field="*{id}" />
-			<input type="hidden" th:field="*{idGrant}" th:value="${grant.getId()}"/>
+			<input type="hidden" th:field="*{idGrant}"/>
 			<!--div class="form-group">
 				<label class="control-label col-sm-2" for="status">Pozycja kosztorysu</label>
 				<div class="col-sm-4">

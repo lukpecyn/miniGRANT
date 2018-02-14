@@ -61,48 +61,65 @@ public class DocumentController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@GetMapping({"/grant/{idGrant}/document_form","/grant/{idGrant}/document/{idDocument}/document_form"})
-	public String documentFormGet(Document document, 
-			Model model, 
-			@PathVariable(value="idGrant", required=true) Integer idGrant, 
-			@PathVariable(value="idDocument", required=false) Integer idDocument) {
+	@GetMapping("/grant/{idGrant}/document_form")
+	public String addDocumentFormGet(Model model, @PathVariable(value="idGrant", required=true) Integer idGrant) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+
+		Grant grant = grantService.getGrant(idGrant);
+		model.addAttribute("grant", grant);
+		
+		Document document = new Document();
+		document.setIdGrant(idGrant);
+		model.addAttribute("document", document);
+		
+		return "document_form";
+	}
+
+	@PostMapping("/grant/{idGrant}/document_form")
+	public String addDocumentFormPost(Model model,Document document,@PathVariable(value="idGrant", required=true) Integer idGrant) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+				
+		if(document.getId()!=null){			
+			if((document.getId()<0) && (idGrant==document.getIdGrant())){
+				documentService.addDocument(document);
+				return "redirect:/grant/"+document.getIdGrant();
+			}
+		}
+		return "redirect:/grant/";	
+	}
+
+	@GetMapping("/grant/{idGrant}/document/{idDocument}/document_form")
+	public String updateDocumentFormGet(Model model, @PathVariable(value="idGrant", required=true) Integer idGrant, @PathVariable(value="idDocument", required=false) Integer idDocument) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
 		if(idDocument!=null){
-			document = documentService.getDocument(idDocument);
-			
-			Grant grant = grantService.getGrant(document.getIdGrant());
-			model.addAttribute("grant", grant);
-
-			if(document.getId()!=null) {
+			Document document = documentService.getDocument(idDocument);
+			if((document.getId()!=null) && (idGrant==document.getIdGrant())) {
+				Grant grant = grantService.getGrant(document.getIdGrant());
+				model.addAttribute("grant", grant);		
 				model.addAttribute("document", document);
+				return "document_form";
 			}
-		} else {
-			Grant grant = grantService.getGrant(idGrant);
-			model.addAttribute("grant", grant);			
 		}
-		return "document_form";
+		return "redirect:/grant";			
 	}
 
-	@PostMapping({"/grant/{idGrant}/document_form","/grant/{idGrant}/document/{idDocument}/document_form"})
-	public String documentFormPost(Document document, 
-			Model model,
-			@PathVariable(value="idGrant", required=true) Integer idGrant) {
+	@PostMapping("/grant/{idGrant}/document/{idDocument}/document_form")
+	public String updateDocumentFormPost(Model model, Document document, @PathVariable(value="idGrant", required=true) Integer idGrant, @PathVariable(value="idDocument", required=true) Integer idDocument) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
 		if(document.getId()!=null){
-			if(document.getId()<0){
-				documentService.addDocument(document);
-			}else{
+			if(idDocument==document.getId()){
+				//TODO: sprawdzanie czy kwota dokumentu nie jest niższa od sumy rozliczeń dla tego dokumentu
 				documentService.updateDocument(document);
+				return "redirect:/grant/"+document.getIdGrant();
 			}
-			return "redirect:/grant/"+document.getIdGrant();
-		}else{
-			return "redirect:/" + idGrant;
 		}
-		//return "redirect:/";
+		return "redirect:/grant";
 	}
 
 	@RequestMapping(value = "/grant/{idGrant}/document/{idDocument}")

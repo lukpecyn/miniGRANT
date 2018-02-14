@@ -59,16 +59,36 @@ public class CostTypeController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@GetMapping({"/admin/cost_type_form","/admin/cost_type/{idCostType}/cost_type_form"})
-	public String costTypeFormGet(CostType costType, 
-			Model model, 
-			@PathVariable(value="idCostType", required=false) Integer idCostType) {
+	@GetMapping("/admin/cost_type_form")
+	public String addCostTypeFormGet(Model model) {
+		
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		model.addAttribute("costType", new CostType());
+
+		return "cost_type_form";
+	}
+		
+	@PostMapping("/admin/cost_type_form")
+	public String addCostTypeFormPost(Model model, CostType costType) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+				
+		if(costType.getId()!=null)
+				costTypeService.addCostType(costType);
+
+		return "redirect:/admin";
+	}
+
+	@GetMapping("/admin/cost_type/{idCostType}/cost_type_form")
+	public String updateCostTypeFormGet(Model model, @PathVariable(value="idCostType", required=false) Integer idCostType) {
 		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
 		if(idCostType!=null){
-			costType = costTypeService.getCostType(idCostType);
+			CostType costType = costTypeService.getCostType(idCostType);
 			
 			if(costType.getId()!=null) {
 				model.addAttribute("costType", costType);
@@ -76,25 +96,17 @@ public class CostTypeController {
 		}
 		return "cost_type_form";
 	}
-		
 
-	@PostMapping({"/admin/cost_type_form","/admin/cost_type/{idCostType}/cost_type_form"})
-	public String costTypeFormPost(CostType costType, 
-			Model model, 
-			@PathVariable(value="idCostType", required=false) Integer idCostType) {
-		
+	@PostMapping("/admin/cost_type/{idCostType}/cost_type_form")
+	public String updateCostTypeFormPost(Model model, CostType costType, @PathVariable(value="idCostType", required=false) Integer idCostType) {		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
-		if(costType.getId()!=null) {
-			if(costType.getId()<0) {
-				costTypeService.addCostType(costType);
-			} else {
-				costTypeService.updateCostType(costType);
-			}
-		} else {
-			return "redirect:/admin";
-		}
+		if(idCostType == costType.getId())
+			costTypeService.updateCostType(costType);
+		else
+			return "redirect:/grant";
+		
 		return "redirect:/admin";
 	}
 

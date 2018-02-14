@@ -106,13 +106,16 @@ public class BeneficiaryController {
 	}
 
 	@PostMapping("/admin/beneficiary/{idBeneficiary}/beneficiary_form")
-	public String updateBeneficiaryFormPost(Model model, Beneficiary beneficiary) {
+	public String updateBeneficiaryFormPost(Model model, Beneficiary beneficiary, @PathVariable(value="idBeneficiary", required=true) long idBeneficiary) {
 		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
-		beneficiaryService.updateBeneficiary(beneficiary);
-
+		if(idBeneficiary==beneficiary.getId())
+			beneficiaryService.updateBeneficiary(beneficiary);
+		else 
+			return "redirect:/";
+		
 		return "redirect:/admin";
 	}
 
