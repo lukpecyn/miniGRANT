@@ -80,7 +80,7 @@ public class BudgetController {
 	}
 	
 	@PostMapping("/grant/{idGrant}/budget_form")
-	public String addBudgetFormPost(Budget budget, Model model) {
+	public String addBudgetFormPost(Model model, Budget budget) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
@@ -113,20 +113,16 @@ public class BudgetController {
 	}
 
 	@PostMapping("/grant/{idGrant}/budget/{idBudget}/budget_form")
-	public String updateBudgetFormPost(Budget budget, 
-			Model model) {
+	public String updateBudgetFormPost(Model model, Budget budget) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
-		if(budget.getId()<0){
-			budgetService.addBudget(budget);
-		}else{
-			BigDecimal paidDotation = paymentService.getPaymentForBudgetDotationSum(budget.getId());
-			BigDecimal paidContributionOwn = paymentService.getPaymentForBudgetContributionOwnSum(budget.getId());
-			BigDecimal paidContributionPersonal = paymentService.getPaymentForBudgetContributionPersonalSum(budget.getId());
-			BigDecimal paidContributionInkind = paymentService.getPaymentForBudgetContributionInkindSum(budget.getId());
-			budgetService.updateBudget(budget);
-		}
+		BigDecimal paidDotation = paymentService.getPaymentForBudgetDotationSum(budget.getId());
+		BigDecimal paidContributionOwn = paymentService.getPaymentForBudgetContributionOwnSum(budget.getId());
+		BigDecimal paidContributionPersonal = paymentService.getPaymentForBudgetContributionPersonalSum(budget.getId());
+		BigDecimal paidContributionInkind = paymentService.getPaymentForBudgetContributionInkindSum(budget.getId());
+		budgetService.updateBudget(budget);
+
 		return "redirect:/grant/{idGrant}";
 	}
 

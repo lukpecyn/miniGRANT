@@ -59,30 +59,20 @@ public class BeneficiaryController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@GetMapping({"/admin/beneficiary_form","/admin/beneficiary/{idBeneficiary}/beneficiary_form"})
-	public String beneficiaryFormGet(Beneficiary beneficiary, 
-			Model model, 
+	@GetMapping("/admin/beneficiary_form")
+	public String addBeneficiaryFormGet(Model model, 
 			@PathVariable(value="idBeneficiary", required=false) Integer idBeneficiary) {
 		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
-		if(idBeneficiary!=null){
-			beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
-			
-			if(beneficiary.getId()!=null) {
-				model.addAttribute("beneficiary", beneficiary);
-			}
-		}
+		model.addAttribute("beneficiary", new Beneficiary());
+		
 		return "beneficiary_form";
 	}
 		
-
-	@PostMapping({"/admin/beneficiary_form","/admin/beneficiary/{idBeneficiary}/beneficiary_form"})
-	public String beneficiaryFormPost(Beneficiary beneficiary, 
-			Model model, 
-			@PathVariable(value="idBeneficiary", required=false) Integer idBeneficiary) {
-		
+	@PostMapping("/admin/beneficiary_form")
+	public String addBeneficiaryFormPost(Model model, Beneficiary beneficiary) {		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
@@ -95,6 +85,34 @@ public class BeneficiaryController {
 		} else {
 			return "redirect:/admin";
 		}
+		return "redirect:/admin";
+	}
+
+	@GetMapping("/admin/beneficiary/{idBeneficiary}/beneficiary_form")
+	public String updateBeneficiaryFormGet(Model model, 
+			@PathVariable(value="idBeneficiary", required=false) Integer idBeneficiary) {
+		
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		if(idBeneficiary!=null){
+			Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+			
+			if(beneficiary.getId()!=null) {
+				model.addAttribute("beneficiary", beneficiary);
+			}
+		}
+		return "beneficiary_form";
+	}
+
+	@PostMapping("/admin/beneficiary/{idBeneficiary}/beneficiary_form")
+	public String updateBeneficiaryFormPost(Model model, Beneficiary beneficiary) {
+		
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		beneficiaryService.updateBeneficiary(beneficiary);
+
 		return "redirect:/admin";
 	}
 
