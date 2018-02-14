@@ -5,7 +5,7 @@
 
 	<groupId>pl.lukpecyn</groupId>
 	<artifactId>miniGRANT</artifactId>
-	<version>0.3.0.6</version>
+	<version>0.3.0.7</version>
 	<packaging>jar</packaging>
 
 	<name>miniGRANT</name>

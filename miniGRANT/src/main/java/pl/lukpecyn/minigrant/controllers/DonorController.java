@@ -59,29 +59,36 @@ public class DonorController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@GetMapping({"/admin/donor_form","/admin/donor/{idDonor}/donor_form"})
-	public String donorFormGet(Donor donor, 
-			Model model, 
-			@PathVariable(value="idDonor", required=false) Integer idDonor) {
+	@GetMapping("/admin/donor_form")
+	public String addDonorFormGet(Model model) {
+		
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		model.addAttribute("donor", new Donor());
+
+		return "donor_form";
+	}
+		
+	@GetMapping("/admin/donor/{idDonor}/donor_form")
+	public String updateDonorFormGet(Model model, @PathVariable(value="idDonor", required=false) Integer idDonor) {
 		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
 		if(idDonor!=null){
-			donor = donorService.getDonor(idDonor);
+			Donor donor = donorService.getDonor(idDonor);
 			
 			if(donor.getId()!=null) {
 				model.addAttribute("donor", donor);
+				return "donor_form";
 			}
 		}
-		return "donor_form";
+		return "redirect:/admin";
 	}
-		
 
-	@PostMapping({"/admin/donor_form","/admin/donor/{idDonor}/donor_form"})
-	public String donorFormPost(Donor donor, 
-			Model model, 
-			@PathVariable(value="idDonor", required=false) Integer idDonor) {
+	@PostMapping("/admin/donor_form")
+	public String addDonorFormPost(Model model, Donor donor) {
 		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
@@ -89,12 +96,21 @@ public class DonorController {
 		if(donor.getId()!=null) {
 			if(donor.getId()<0) {
 				donorService.addDonor(donor);
-			} else {
-				donorService.updateDonor(donor);
 			}
-		} else {
-			return "redirect:/admin";
 		}
+		return "redirect:/admin";
+	}
+
+	@PostMapping("/admin/donor/{idDonor}/donor_form")
+	public String updateDonorFormPost(Model model, Donor donor, @PathVariable(value="idDonor", required=true) Integer idDonor) {
+		
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+				
+		if(donor.getId()!=null)
+			if(donor.getId()==idDonor)
+				donorService.updateDonor(donor);
+
 		return "redirect:/admin";
 	}
 

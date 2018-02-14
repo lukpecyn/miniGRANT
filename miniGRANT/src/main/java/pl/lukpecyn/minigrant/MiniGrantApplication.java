@@ -52,7 +52,7 @@ public class MiniGrantApplication {
 	public void backupDB() {
 		Date date = Calendar.getInstance().getTime();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd.HHmmss");
-		String backupPath = "./backup/db_" + sdf.format(date) + ".tgz";
+		String backupPath = "./backup/db_" + sdf.format(date) + "_" + appVersion +".tgz";
 		String sql = "BACKUP DATABASE TO '" + backupPath + "' BLOCKING";
 		jdbcTemplate.execute(sql);
 	}
