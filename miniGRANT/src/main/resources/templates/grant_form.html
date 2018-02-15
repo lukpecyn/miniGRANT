@@ -12,7 +12,7 @@
   			<li th:if="${grant.getId()>=0}"><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/> </li>
   			<li class="active">Definicja grantu</li>
 		</ul>
-		<form class="form-horizontal" action="/grant_form" th:action="@{/grant_form}" th:object="${grant}" method="post">
+		<form class="form-horizontal" action="" th:object="${grant}" method="post">
 			<input type="hidden" th:field="*{id}" />
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="beneficiary">Beneficjent</label>
