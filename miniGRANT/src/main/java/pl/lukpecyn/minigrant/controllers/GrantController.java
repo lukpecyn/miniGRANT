@@ -62,8 +62,34 @@ public class GrantController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@GetMapping({"grant_form", "/grant/{idGrant}/grant_form"})
-	public String grantFormGet(Grant grant, Model model, @PathVariable(value="idGrant", required=false) Integer idGrant) {
+	@GetMapping("/grant/grant_form")
+	public String addGrantFormGet(Model model) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
+		model.addAttribute("beneficiaryList", beneficiaryService.getBeneficiaryList());
+		model.addAttribute("donorList", donorService.getDonorList());
+		model.addAttribute("grant", new Grant());
+		return "grant_form";
+	}
+	
+	@PostMapping("/grant/grant_form")
+	public String addGrantFormPost(Model model, Grant grant) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		if(grant.getName()!=null){
+			if(grant.getId()<0){
+				grant.setStatus(0);
+				grantService.addGrant(grant);
+			}
+		}
+		return "redirect:/grant";
+	}
+
+	@GetMapping("/grant/{idGrant}/grant_form")
+	public String updateGrantFormGet(Model model, @PathVariable(value="idGrant", required=true) Integer idGrant) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
@@ -72,31 +98,27 @@ public class GrantController {
 		model.addAttribute("donorList", donorService.getDonorList());
 		
 		if(idGrant!=null){
-			grant = grantService.getGrant(idGrant);
+			Grant grant = grantService.getGrant(idGrant);
+			if(grant.getName()!=null) {
+				model.addAttribute("grant", grant);
+				return "grant_form";
+			}
 		}
-		if(grant.getName()!=null) {
-			model.addAttribute("grant", grant);
-		}
-		//TODO: wybór z lity beneficjentów i grantodawców	
-		return "grant_form";
+		return "redirect:/grant";
 	}
 	
-	@PostMapping({"grant_form", "/grant/{idGrant}/grant_form"})
-	public String grantFormPost(Grant grant, Model model) {
+	@PostMapping("/grant/{idGrant}/grant_form")
+	public String updateGrantFormPost(Model model, Grant grant, @PathVariable(value="idGrant", required=true) Integer idGrant) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		if(grant.getName()!=null){
-			if(grant.getId()<0){
+			if(grant.getId()==idGrant){
 				grant.setStatus(0);
-				grantService.addGrant(grant);
-				return "redirect:/";
-			}else{
 				grantService.updateGrant(grant);
 				return "redirect:/grant/"+grant.getId();
 			}
-		}else{
-			return "redirect:/";
 		}
+		return "redirect:/";
 	}
 
 	@RequestMapping(value = "/grant/{idGrant}")

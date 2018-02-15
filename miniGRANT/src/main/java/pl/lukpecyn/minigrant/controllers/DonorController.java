@@ -70,6 +70,20 @@ public class DonorController {
 		return "donor_form";
 	}
 		
+	@PostMapping("/admin/donor_form")
+	public String addDonorFormPost(Model model, Donor donor) {
+		
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+				
+		if(donor.getId()!=null) {
+			if(donor.getId()<0) {
+				donorService.addDonor(donor);
+			}
+		}
+		return "redirect:/admin";
+	}
+
 	@GetMapping("/admin/donor/{idDonor}/donor_form")
 	public String updateDonorFormGet(Model model, @PathVariable(value="idDonor", required=false) Integer idDonor) {
 		
@@ -82,20 +96,6 @@ public class DonorController {
 			if(donor.getId()!=null) {
 				model.addAttribute("donor", donor);
 				return "donor_form";
-			}
-		}
-		return "redirect:/admin";
-	}
-
-	@PostMapping("/admin/donor_form")
-	public String addDonorFormPost(Model model, Donor donor) {
-		
-		model.addAttribute("appVersion", appVersion);
-		model.addAttribute("appName", appName);
-				
-		if(donor.getId()!=null) {
-			if(donor.getId()<0) {
-				donorService.addDonor(donor);
 			}
 		}
 		return "redirect:/admin";
