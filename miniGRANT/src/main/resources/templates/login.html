@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+	<head th:replace="fragments/header :: Head">
+    	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+    <style>
+		.jumbotron {
+    		background-color: #ffffff;
+		}
+	</style>
+    
+    <body>
+    	<div th:replace="fragments/header :: myHeader"> Header </div>
+        <div class="container">
+        	<div class="alert alert-danger" th:if="${param.error}">
+            	Błędna nazwa lub hasło użytkownika.
+        	</div>
+        	<div class="alert alert-success" th:if="${param.logout}">
+            	Zostałeś wylogowany.
+        	</div>
+        	<div class="alert alert-info" th:if="${information}" th:text="${information}" />
+        	
+        	<ul class="nav nav-tabs">
+  				<li class="active"><a data-toggle="tab" href="#login">Logowanie</a></li>
+  				<li><a data-toggle="tab" href="#registration">Rejestracja</a></li>
+			</ul>	
+        		
+        	<div class="jumbotron">
+        		<div class="tab-content">
+					<div id="login" class="tab-pane fade in active">
+	        			<form class="form-horizontal" th:action="@{/login}" method="post">
+    	    				<div class="form-group">
+	        	    			<label class="control-label col-sm-2" for="login">Nazwa użytkownika:</label>
+    	        				<div class="col-sm-10">
+        	    					<input type="text" class="form-control" id="login" name="username" required="required"/>
+            					</div>
+	            			</div>
+    	        			<div class="form-group">
+        	    				<label class="control-label col-sm-2" for="pwd">Hasło:</label>
+            					<div class="col-sm-10">
+	            					<input type="password" class="form-control" id="pwd" name="password" required="required"/>
+    	        				</div>
+	    	        		</div>
+    	    	    		<div class="form-group">
+    							<div class="col-sm-offset-2 col-sm-10">
+            						<button class="btn btn-success" type="submit" >Zaloguj</button>
+            					</div>
+	            			</div>     		
+		        		</form>
+	    	   		</div>
+		    		<div id="registration" class="tab-pane fade">
+	        			<form class="form-horizontal" th:action="@{/register}" th:object="${user}" method="post">
+	            			<div class="form-group">
+	        	    			<label class="control-label col-sm-2" for="fullname">Imię i nazwisko:</label>
+    	        				<div class="col-sm-10">
+        	    					<input th:field="*{fullname}" type="text" class="form-control" id="fullname" name="fullname" required="required"/>
+            					</div>
+	            			</div>
+    	    				<div class="form-group">
+	        	    			<label class="control-label col-sm-2" for="email">e-mail:</label>
+    	        				<div class="col-sm-10">
+        	    					<input th:field="*{email}" type="email" class="form-control" id="email" name="email" required="required"/>
+            					</div>
+	            			</div>
+    	    				<div class="form-group">
+	        	    			<label class="control-label col-sm-2" for="login">Nazwa użytkownika:</label>
+    	        				<div class="col-sm-10">
+        	    					<input th:field="*{username}" type="text" class="form-control" id="login" name="username" required="required"/>
+            					</div>
+	            			</div>
+    	        			<div class="form-group">
+        	    				<label class="control-label col-sm-2" for="pwd">Hasło:</label>
+            					<div class="col-sm-10">
+	            					<input th:field="*{password}" type="password" class="form-control" id="pwd" name="password" required="required" placeholder="Musi mieć długość co najmniej 8 znaków oraz zawierać duże i małe litery oraz cyfry" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"/>
+    	        				</div>
+	    	        		</div>
+    	        			<div class="form-group">
+        	    				<label class="control-label col-sm-2" for="pwd2">Powtórz hasło:</label>
+            					<div class="col-sm-10">
+	            					<input type="password" class="form-control" id="pwd2" name="pwd2" required="required" />
+    	        				</div>
+	    	        		</div>
+    	    	    		<div class="form-group">
+    							<div class="col-sm-offset-2 col-sm-10">
+            						<button class="btn btn-primary" type="submit" >Zarejestruj</button>
+            					</div>
+	            			</div>     		
+		        		</form>
+	        			
+        			</div>
+        		</div>
+        	</div>
+        </div>
+		<div th:replace="fragments/footer :: myFooter"> Footer </div>        
+    </body>
+</html>

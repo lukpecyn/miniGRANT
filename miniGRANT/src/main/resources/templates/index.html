@@ -7,27 +7,10 @@
 <body>
 	<div th:replace="fragments/header :: myHeader"> Header </div>
 	<div class="container">
-		<a href="/grant/grant_form" class="btn btn-primary" >Nowy grant</a>
-		<table class="table">
-    		<thead>
-    			<tr>
-	    			<th>Nazwa grantu</th>
-    				<th>Data początkowa</th>
-	    			<th>Data końcowa</th>
-    				<th>Status</th>
-    			</tr>
-    		</thead>
-    		<tbody>
-				<tr th:each="grant : ${grantList}">
-					<td> <a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}" /></td>
-					<!--td th:text="${grant.getName()}" /-->
-					<td th:text="${grant.getDateBegin()}" />
-					<td th:text="${grant.getDateEnd()}" />
-					<!--td th:text="${grant.getStatusText()}" /-->
-					<td> <span th:each="grantStatus : ${grantStatusList}" th:if="${grantStatus.getId()==grant.getStatus()}" th:text="${grantStatus.getName()}" /></td>
-				</tr>    	
-    		</tbody>
-    	</table>
+		<div class="jumbotron text-center">
+			<h1>Prosty System Zarządzania Grantami</h1>
+			<a class="btn btn-info" href="/grant"><big>Lista grantów</big></a>
+		</div>
 	</div>
 	<div th:replace="fragments/footer :: myFooter"> Footer </div>
 </body>

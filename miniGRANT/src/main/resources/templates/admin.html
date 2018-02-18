@@ -16,6 +16,7 @@
   			<li class="active"><a data-toggle="tab" href="#cost_types">Rodzaje kosztów</a></li>
   			<li><a data-toggle="tab" href="#donors">Grantodawcy</a></li>
   			<li><a data-toggle="tab" href="#beneficiaries">Beneficjenci</a></li>
+  			<li><a data-toggle="tab" href="#users">Użytkownicy</a></li>
 		</ul>	
 		<div class="tab-content">
 			<div id="cost_types" class="tab-pane fade in active">
@@ -64,6 +65,27 @@
     				<tbody>
 						<tr th:each="beneficiary : ${beneficiaryList}">
 							<td> <a th:href="@{/admin/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></td>
+						</tr>    	
+		    		</tbody>
+    			</table>
+    		</div>
+    		
+    		<div id="users" class="tab-pane fade">
+				<table class="table">
+    				<thead>
+    					<tr>
+			    			<th>Login</th>
+			    			<th>Imię i nazwisko</th>
+			    			<th>Adres e-mail</th>
+			    			<th>Potwierdzony</th>
+			    			<th>Aktywny</th> 
+    					</tr>
+		    		</thead>
+    				<tbody>
+						<tr th:each="user : ${userList}">
+							<td> <a th:href="@{/admin/user/} + ${user.getUsername()}" th:text="${user.getUsername()}" /></td>
+							<td th:text="${user.getFullname()}" />
+							<td th:text="${user.getEmail()}" />
 						</tr>    	
 		    		</tbody>
     			</table>

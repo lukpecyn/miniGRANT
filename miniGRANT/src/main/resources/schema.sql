@@ -1,3 +1,6 @@
+
+--DROP TABLE IF EXISTS authorities CASCADE;
+--DROP TABLE IF EXISTS users CASCADE;
 /*
 DROP TABLE IF EXISTS donors CASCADE;
 DROP TABLE IF EXISTS beneficiaries CASCADE;
@@ -7,6 +10,25 @@ DROP TABLE IF EXISTS budgets CASCADE;
 DROP TABLE IF EXISTS documents CASCADE;
 DROP TABLE IF EXISTS payments CASCADE;
 */
+
+CREATE TABLE IF NOT EXISTS users(
+	username varchar_ignorecase(50) NOT NULL PRIMARY KEY,
+	password varchar_ignorecase(50) NOT NULL,
+	fullname varchar(50) NOT NULL,
+	email varchar_ignorecase(50) NOT NULL,
+	guid UUID,
+	confirmed BOOLEAN DEFAULT FALSE NOT NULL,
+	enabled BOOLEAN DEFAULT FALSE NOT NULL
+);
+--CREATE UNIQUE INDEX IF NOT EXISTS ix_users_username ON users(username);
+
+CREATE TABLE IF NOT EXISTS authorities(
+	username varchar_ignorecase(50) NOT NULL,
+	authority varchar_ignorecase(50) not null,
+	CONSTRAINT fk_authorities_users FOREIGN KEY(username) REFERENCES users(username)
+);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_auth_username ON authorities (username,authority);
+
 
 CREATE TABLE IF NOT EXISTS beneficiaries(
 	id INTEGER IDENTITY PRIMARY KEY,

@@ -36,7 +36,7 @@ public class AdminController {
 	@Autowired
 	BeneficiaryService beneficiaryService;
 
-	@RequestMapping("/admin")
+	@RequestMapping("/grant/admin")
 	public String admin(Model model) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);

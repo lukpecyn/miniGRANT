@@ -25,7 +25,8 @@
 		<div class="container">
 			<div class="navbar-header">
 				<!--a class="navbar-brand" href="/"><span th:text="${appName}" /></a-->
-				<a class="navbar-brand" href="/"><strong>miniGRANT</strong></a>
+				<a class="navbar-brand" href="/"><strong>miniGRANT</strong></a> 
+				<span class="navbar-brand" > Prosty System Zarządzania Grantami</span>
 			</div>
 			<div id="navbar" class="navbar-collapse collapse">
 				<!--ul sec:authorize="isAuthenticated()" class="nav navbar-nav navbar-left">
@@ -43,13 +44,13 @@
                 		</ul>
               		</li>
               	</ul-->
-           		<!--a href="/admin" class="btn btn-success navbar-btn navbar-right" sec:authorize="hasRole('ROLE_ADMIN')">Administracja</a-->
-           		<a href="/admin" class="btn btn-success navbar-btn navbar-right" >Administracja</a>
+           		<a href="/grant/admin" class="btn btn-success navbar-btn navbar-right" sec:authorize="hasRole('ROLE_ADMIN')">Administracja</a>
+           		<!--a href="/grant/admin" class="btn btn-success navbar-btn navbar-right" sec:authorize="isAuthenticated()" >Administracja</a-->
               	<!-- Logout -->
-              	<!--form class="nav navbar-form navbar-right" sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">	
+              	<form class="nav navbar-form navbar-right" sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">	
         			<input class="btn btn-danger" type="submit" value="Wyloguj"/>
-        		</form-->
-        		<!--p class="navbar-text navbar-right" sec:authorize="isAuthenticated()" sec:authentication="name">Username 1</p-->
+        		</form>
+        		<p class="navbar-text navbar-right" sec:authorize="isAuthenticated()" sec:authentication="name">Username</p>
         		<p class="navbar-text navbar-right" sec:authorize="isAuthenticated()">
         			<strong sec:authorize="hasRole('ROLE_ADMIN')" th:text="${fullname}">Fullname</strong>
         			<span sec:authorize="!hasRole('ROLE_ADMIN')" th:text="${fullname}">Fullname</span>

@@ -25,3 +25,5 @@ nbdist/
 /db/
 /logs/
 /backup/
+/application.properties.txt
+/application.properties

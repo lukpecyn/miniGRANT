@@ -59,7 +59,8 @@ public class MiniGrantController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@RequestMapping({"/","/grant"})
+
+	@RequestMapping({"/", "/grant"})
 	public String grantList(Model model) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
@@ -68,6 +69,6 @@ public class MiniGrantController {
 		
 		List<Grant> grantList = grantService.getGrantsListByDateBegin();
 		model.addAttribute("grantList", grantList);
-		return "index";
+		return "grant_list";
 	}	
 }
