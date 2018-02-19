@@ -76,7 +76,7 @@ public class SecurityController {
 		model.addAttribute("user", new User());
 
 		if(userService.getCount()==0)
-			model.addAttribute("information", "UWAGA!!! Nie zarejestrowano jeszcze żadnych użytkowników! Pierwszy zarejestrowany użytkownik zostanie aktywowany od razu.");
+			model.addAttribute("infoMessage", "UWAGA!!! Nie zarejestrowano jeszcze żadnych użytkowników! Pierwszy zarejestrowany użytkownik zostanie aktywowany od razu.");
 		return "login";
 	}
 
@@ -94,18 +94,29 @@ public class SecurityController {
 			} else {
 				user.setEnabled(false);
 				role.setRole("ROLE_ADMIN");
-				model.addAttribute("information", "Na twój adres e-mail została wysłana wiadomość z linkiem do potwierdzenia rejestracji. "
-						+ " Po potwiedzeniu musisz jeszcze poczekać, aż administrator aktywuje twoje konto.");
 			}		
 			role.setUsername(user.getUsername());
 			user.setRole(role);
-			userService.addUser(user);
-			emailService.sendSimpleEmail(user.getEmail(), "Rejestracja w systemie " +appName, "Adres do aktywacji konta: " + appAddress + "/activation/" + user.getGuid().toString()+ "\n\nZ poważaniem\nAdministrator " +appName);
-		
-			model.addAttribute("user", new User());
+			if((userService.ChceckUsernameExists(user.getUsername())==0) && (userService.ChceckEmailExists(user.getEmail())==0)) {
+				userService.addUser(user);
+				emailService.sendSimpleEmail(user.getEmail(), "Rejestracja w systemie " +appName, "Adres do aktywacji konta: " + appAddress + "/activation/" + user.getGuid().toString()+ "\n\nZ poważaniem\nAdministrator " +appName);
+				String infoMessage = "Na twój adres e-mail została wysłana wiadomość z linkiem do potwierdzenia rejestracji.";
+				if(userService.getCount()>1)
+					infoMessage = infoMessage + " Po potwiedzeniu musisz jeszcze poczekać, aż administrator aktywuje twoje konto.";
+				model.addAttribute("infoMessage", infoMessage);
+				model.addAttribute("user", new User());
+			} else {
+				String errorMessage = "";
+				if(userService.ChceckUsernameExists(user.getUsername())>0)
+					errorMessage = "Nazwa użytkownika '" + user.getUsername() + "' jest już zajęta. ";
+				else if(userService.ChceckEmailExists(user.getEmail())>0)
+					errorMessage = "Adres e-mail '" + user.getEmail() + "' jest już zajęty. ";
+				model.addAttribute("errorMessage", errorMessage);
+				model.addAttribute("user", user);
+			}
 		} else {
+			model.addAttribute("errorMessage", "Hasła się nie zgadzają");
 			model.addAttribute("user", user);
-			model.addAttribute("information", "Hasła się nie zgadzają");
 		}
 		return "login";
 	}
@@ -117,7 +128,7 @@ public class SecurityController {
 			user.setConfirmed(true);
 			userService.updateUser(user);
 			model.addAttribute("user", new User());
-			model.addAttribute("information", "Adres e-mail został potwierdzony");
+			model.addAttribute("infoMessage", "Adres e-mail został potwierdzony. Konto oczekuje na aktywację przez administratora.");
 		} else {
 			return "redirect:/";
 		}

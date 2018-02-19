@@ -40,12 +40,11 @@ public class UserService {
 	}
 	
 	public List<User> getAllUser(){
-		return jdbcTemplate.query("SELECT users.username,users.password,users.fullname,users.fullname,users.email,users.guid,users.confirmed,users.enabled,authorities.authority FROM users LEFT JOIN authorities ON users.username=authorities.username", new RowMapper<User>(){
+		return jdbcTemplate.query("SELECT users.username,users.fullname,users.fullname,users.email,users.guid,users.confirmed,users.enabled,authorities.authority FROM users LEFT JOIN authorities ON users.username=authorities.username", new RowMapper<User>(){
 	      public User mapRow(ResultSet rs, int arg1) throws SQLException {
 	  		User u = new User();
 	        Role r = new Role();
 	        u.setUsername(rs.getString("username"));
-	        u.setPassword(rs.getString("password"));
 	        u.setFullname(rs.getString("fullname"));
 	        u.setEmail(rs.getString("email"));
 	        u.setGuid(UUID.fromString(rs.getString("guid")));
@@ -97,5 +96,13 @@ public class UserService {
 	public Integer getCount() {
 		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Integer.class);
 	}
-	
+
+	public Integer ChceckUsernameExists(String username) {
+		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users WHERE username=?", new Object[]{username}, Integer.class);
+	}
+
+	public Integer ChceckEmailExists(String email) {
+		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users WHERE email=?", new Object[]{email}, Integer.class);
+	}
+
 }

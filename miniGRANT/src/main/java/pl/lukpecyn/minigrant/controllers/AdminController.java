@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import pl.lukpecyn.minigrant.models.Beneficiary;
 import pl.lukpecyn.minigrant.models.CostType;
 import pl.lukpecyn.minigrant.models.Donor;
+import pl.lukpecyn.minigrant.models.User;
 import pl.lukpecyn.minigrant.services.BeneficiaryService;
 import pl.lukpecyn.minigrant.services.CostTypeService;
 import pl.lukpecyn.minigrant.services.DonorService;
+import pl.lukpecyn.minigrant.services.UserService;
 
 @Controller
 public class AdminController {
@@ -35,6 +37,9 @@ public class AdminController {
 
 	@Autowired
 	BeneficiaryService beneficiaryService;
+	
+	@Autowired
+	UserService userService;
 
 	@RequestMapping("/grant/admin")
 	public String admin(Model model) {
@@ -49,6 +54,9 @@ public class AdminController {
 
 		List<Beneficiary> beneficiaryList = beneficiaryService.getBeneficiaryList();
 		model.addAttribute("beneficiaryList", beneficiaryList);
+		
+		List<User> userList = userService.getAllUser();
+		model.addAttribute("userList", userList);
 		
 		return "admin";
 	}

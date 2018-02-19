@@ -20,7 +20,8 @@ CREATE TABLE IF NOT EXISTS users(
 	confirmed BOOLEAN DEFAULT FALSE NOT NULL,
 	enabled BOOLEAN DEFAULT FALSE NOT NULL
 );
---CREATE UNIQUE INDEX IF NOT EXISTS ix_users_username ON users(username);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_users_username ON users(username);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_users_email ON users(email);
 
 CREATE TABLE IF NOT EXISTS authorities(
 	username varchar_ignorecase(50) NOT NULL,

@@ -18,8 +18,8 @@
         	<div class="alert alert-success" th:if="${param.logout}">
             	Zostałeś wylogowany.
         	</div>
-        	<div class="alert alert-info" th:if="${information}" th:text="${information}" />
-        	
+        	<div class="alert alert-info" th:if="${infoMessage}" th:text="${infoMessage}" />
+        	<div class="alert alert-danger" th:if="${errorMessage}" th:text="${errorMessage}" />
         	<ul class="nav nav-tabs">
   				<li class="active"><a data-toggle="tab" href="#login">Logowanie</a></li>
   				<li><a data-toggle="tab" href="#registration">Rejestracja</a></li>
