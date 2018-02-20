@@ -44,7 +44,7 @@
                 		</ul>
               		</li>
               	</ul-->
-           		<a href="/grant/admin" class="btn btn-success navbar-btn navbar-right" sec:authorize="hasRole('ROLE_ADMIN')">Administracja</a>
+           		<a href="/admin" class="btn btn-success navbar-btn navbar-right" sec:authorize="hasRole('ROLE_ADMIN')">Administracja</a>
            		<!--a href="/grant/admin" class="btn btn-success navbar-btn navbar-right" sec:authorize="isAuthenticated()" >Administracja</a-->
               	<!-- Logout -->
               	<form class="nav navbar-form navbar-right" sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post">	

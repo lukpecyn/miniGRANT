@@ -16,7 +16,7 @@
   			<li class="active"><a data-toggle="tab" href="#cost_types">Rodzaje kosztów</a></li>
   			<li><a data-toggle="tab" href="#donors">Grantodawcy</a></li>
   			<li><a data-toggle="tab" href="#beneficiaries">Beneficjenci</a></li>
-  			<li><a data-toggle="tab" href="#users">Użytkownicy</a></li>
+  			<li sec:authorize="hasRole('ROLE_ADMIN')" ><a data-toggle="tab" href="#users">Użytkownicy</a></li>
 		</ul>	
 		<div class="tab-content">
 			<div id="cost_types" class="tab-pane fade in active">
@@ -70,26 +70,30 @@
     			</table>
     		</div>
     		
-    		<div id="users" class="tab-pane fade">
+    		<div id="users" class="tab-pane fade" sec:authorize="hasRole('ROLE_ADMIN')" >
 				<table class="table">
     				<thead>
     					<tr>
 			    			<th>Login</th>
 			    			<th>Imię i nazwisko</th>
 			    			<th>Adres e-mail</th>
-			    			<th>Potwierdzony</th>
-			    			<th>Aktywny</th> 
+			    			<th width="10%">Potwierdzony</th>
+			    			<th width="10%">Aktywny</th> 
+			    			<th width="5%">Akcja</th>
     					</tr>
 		    		</thead>
     				<tbody>
 						<tr th:each="user : ${userList}">
-							<td> <a th:href="@{/admin/user/} + ${user.getUsername()}" th:text="${user.getUsername()}" /></td>
+							<td th:text="${user.getUsername()}" />
 							<td th:text="${user.getFullname()}" />
 							<td th:text="${user.getEmail()}" />
-							<td width="10%" align="center" class="success text-success" th:if="${user.getConfirmed()}">TAK</td>
-							<td width="10%" align="center" class="danger text-danger" th:if="${!user.getConfirmed()}">NIE</td>
-							<td width="10%" align="center" class="success text-success" th:if="${user.getEnabled()}">TAK</td>
-							<td width="10%" align="center" class="danger text-danger" th:if="${!user.getEnabled()}">NIE</td>
+							<td  align="center" class="success text-success" th:if="${user.getConfirmed()}">TAK</td>
+							<td align="center" class="danger text-danger" th:if="${!user.getConfirmed()}">NIE</td>
+							<td align="center" class="success text-success" th:if="${user.getEnabled()}">TAK</td>
+							<td align="center" class="danger text-danger" th:if="${!user.getEnabled()}">NIE</td>
+							<td th:if="${user.getEnabled()} AND ${user.getConfirmed()}"><a class="btn btn-danger" th:href="@{/admin/user/} + ${user.getUsername()} + @{/disable}">Wyłącz</a></td>
+							<td th:if="${!user.getEnabled()} AND ${user.getConfirmed()}"><a class="btn btn-success" th:href="@{/admin/user/} + ${user.getUsername()} + @{/enable}">Włącz</a></td>
+							<td th:if="${!user.getConfirmed()}">E-mail niepotwierdzony</td>
 						</tr>    	
 		    		</tbody>
     			</table>

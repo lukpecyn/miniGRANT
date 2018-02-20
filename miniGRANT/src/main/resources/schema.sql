@@ -1,4 +1,3 @@
-
 --DROP TABLE IF EXISTS authorities CASCADE;
 --DROP TABLE IF EXISTS users CASCADE;
 /*
@@ -16,6 +15,7 @@ CREATE TABLE IF NOT EXISTS users(
 	password varchar_ignorecase(50) NOT NULL,
 	fullname varchar(50) NOT NULL,
 	email varchar_ignorecase(50) NOT NULL,
+	--registration_timestamp TIMESTAMP NOT NULL,
 	guid UUID,
 	confirmed BOOLEAN DEFAULT FALSE NOT NULL,
 	enabled BOOLEAN DEFAULT FALSE NOT NULL

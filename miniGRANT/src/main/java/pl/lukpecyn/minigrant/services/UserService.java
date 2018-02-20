@@ -38,6 +38,16 @@ public class UserService {
 		String sql_user = "UPDATE users SET password=?,fullname=?,email=?,guid=?,confirmed=?,enabled=? WHERE username=?";
 	    return jdbcTemplate.update(sql_user, user.getPassword(),user.getFullname(),user.getEmail(),user.getGuid(),user.getConfirmed(),user.getEnabled(),user.getUsername());
 	}
+
+	public int enableUser(String username) {
+		String sql_user = "UPDATE users SET enabled=true WHERE username=?";
+	    return jdbcTemplate.update(sql_user, username);
+	}
+	
+	public int disableUser(String username) {
+		String sql_user = "UPDATE users SET enabled=false WHERE username=?";
+	    return jdbcTemplate.update(sql_user, username);
+	}
 	
 	public List<User> getAllUser(){
 		return jdbcTemplate.query("SELECT users.username,users.fullname,users.fullname,users.email,users.guid,users.confirmed,users.enabled,authorities.authority FROM users LEFT JOIN authorities ON users.username=authorities.username", new RowMapper<User>(){

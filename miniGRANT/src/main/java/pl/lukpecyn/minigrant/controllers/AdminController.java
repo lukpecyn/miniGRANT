@@ -1,5 +1,6 @@
 package pl.lukpecyn.minigrant.controllers;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import pl.lukpecyn.minigrant.models.Beneficiary;
@@ -41,7 +43,7 @@ public class AdminController {
 	@Autowired
 	UserService userService;
 
-	@RequestMapping("/grant/admin")
+	@RequestMapping("/admin")
 	public String admin(Model model) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
@@ -61,4 +63,15 @@ public class AdminController {
 		return "admin";
 	}
 
+	@RequestMapping("/admin/user/{username}/enable")
+	public String enableUser(@PathVariable(value= "username", required=true) String username) {
+		userService.enableUser(username);
+		return "redirect:/admin";
+	}
+
+	@RequestMapping("/admin/user/{username}/disable")
+	public String disableUser(@PathVariable(value= "username", required=true) String username) {
+		userService.disableUser(username);
+		return "redirect:/admin";
+	}
 }

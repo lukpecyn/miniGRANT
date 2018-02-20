@@ -9,6 +9,7 @@ public class User {
 	String password;
 	String fullname;
 	String email;
+	//String registrationTimestamp;
 	UUID guid;
 	boolean confirmed;
 	boolean enabled;
