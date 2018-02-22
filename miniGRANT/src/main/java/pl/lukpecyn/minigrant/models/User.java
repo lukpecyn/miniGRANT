@@ -1,6 +1,8 @@
 package pl.lukpecyn.minigrant.models;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 public class User {
@@ -9,7 +11,7 @@ public class User {
 	String password;
 	String fullname;
 	String email;
-	//String registrationTimestamp;
+	Timestamp registrationTimestamp;
 	UUID guid;
 	boolean confirmed;
 	boolean enabled;
@@ -42,9 +44,15 @@ public class User {
     public String getEmail() {
         return this.email;
     }
-
     public void setEmail(String p) {
         this.email = p;
+    }
+
+    public Timestamp getRegistrationTimestamp() {
+        return this.registrationTimestamp;
+    }
+    public void setRegistrationTimestamp(Timestamp d) {
+        this.registrationTimestamp = d;
     }
 
     public void setGuid(UUID guid) {

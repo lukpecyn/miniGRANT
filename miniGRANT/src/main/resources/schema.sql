@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS users(
 	password varchar_ignorecase(50) NOT NULL,
 	fullname varchar(50) NOT NULL,
 	email varchar_ignorecase(50) NOT NULL,
-	--registration_timestamp TIMESTAMP NOT NULL,
+	registration_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	guid UUID,
 	confirmed BOOLEAN DEFAULT FALSE NOT NULL,
 	enabled BOOLEAN DEFAULT FALSE NOT NULL
@@ -26,7 +26,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS ix_users_email ON users(email);
 CREATE TABLE IF NOT EXISTS authorities(
 	username varchar_ignorecase(50) NOT NULL,
 	authority varchar_ignorecase(50) not null,
-	CONSTRAINT fk_authorities_users FOREIGN KEY(username) REFERENCES users(username)
+	CONSTRAINT fk_authorities_users FOREIGN KEY(username) REFERENCES users(username) ON DELETE CASCADE 
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_auth_username ON authorities (username,authority);
 

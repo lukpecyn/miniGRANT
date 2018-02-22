@@ -15,6 +15,8 @@ public class EmailService {
   
 	@Value("${spring.mail.from.email}")
 	public String from;
+	@Value("${app.name}")
+	public String appName;
 
 	private static final Logger logger = LoggerFactory.getLogger(EmailService.class);
 
@@ -27,7 +29,10 @@ public class EmailService {
         message.setTo(to); 
         message.setFrom(from);
         message.setSubject(subject); 
-        message.setText(content);
+        message.setText(content + "\n\n"
+        		+ "-----------------------------------\n"
+        		+ "Z poważaniem\n"
+        		+ "Administracja systemu " +appName);
         emailSender.send(message);
         logger.info("E-mail sent.");
 	}

@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import pl.lukpecyn.minigrant.controllers.SecurityController;
@@ -28,35 +29,56 @@ public class UserService {
 	
 	public int addUser(User user) {
 		String sql_user = "INSERT INTO users(username,password,fullname,email,guid,confirmed,enabled) VALUES(?,?,?,?,?,?,?)";
-	    jdbcTemplate.update(sql_user, user.getUsername(),user.getPassword(),user.getFullname(),user.getEmail(),user.getGuid(),user.getConfirmed(),user.getEnabled());
+	    Integer i = jdbcTemplate.update(sql_user, user.getUsername(),user.getPassword(),user.getFullname(),user.getEmail(),user.getGuid(),user.getConfirmed(),user.getEnabled());
 		
 	    String sql_role = "INSERT INTO authorities(username,authority) VALUES(?,?)";
-	    return jdbcTemplate.update(sql_role, user.getUsername(),user.getRole().getRole());
+	    jdbcTemplate.update(sql_role, user.getUsername(),user.getRole().getRole());
+	    
+		logger.info("Added new users: " + i.toString() + " (" + user.getUsername() + ")");
+	    return i;
 	}
 	
 	public int updateUser(User user) {
 		String sql_user = "UPDATE users SET password=?,fullname=?,email=?,guid=?,confirmed=?,enabled=? WHERE username=?";
-	    return jdbcTemplate.update(sql_user, user.getPassword(),user.getFullname(),user.getEmail(),user.getGuid(),user.getConfirmed(),user.getEnabled(),user.getUsername());
+	    Integer i = jdbcTemplate.update(sql_user, user.getPassword(),user.getFullname(),user.getEmail(),user.getGuid(),user.getConfirmed(),user.getEnabled(),user.getUsername());
+	    
+		logger.info("Updated users: " + i.toString() + " (" + user.getUsername() + ")");
+		return i;
+	}
+
+	public int deleteUser(String username) {
+		String sql_user = "DELETE FROM users WHERE username=?";
+	    Integer i = jdbcTemplate.update(sql_user, username);
+
+	    logger.info("Deleted users: " + i.toString() + " (" + username + ")");
+		return i;
 	}
 
 	public int enableUser(String username) {
 		String sql_user = "UPDATE users SET enabled=true WHERE username=?";
-	    return jdbcTemplate.update(sql_user, username);
+	    Integer i = jdbcTemplate.update(sql_user, username);
+	    
+	    logger.info("Enabled users: " + i.toString() + " (" + username + ")");
+		return i;
 	}
 	
 	public int disableUser(String username) {
 		String sql_user = "UPDATE users SET enabled=false WHERE username=?";
-	    return jdbcTemplate.update(sql_user, username);
+	    Integer i = jdbcTemplate.update(sql_user, username);
+	
+	    logger.info("Disabled users: " + i.toString() + " (" + username + ")");
+		return i;
 	}
 	
 	public List<User> getAllUser(){
-		return jdbcTemplate.query("SELECT users.username,users.fullname,users.fullname,users.email,users.guid,users.confirmed,users.enabled,authorities.authority FROM users LEFT JOIN authorities ON users.username=authorities.username", new RowMapper<User>(){
+		return jdbcTemplate.query("SELECT users.username,users.fullname,users.fullname,users.email,users.registration_timestamp,users.guid,users.confirmed,users.enabled,authorities.authority FROM users LEFT JOIN authorities ON users.username=authorities.username", new RowMapper<User>(){
 	      public User mapRow(ResultSet rs, int arg1) throws SQLException {
 	  		User u = new User();
 	        Role r = new Role();
 	        u.setUsername(rs.getString("username"));
 	        u.setFullname(rs.getString("fullname"));
 	        u.setEmail(rs.getString("email"));
+	        u.setRegistrationTimestamp(rs.getTimestamp("registration_timestamp"));
 	        u.setGuid(UUID.fromString(rs.getString("guid")));
 	        u.setConfirmed(rs.getBoolean("confirmed"));
 	        u.setEnabled(rs.getBoolean("enabled"));
@@ -77,6 +99,7 @@ public class UserService {
 		        u.setPassword(rs.getString("password"));
 		        u.setFullname(rs.getString("fullname"));
 		        u.setEmail(rs.getString("email"));
+		        u.setRegistrationTimestamp(rs.getTimestamp("registration_timestamp"));
 		        u.setGuid(UUID.fromString(rs.getString("guid")));
 		        u.setConfirmed(rs.getBoolean("confirmed"));
 		        u.setEnabled(rs.getBoolean("enabled"));
@@ -95,6 +118,7 @@ public class UserService {
 		        u.setPassword(rs.getString("password"));
 		        u.setFullname(rs.getString("fullname"));
 		        u.setEmail(rs.getString("email"));
+		        u.setRegistrationTimestamp(rs.getTimestamp("registration_timestamp"));
 		        u.setGuid(UUID.fromString(rs.getString("guid")));
 		        u.setConfirmed(rs.getBoolean("confirmed"));
 		        u.setEnabled(rs.getBoolean("enabled"));
@@ -115,4 +139,11 @@ public class UserService {
 		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users WHERE email=?", new Object[]{email}, Integer.class);
 	}
 
+	@Scheduled(fixedDelay=60000)
+	public Integer deleteUnconfirmedUsers() {
+		Integer i = jdbcTemplate.update("DELETE FROM users WHERE NOT confirmed AND registration_timestamp<DATEADD(DAY,-1,NOW())");
+		if(i>0)
+			logger.info("Deleted unconfirmed users: " + i.toString());
+		return i;
+	}
 }

@@ -29,7 +29,7 @@ public class SecurityController {
 	public String appVersion;
 	@Value("${app.name}")
 	public String appName;
-	@Value("${appAddress}")
+	@Value("${app.address}")
 	public String appAddress;
 
 	@Autowired
@@ -71,7 +71,7 @@ public class SecurityController {
 		List<User> userList = userService.getAllUser();
 		logger.info("User list size " + userList.size());
 		for(User user : userList) {
-			logger.info("User: " + user.getUsername() + ", confirmed: " + user.getConfirmed() + ", enabled: " + user.getEnabled() + ", guid: " + user.getGuid().toString());
+			logger.info("User: " + user.getUsername() + ", timestamp: " + user.getRegistrationTimestamp().toString() + ", confirmed: " + user.getConfirmed() + ", enabled: " + user.getEnabled() + ", guid: " + user.getGuid().toString());
 		}
 		model.addAttribute("user", new User());
 
@@ -99,7 +99,7 @@ public class SecurityController {
 			user.setRole(role);
 			if((userService.ChceckUsernameExists(user.getUsername())==0) && (userService.ChceckEmailExists(user.getEmail())==0)) {
 				userService.addUser(user);
-				emailService.sendSimpleEmail(user.getEmail(), "Rejestracja w systemie " +appName, "Adres do aktywacji konta: " + appAddress + "/activation/" + user.getGuid().toString()+ "\n\nZ poważaniem\nAdministrator " +appName);
+				emailService.sendSimpleEmail(user.getEmail(), "Rejestracja w systemie " +appName, "Adres do potwierdzenia konta: " + appAddress + "/activation/" + user.getGuid().toString()+ "\nBrak potwierdzenia w ciągu 24 godzin spowoduje usunięcie konta!");
 				String infoMessage = "Na twój adres e-mail została wysłana wiadomość z linkiem do potwierdzenia rejestracji.";
 				if(userService.getCount()>1)
 					infoMessage = infoMessage + " Po potwiedzeniu musisz jeszcze poczekać, aż administrator aktywuje twoje konto.";

@@ -19,6 +19,7 @@ import pl.lukpecyn.minigrant.models.User;
 import pl.lukpecyn.minigrant.services.BeneficiaryService;
 import pl.lukpecyn.minigrant.services.CostTypeService;
 import pl.lukpecyn.minigrant.services.DonorService;
+import pl.lukpecyn.minigrant.services.EmailService;
 import pl.lukpecyn.minigrant.services.UserService;
 
 @Controller
@@ -28,9 +29,14 @@ public class AdminController {
 	public String appVersion;
 	@Value("${app.name}")
 	public String appName;
+	@Value("${app.address}")
+	public String appAddress;
 
 	private static final Logger logger = LoggerFactory.getLogger(MiniGrantController.class);
 
+	@Autowired
+	EmailService emailService;
+	
 	@Autowired
 	CostTypeService costTypeService;
 
@@ -64,14 +70,16 @@ public class AdminController {
 	}
 
 	@RequestMapping("/admin/user/{username}/enable")
-	public String enableUser(@PathVariable(value= "username", required=true) String username) {
+	public String enableUser(@PathVariable(value= "username", required=true) String username) {		
 		userService.enableUser(username);
+		emailService.sendSimpleEmail(userService.getUser(username).getEmail(), "Informacja z systemu " +appName, "Twoje konto zostało włączone. Teraz możesz się zalogować wchodząc na stronę: " + appAddress);
 		return "redirect:/admin";
 	}
 
 	@RequestMapping("/admin/user/{username}/disable")
 	public String disableUser(@PathVariable(value= "username", required=true) String username) {
 		userService.disableUser(username);
+		emailService.sendSimpleEmail(userService.getUser(username).getEmail(), "Informacja z systemu " +appName, "Twoje konto zostało wyłączone.");
 		return "redirect:/admin";
 	}
 }
