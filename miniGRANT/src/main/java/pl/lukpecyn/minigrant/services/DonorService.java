@@ -18,13 +18,13 @@ public class DonorService {
 	JdbcTemplate jdbcTemplate;
 	
 	public int addDonor(Donor donor) {
-		String sql ="INSERT INTO donors(name) VALUES(?)";
-		return jdbcTemplate.update(sql,donor.getName());
+		String sql ="INSERT INTO donors(name,beneficiary_id) VALUES(?,?)";
+		return jdbcTemplate.update(sql,donor.getName(),donor.getIdBeneficiary());
 	}
 
 	public int updateDonor(Donor donor) {
-		String sql = "UPDATE donors SET name=? WHERE id=?";
-		return jdbcTemplate.update(sql,donor.getName(),donor.getId());
+		String sql = "UPDATE donors SET name=?,beneficiary_id=? WHERE id=?";
+		return jdbcTemplate.update(sql,donor.getName(),donor.getIdBeneficiary(),donor.getId());
 	}
 	
 	public int delDonor(Integer idDonor) {
@@ -37,16 +37,16 @@ public class DonorService {
 		String sql = "SELECT * FROM donors WHERE id=?";
 		return (Donor)jdbcTemplate.queryForObject(sql, new Object[]{idDonor}, new RowMapper<Donor>(){
 			public Donor mapRow(ResultSet rs, int arg1) throws SQLException {
-				Donor donor = new Donor(rs.getInt("id"), rs.getString("name"));
+				Donor donor = new Donor(rs.getInt("id"), rs.getString("name"),rs.getInt("beneficiary_id"));
 				return donor;
 			}
 		}); 		
 	}
 
-	public List<Donor> getDonorList() {
-		return jdbcTemplate.query("SELECT * FROM donors ORDER BY name", new RowMapper<Donor>(){
+	public List<Donor> getDonorList(long idBeneficiary) {
+		return jdbcTemplate.query("SELECT * FROM donors WHERE beneficiary_id=? ORDER BY name", new Object[]{idBeneficiary}, new RowMapper<Donor>(){
 			public Donor mapRow(ResultSet rs, int arg1) throws SQLException {
-				Donor donor = new Donor(rs.getInt("id"),rs.getString("name"));
+				Donor donor = new Donor(rs.getInt("id"),rs.getString("name"),rs.getInt("beneficiary_id"));
 				return donor;
 			}
 		}); 		

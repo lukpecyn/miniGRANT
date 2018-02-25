@@ -70,7 +70,7 @@ public class GrantController {
 		
 		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
 		model.addAttribute("beneficiaryList", beneficiaryService.getBeneficiaryList(principal.getName()));
-		model.addAttribute("donorList", donorService.getDonorList());
+		//model.addAttribute("donorList", donorService.getDonorList());
 		model.addAttribute("grant", new Grant());
 		return "grant_form";
 	}
@@ -96,7 +96,7 @@ public class GrantController {
 		
 		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
 		model.addAttribute("beneficiaryList", beneficiaryService.getBeneficiaryList(principal.getName()));
-		model.addAttribute("donorList", donorService.getDonorList());
+		//model.addAttribute("donorList", donorService.getDonorList());
 		
 		if(idGrant!=null){
 			Grant grant = grantService.getGrant(idGrant);

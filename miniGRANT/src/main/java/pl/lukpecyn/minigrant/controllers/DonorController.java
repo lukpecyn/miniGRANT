@@ -1,6 +1,7 @@
 package pl.lukpecyn.minigrant.controllers;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pl.lukpecyn.minigrant.models.Beneficiary;
 import pl.lukpecyn.minigrant.models.Donor;
 import pl.lukpecyn.minigrant.services.BeneficiaryService;
 import pl.lukpecyn.minigrant.services.BudgetService;
@@ -59,71 +61,94 @@ public class DonorController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@GetMapping("/admin/donor_form")
-	public String addDonorFormGet(Model model) {
+	@RequestMapping(value = "/beneficiary/{idBeneficiary}/donor/{idDonor}")
+	public String showDocument(Model model, Principal principal, 
+			@PathVariable(value="idBeneficiary", required=true) long idBeneficiary,
+			@PathVariable(value="idDonor", required=true) long idDonor) {
+
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		Donor donor = donorService.getDonor(idDonor);
+		if ((beneficiaryService.checkUser(beneficiary, principal.getName())>0) && (donor.getIdBeneficiary()==beneficiary.getId())) {
+			model.addAttribute("beneficiary", beneficiary);
+			model.addAttribute("donor", donor);
+			return "donor";
+		} else {
+			return "redirect:/";
+		}
+	}	
+
+	@GetMapping("/beneficiary/{idBeneficiary}/donor_form")
+	public String addDonorFormGet(Model model, Principal principal, @PathVariable(value="idBeneficiary", required=true) long idBeneficiary) {
 		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
-		model.addAttribute("donor", new Donor());
-
-		return "donor_form";
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		
+		if(beneficiaryService.checkUser(beneficiary, principal.getName())>0) {
+			model.addAttribute("beneficiary", beneficiary);
+			Donor donor = new Donor();
+			donor.setIdBeneficiary(beneficiary.getId());
+			model.addAttribute("donor", donor);
+			return "donor_form";
+	
+		} else {
+			return "redirect:/";
+		}
 	}
 		
-	@PostMapping("/admin/donor_form")
-	public String addDonorFormPost(Model model, Donor donor) {
+	@PostMapping("/beneficiary/{idBeneficiary}/donor_form")
+	public String addDonorFormPost(Model model, Principal principal, Donor donor, @PathVariable(value="idBeneficiary", required=true) long idBeneficiary) {
 		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
 		if(donor.getId()!=null) {
 			if(donor.getId()<0) {
-				donorService.addDonor(donor);
+				if((donor.getIdBeneficiary()==idBeneficiary) && (beneficiaryService.checkUser(beneficiaryService.getBeneficiary(idBeneficiary), principal.getName())>0)) {
+					donorService.addDonor(donor);
+				}
 			}
 		}
-		return "redirect:/admin";
+		return "redirect:/beneficiary/" + idBeneficiary;
 	}
 
-	@GetMapping("/admin/donor/{idDonor}/donor_form")
-	public String updateDonorFormGet(Model model, @PathVariable(value="idDonor", required=false) Integer idDonor) {
+	@GetMapping("/beneficiary/{idBeneficiary}/donor/{idDonor}/donor_form")
+	public String updateDonorFormGet(Model model, Principal principal, 
+			@PathVariable(value="idBeneficiary", required=true) long idBeneficiary,
+			@PathVariable(value="idDonor", required=true) Integer idDonor) {
 		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
-		if(idDonor!=null){
-			Donor donor = donorService.getDonor(idDonor);
-			
-			if(donor.getId()!=null) {
-				model.addAttribute("donor", donor);
-				return "donor_form";
-			}
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		Donor donor = donorService.getDonor(idDonor);
+		if((donor.getIdBeneficiary()==beneficiary.getId()) && (beneficiaryService.checkUser(beneficiaryService.getBeneficiary(idBeneficiary), principal.getName())>0)) {
+			model.addAttribute("beneficiary", beneficiary);
+			model.addAttribute("donor", donor);
+			return "donor_form";
+		} else {
+			return "redirect:/";
 		}
-		return "redirect:/admin";
 	}
 
-	@PostMapping("/admin/donor/{idDonor}/donor_form")
-	public String updateDonorFormPost(Model model, Donor donor, @PathVariable(value="idDonor", required=true) Integer idDonor) {
+	@PostMapping("/beneficiary/{idBeneficiary}/donor/{idDonor}/donor_form")
+	public String updateDonorFormPost(Model model, Donor donor, Principal principal, 
+			@PathVariable(value="idBeneficiary", required=true) long idBeneficiary,
+			@PathVariable(value="idDonor", required=true) Integer idDonor) {
 		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
-		if(donor.getId()!=null)
-			if(donor.getId()==idDonor)
-				donorService.updateDonor(donor);
-
-		return "redirect:/admin";
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		if((donor.getId()==idDonor) && (donor.getIdBeneficiary()==beneficiary.getId()) && (beneficiaryService.checkUser(beneficiaryService.getBeneficiary(idBeneficiary), principal.getName())>0)) {
+			donorService.updateDonor(donor);
+			return "redirect:/beneficiary/{idBeneficiary}";
+		} else {
+			return "redirect:/";
+		}
 	}
-
-	@RequestMapping(value = "/admin/donor/{idDonor}")
-	public String showDocument(Model model, 
-			@PathVariable(value="idDonor", required=true) long idDonor) {
-
-		model.addAttribute("appVersion", appVersion);
-		model.addAttribute("appName", appName);
-		
-		Donor donor = donorService.getDonor(idDonor);
-		model.addAttribute("donor", donor);
-
-		return "donor";
-	}	
 }

@@ -53,15 +53,6 @@ public class AdminController {
 	public String admin(Model model, Principal principal) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
-
-		List<CostType> costTypeList = costTypeService.getCostTypeList();
-		model.addAttribute("costTypeList", costTypeList);
-		
-		List<Donor> donorList = donorService.getDonorList();
-		model.addAttribute("donorList", donorList);
-
-		List<Beneficiary> beneficiaryList = beneficiaryService.getBeneficiaryList(principal.getName());
-		model.addAttribute("beneficiaryList", beneficiaryList);
 		
 		List<User> userList = userService.getAllUser();
 		model.addAttribute("userList", userList);

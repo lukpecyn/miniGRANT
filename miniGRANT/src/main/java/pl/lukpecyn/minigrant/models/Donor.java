@@ -5,14 +5,16 @@ public class Donor {
 
 	Integer id;
 	String name;
+	Integer idBeneficiary;
 	
 	public Donor() {
 		id=-1;
 	}
 	
-	public Donor(Integer id, String name) {
+	public Donor(Integer id, String name,Integer idBeneficiary) {
 		this.id = id;
 		this.name = name;
+		this.idBeneficiary = idBeneficiary;
 	}
 	
 	public void setId(Integer i) {
@@ -29,4 +31,10 @@ public class Donor {
 		return this.name;
 	}
 	
+	public void setIdBeneficiary(Integer i) {
+		this.idBeneficiary=i;
+	}
+	public Integer getIdBeneficiary() {
+		return this.idBeneficiary;
+	}
 }

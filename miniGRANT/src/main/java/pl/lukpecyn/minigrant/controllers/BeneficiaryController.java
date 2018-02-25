@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.lukpecyn.minigrant.models.Beneficiary;
+import pl.lukpecyn.minigrant.models.Donor;
 import pl.lukpecyn.minigrant.models.Grant;
 import pl.lukpecyn.minigrant.services.BeneficiaryService;
 import pl.lukpecyn.minigrant.services.BudgetService;
@@ -68,6 +69,24 @@ public class BeneficiaryController {
 		
 		model.addAttribute("beneficiaryList", beneficiaryService.getBeneficiaryList(principal.getName()));
 		return "beneficiary_list";
+	}	
+
+	@RequestMapping(value = "/beneficiary/{idBeneficiary}")
+	public String showDocument(Model model, Principal principal,
+			@PathVariable(value="idBeneficiary", required=true) long idBeneficiary) {
+
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		if(beneficiaryService.checkUser(beneficiary, principal.getName())>0) {
+			model.addAttribute("beneficiary", beneficiary);
+			model.addAttribute("donorList", donorService.getDonorList(idBeneficiary));
+			return "beneficiary";
+		} else {
+			return "redirect:/";
+		}
+		
 	}	
 
 	@GetMapping("/beneficiary/beneficiary_form")
@@ -131,18 +150,5 @@ public class BeneficiaryController {
 		
 		return "redirect:/beneficiary/" + idBeneficiary;
 	}
-
-	@RequestMapping(value = "/beneficiary/{idBeneficiary}")
-	public String showDocument(Model model, 
-			@PathVariable(value="idBeneficiary", required=true) long idBeneficiary) {
-
-		model.addAttribute("appVersion", appVersion);
-		model.addAttribute("appName", appName);
-		
-		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
-		model.addAttribute("beneficiary", beneficiary);
-
-		return "beneficiary";
-	}	
 }
 

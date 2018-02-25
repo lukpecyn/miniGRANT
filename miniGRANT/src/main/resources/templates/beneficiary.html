@@ -24,7 +24,7 @@
   			<li class="active"><a data-toggle="tab" href="#grants">Granty</a></li>
   			<li><a data-toggle="tab" href="#donors">Grantodawcy</a></li>
   			<li><a data-toggle="tab" href="#cost_types">Rodzaje kosztów</a></li>
-  			<li><a data-toggle="tab" href="#users">Użytkownicy</a></li>
+  			<li><a data-toggle="tab" href="#users">Współpracownicy</a></li>
 		</ul>	
 			
 		<div class="tab-content">
@@ -59,7 +59,7 @@
 		    		</thead>
     				<tbody>
 						<tr th:each="donor : ${donorList}">
-							<td> <a th:href="@{/admin/donor/} + ${donor.getId()}" th:text="${donor.getName()}" /></td>
+							<td> <a th:href="${beneficiary.getId()} + @{/donor/} + ${donor.getId()}" th:text="${donor.getName()}" /></td>
 						</tr>    	
 		    		</tbody>
     			</table>
@@ -89,6 +89,7 @@
 			    			<th>Adres e-mail</th>
 			    			<th width="10%">Potwierdzony</th>
 			    			<th width="10%">Aktywny</th> 
+			    			<th width="5%">Akcja</th>
     					</tr>
 		    		</thead>
     				<tbody>

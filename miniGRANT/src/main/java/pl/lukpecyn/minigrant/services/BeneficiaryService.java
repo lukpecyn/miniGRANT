@@ -67,4 +67,12 @@ public class BeneficiaryService {
 		String sql ="INSERT INTO bau(username,beneficiary_id) VALUES(?,?)";
 		return jdbcTemplate.update(sql,username,beneficiary.getId());
 	}
+	
+	public Integer checkUser(Beneficiary beneficiary, String username) {
+		return (Integer)jdbcTemplate.queryForObject("SELECT COUNT(*) AS count FROM bau WHERE username=? AND beneficiary_id=?", new Object[]{username,beneficiary.getId()}, new RowMapper<Integer>() {
+			public Integer mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getInt("count");
+			}
+		});
+	}
 }
