@@ -30,7 +30,8 @@ public class EmailService {
         message.setFrom(from);
         message.setSubject(subject); 
         message.setText(content + "\n\n"
-        		+ "-----------------------------------\n"
+        		+ "Prosimy nie odpowiadać na tą wiadomość.\n"
+        		+ "---------------------------------------\n"
         		+ "Z poważaniem\n"
         		+ "Administracja systemu " +appName);
         emailSender.send(message);

@@ -41,13 +41,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 */
 		http
 		.authorizeRequests()
-			.antMatchers("/register","/activation/**")
+			.antMatchers("/register","/activation/**","/confirmation/**")
 				//.authenticated();
 				.permitAll();
 
 		http
 		.authorizeRequests()
-			.antMatchers("/grant/**")
+			.antMatchers("/beneficiary/**")
 				.authenticated();
 
 		http
@@ -58,8 +58,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 		.authorizeRequests()
 			.antMatchers("/*")
-				.authenticated();
-				//.permitAll();
+				//.authenticated();
+				.permitAll();
 
 		http
 			.formLogin()

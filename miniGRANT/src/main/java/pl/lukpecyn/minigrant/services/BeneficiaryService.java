@@ -43,12 +43,28 @@ public class BeneficiaryService {
 		}); 		
 	}
 
-	public List<Beneficiary> getBeneficiaryList() {
-		return jdbcTemplate.query("SELECT * FROM beneficiaries ORDER BY name", new RowMapper<Beneficiary>(){
+	public Beneficiary getBeneficiaryByName(String beneficiaryName) {
+		String sql = "SELECT * FROM beneficiaries WHERE name=?";
+		return (Beneficiary)jdbcTemplate.queryForObject(sql, new Object[]{beneficiaryName}, new RowMapper<Beneficiary>(){
+			public Beneficiary mapRow(ResultSet rs, int arg1) throws SQLException {
+				Beneficiary beneficiary = new Beneficiary(rs.getInt("id"), rs.getString("name"));
+				return beneficiary;
+			}
+		}); 		
+	}
+
+	public List<Beneficiary> getBeneficiaryList(String username) {
+		//return jdbcTemplate.query("SELECT * FROM beneficiaries ORDER BY name", new RowMapper<Beneficiary>(){
+		return jdbcTemplate.query("SELECT beneficiaries.id, beneficiaries.name FROM bau LEFT JOIN beneficiaries ON bau.beneficiary_id=beneficiaries.id WHERE bau.username=? ORDER BY beneficiaries.name", new Object[]{username}, new RowMapper<Beneficiary>(){
 			public Beneficiary mapRow(ResultSet rs, int arg1) throws SQLException {
 				Beneficiary beneficiary = new Beneficiary(rs.getInt("id"),rs.getString("name"));
 				return beneficiary;
 			}
 		}); 		
+	}
+	
+	public int connectUser(Beneficiary beneficiary,String username) {
+		String sql ="INSERT INTO bau(username,beneficiary_id) VALUES(?,?)";
+		return jdbcTemplate.update(sql,username,beneficiary.getId());
 	}
 }

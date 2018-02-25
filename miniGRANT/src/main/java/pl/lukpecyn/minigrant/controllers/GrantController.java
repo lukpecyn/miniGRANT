@@ -1,6 +1,7 @@
 package pl.lukpecyn.minigrant.controllers;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -63,12 +64,12 @@ public class GrantController {
 	PaymentService paymentService;
 	
 	@GetMapping("/grant/grant_form")
-	public String addGrantFormGet(Model model) {
+	public String addGrantFormGet(Model model, Principal principal) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
 		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
-		model.addAttribute("beneficiaryList", beneficiaryService.getBeneficiaryList());
+		model.addAttribute("beneficiaryList", beneficiaryService.getBeneficiaryList(principal.getName()));
 		model.addAttribute("donorList", donorService.getDonorList());
 		model.addAttribute("grant", new Grant());
 		return "grant_form";
@@ -89,12 +90,12 @@ public class GrantController {
 	}
 
 	@GetMapping("/grant/{idGrant}/grant_form")
-	public String updateGrantFormGet(Model model, @PathVariable(value="idGrant", required=true) Integer idGrant) {
+	public String updateGrantFormGet(Model model, Principal principal, @PathVariable(value="idGrant", required=true) Integer idGrant) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
 		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
-		model.addAttribute("beneficiaryList", beneficiaryService.getBeneficiaryList());
+		model.addAttribute("beneficiaryList", beneficiaryService.getBeneficiaryList(principal.getName()));
 		model.addAttribute("donorList", donorService.getDonorList());
 		
 		if(idGrant!=null){

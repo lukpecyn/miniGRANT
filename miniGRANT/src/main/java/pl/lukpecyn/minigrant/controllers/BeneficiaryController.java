@@ -1,6 +1,7 @@
 package pl.lukpecyn.minigrant.controllers;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import pl.lukpecyn.minigrant.models.Beneficiary;
+import pl.lukpecyn.minigrant.models.Grant;
 import pl.lukpecyn.minigrant.services.BeneficiaryService;
 import pl.lukpecyn.minigrant.services.BudgetService;
 import pl.lukpecyn.minigrant.services.CostTypeService;
@@ -58,8 +60,17 @@ public class BeneficiaryController {
 
 	@Autowired
 	PaymentService paymentService;
-	
-	@GetMapping("/admin/beneficiary_form")
+
+	@RequestMapping("/beneficiary")
+	public String beneficiaryList(Model model,Principal principal) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		model.addAttribute("beneficiaryList", beneficiaryService.getBeneficiaryList(principal.getName()));
+		return "beneficiary_list";
+	}	
+
+	@GetMapping("/beneficiary/beneficiary_form")
 	public String addBeneficiaryFormGet(Model model, 
 			@PathVariable(value="idBeneficiary", required=false) Integer idBeneficiary) {
 		
@@ -71,24 +82,26 @@ public class BeneficiaryController {
 		return "beneficiary_form";
 	}
 		
-	@PostMapping("/admin/beneficiary_form")
-	public String addBeneficiaryFormPost(Model model, Beneficiary beneficiary) {		
+	@PostMapping("/beneficiary/beneficiary_form")
+	public String addBeneficiaryFormPost(Model model, Principal principal, Beneficiary beneficiary) {		
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
 		if(beneficiary.getId()!=null) {
 			if(beneficiary.getId()<0) {
 				beneficiaryService.addBeneficiary(beneficiary);
+				beneficiaryService.connectUser(beneficiaryService.getBeneficiaryByName(beneficiary.getName()), principal.getName());
+				
 			} else {
 				beneficiaryService.updateBeneficiary(beneficiary);
 			}
 		} else {
-			return "redirect:/admin";
+			return "redirect:/beneficiary";
 		}
-		return "redirect:/admin";
+		return "redirect:/beneficiary";
 	}
 
-	@GetMapping("/admin/beneficiary/{idBeneficiary}/beneficiary_form")
+	@GetMapping("/beneficiary/{idBeneficiary}/beneficiary_form")
 	public String updateBeneficiaryFormGet(Model model, 
 			@PathVariable(value="idBeneficiary", required=false) Integer idBeneficiary) {
 		
@@ -105,7 +118,7 @@ public class BeneficiaryController {
 		return "beneficiary_form";
 	}
 
-	@PostMapping("/admin/beneficiary/{idBeneficiary}/beneficiary_form")
+	@PostMapping("/beneficiary/{idBeneficiary}/beneficiary_form")
 	public String updateBeneficiaryFormPost(Model model, Beneficiary beneficiary, @PathVariable(value="idBeneficiary", required=true) long idBeneficiary) {
 		
 		model.addAttribute("appVersion", appVersion);
@@ -116,10 +129,10 @@ public class BeneficiaryController {
 		else 
 			return "redirect:/";
 		
-		return "redirect:/admin";
+		return "redirect:/beneficiary/" + idBeneficiary;
 	}
 
-	@RequestMapping(value = "/admin/beneficiary/{idBeneficiary}")
+	@RequestMapping(value = "/beneficiary/{idBeneficiary}")
 	public String showDocument(Model model, 
 			@PathVariable(value="idBeneficiary", required=true) long idBeneficiary) {
 
@@ -132,3 +145,4 @@ public class BeneficiaryController {
 		return "beneficiary";
 	}	
 }
+

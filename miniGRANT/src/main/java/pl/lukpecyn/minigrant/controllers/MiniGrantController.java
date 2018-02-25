@@ -1,6 +1,7 @@
 package pl.lukpecyn.minigrant.controllers;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -60,15 +61,14 @@ public class MiniGrantController {
 	PaymentService paymentService;
 	
 
-	@RequestMapping({"/", "/grant"})
-	public String grantList(Model model) {
+	@RequestMapping("/")
+	public String index(Model model, Principal principal) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
+		if (principal!=null)
+			return "redirect:/beneficiary";
+		else
+			return "index";
 		
-		model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
-		
-		List<Grant> grantList = grantService.getGrantsListByDateBegin();
-		model.addAttribute("grantList", grantList);
-		return "grant_list";
 	}	
 }

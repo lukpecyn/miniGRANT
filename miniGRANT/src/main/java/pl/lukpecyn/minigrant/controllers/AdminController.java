@@ -50,7 +50,7 @@ public class AdminController {
 	UserService userService;
 
 	@RequestMapping("/admin")
-	public String admin(Model model) {
+	public String admin(Model model, Principal principal) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 
@@ -60,7 +60,7 @@ public class AdminController {
 		List<Donor> donorList = donorService.getDonorList();
 		model.addAttribute("donorList", donorList);
 
-		List<Beneficiary> beneficiaryList = beneficiaryService.getBeneficiaryList();
+		List<Beneficiary> beneficiaryList = beneficiaryService.getBeneficiaryList(principal.getName());
 		model.addAttribute("beneficiaryList", beneficiaryList);
 		
 		List<User> userList = userService.getAllUser();

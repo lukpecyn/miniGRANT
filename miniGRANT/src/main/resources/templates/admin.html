@@ -8,69 +8,15 @@
 	<div th:replace="fragments/header :: myHeader"> Header </div>
 	<div class="container">
 		<ul class="breadcrumb">
-  			<li><a href="/">Granty</a></li>
+  			<li><a href="/">miniGRANT</a></li>
   			<li class="active">Administracja</li>
 		</ul>		
 		
 		<ul class="nav nav-tabs">
-  			<li class="active"><a data-toggle="tab" href="#cost_types">Rodzaje kosztów</a></li>
-  			<li><a data-toggle="tab" href="#donors">Grantodawcy</a></li>
-  			<li><a data-toggle="tab" href="#beneficiaries">Beneficjenci</a></li>
-  			<li sec:authorize="hasRole('ROLE_ADMIN')" ><a data-toggle="tab" href="#users">Użytkownicy</a></li>
+  			<li sec:authorize="hasRole('ROLE_ADMIN')" class="active"><a data-toggle="tab" href="#users">Użytkownicy</a></li>
 		</ul>	
 		<div class="tab-content">
-			<div id="cost_types" class="tab-pane fade in active">
-				<p />
-				<a th:href="@{/admin/cost_type_form}" class="btn btn-primary" >Nowy rodzaj kosztów</a>
-				<table class="table">
-    				<thead>
-    					<tr>
-			    			<th>Rodzaj kosztów</th>
-    						<th width="70%">Opis</th>
-    					</tr>
-		    		</thead>
-    				<tbody>
-						<tr th:each="costType : ${costTypeList}">
-							<td> <a th:href="@{/admin/cost_type/} + ${costType.getId()}" th:text="${costType.getName()}" /></td>
-							<td th:text="${costType.getDescription()}" />
-						</tr>    	
-		    		</tbody>
-    			</table>
-    		</div>
-    		<div id="donors" class="tab-pane fade">
-    			<p />
-    			<a th:href="@{/admin/donor_form}" class="btn btn-primary" >Nowy grantodawca</a>
-				<table class="table">
-    				<thead>
-    					<tr>
-			    			<th>Nazwa grantodawcy</th>
-    					</tr>
-		    		</thead>
-    				<tbody>
-						<tr th:each="donor : ${donorList}">
-							<td> <a th:href="@{/admin/donor/} + ${donor.getId()}" th:text="${donor.getName()}" /></td>
-						</tr>    	
-		    		</tbody>
-    			</table>
-    		</div>
-    		<div id="beneficiaries" class="tab-pane fade">
-    			<p />
-    			<a th:href="@{/admin/beneficiary_form}" class="btn btn-primary" >Nowy beneficjent</a>
-				<table class="table">
-    				<thead>
-    					<tr>
-			    			<th>Nazwa beneficjenta</th>
-    					</tr>
-		    		</thead>
-    				<tbody>
-						<tr th:each="beneficiary : ${beneficiaryList}">
-							<td> <a th:href="@{/admin/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></td>
-						</tr>    	
-		    		</tbody>
-    			</table>
-    		</div>
-    		
-    		<div id="users" class="tab-pane fade" sec:authorize="hasRole('ROLE_ADMIN')" >
+    		<div id="users" class="tab-pane fade in active" sec:authorize="hasRole('ROLE_ADMIN')" >
 				<table class="table">
     				<thead>
     					<tr>

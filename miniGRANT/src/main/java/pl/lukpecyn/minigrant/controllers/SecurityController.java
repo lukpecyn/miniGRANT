@@ -99,10 +99,10 @@ public class SecurityController {
 			user.setRole(role);
 			if((userService.ChceckUsernameExists(user.getUsername())==0) && (userService.ChceckEmailExists(user.getEmail())==0)) {
 				userService.addUser(user);
-				emailService.sendSimpleEmail(user.getEmail(), "Rejestracja w systemie " +appName, "Adres do potwierdzenia konta: " + appAddress + "/activation/" + user.getGuid().toString()+ "\nBrak potwierdzenia w ciągu 24 godzin spowoduje usunięcie konta!");
+				emailService.sendSimpleEmail(user.getEmail(), "Rejestracja w systemie " +appName, "Adres do potwierdzenia konta: " + appAddress + "/activation/" + user.getGuid().toString()+ " \nBrak potwierdzenia w ciągu 24 godzin spowoduje usunięcie konta!");
 				String infoMessage = "Na twój adres e-mail została wysłana wiadomość z linkiem do potwierdzenia rejestracji.";
 				if(userService.getCount()>1)
-					infoMessage = infoMessage + " Po potwiedzeniu musisz jeszcze poczekać, aż administrator aktywuje twoje konto.";
+					infoMessage = infoMessage + " Po potwierdzeniu musisz jeszcze poczekać, aż administrator aktywuje twoje konto.";
 				model.addAttribute("infoMessage", infoMessage);
 				model.addAttribute("user", new User());
 			} else {

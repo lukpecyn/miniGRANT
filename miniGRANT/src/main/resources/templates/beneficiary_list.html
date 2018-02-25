@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head th:replace="fragments/header :: Head">
+    <title>miniGRANT</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<div th:replace="fragments/header :: myHeader"> Header </div>
+	<div class="container">
+		<ul class="breadcrumb">
+  			<li><a href="/">miniGRANT</a></li>
+  			<li class="active">Beneficjenci</li>
+		</ul>		
+		
+		<a th:href="@{/beneficiary/beneficiary_form}" class="btn btn-success" >Nowy beneficjent</a>
+		<table class="table">
+			<thead>
+				<tr>
+	    			<th>Nazwa beneficjenta</th>
+					</tr>
+			</thead>
+    		<tbody>
+				<tr th:each="beneficiary : ${beneficiaryList}">
+					<td> <a th:href="@{/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></td>
+				</tr>    	
+		    </tbody>
+    	</table>
+	</div>
+	<div th:replace="fragments/footer :: myFooter"> Footer </div>
+</body>
+</html>
