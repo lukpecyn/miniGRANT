@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS grants(
 	CONSTRAINT fk_grants_donor FOREIGN KEY(donor_id) REFERENCES donors(id),
 	CONSTRAINT fk_grants_beneficiary FOREIGN KEY(beneficiary_id) REFERENCES beneficiaries(id),
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ix_grants_date_begin_name ON grants(date_begin, date_end, name);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_grants_date_begin_name_beneficiary ON grants(date_begin, date_end, name, beneficiary_id);
 
 CREATE TABLE IF NOT EXISTS cost_types (
 	id INTEGER IDENTITY PRIMARY KEY,

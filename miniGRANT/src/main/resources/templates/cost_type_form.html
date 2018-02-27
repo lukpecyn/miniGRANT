@@ -12,7 +12,7 @@
   			<li><a href="/beneficiary">Beneficjenci</a></li>
   			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></li>
   			<li>Rodzaje kosztów</li>
-  			<li th:if="${costType.getId()>=0}"><a th:href="@{/admin/cost_type/} + ${costType.getId()}" th:text="${costType.getName()}"/> </li>
+  			<li th:if="${costType.getId()>=0}"><a th:href="@{/beneficiary/} + ${beneficiary.getId()} + @{/cost_type/} + ${costType.getId()}" th:text="${costType.getName()}"/> </li>
   			<li class="active">Definicja rodzaju kosztu</li>
 		</ul>
 		<form class="form-horizontal" th:action="@{cost_type_form}" th:object="${costType}" method="post">

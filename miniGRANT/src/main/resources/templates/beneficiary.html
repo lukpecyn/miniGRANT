@@ -15,7 +15,7 @@
 		
 		<p>
 			<a th:href="${beneficiary.getId()} + @{/beneficiary_form}" class="btn btn-warning" >Popraw beneficjenta</a>
-			<a th:href="${beneficiary.getId()} + @{/grant_form}" class="btn btn-success" >Nowy grant</a>
+			<a th:href="${beneficiary.getId()} + @{/grant_form}" th:if="${donorList.size()>0} AND ${costTypeList.size()>0}" class="btn btn-success" ><strong>Nowy grant</strong></a>
 			<a th:href="${beneficiary.getId()} + @{/donor_form}" class="btn btn-success" >Nowy grantodawca</a>
 			<a th:href="${beneficiary.getId()} + @{/cost_type_form}" class="btn btn-success" >Nowy rodzaj kosztu</a>
 			<a th:href="${beneficiary.getId()} + @{/user_list}" class="btn btn-warning" >Dołącz współpracownika</a>
@@ -29,7 +29,9 @@
 			
 		<div class="tab-content">
 			<div id="grants" class="tab-pane fade in active">
-				<table class="table">
+				<p th:unless="${donorList.size()>0}" />
+				<div th:unless="${donorList.size()>0}" class="alert alert-danger">Najpierw musisz dodać conajmniej jednego <u>grantodawcę</u>!</div> 
+				<table th:if="${donorList.size()>0}" class="table">
     				<thead>
     					<tr>
 	    					<th>Nazwa grantu</th>
@@ -40,7 +42,7 @@
     				</thead>
     				<tbody>
 						<tr th:each="grant : ${grantList}">
-							<td> <a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}" /></td>
+							<td> <a th:href="${beneficiary.getId()} + @{/grant/} + ${grant.getId()}" th:text="${grant.getName()}" /></td>
 							<!--td th:text="${grant.getName()}" /-->
 							<td th:text="${grant.getDateBegin()}" />
 							<td th:text="${grant.getDateEnd()}" />
@@ -49,6 +51,7 @@
 						</tr>    	
     				</tbody>
     			</table>
+    			
 			</div>
     		<div id="donors" class="tab-pane fade">
 				<table class="table">

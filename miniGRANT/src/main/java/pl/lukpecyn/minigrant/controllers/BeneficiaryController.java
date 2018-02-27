@@ -73,7 +73,7 @@ public class BeneficiaryController {
 
 	@RequestMapping(value = "/beneficiary/{idBeneficiary}")
 	public String showDocument(Model model, Principal principal,
-			@PathVariable(value="idBeneficiary", required=true) long idBeneficiary) {
+			@PathVariable(value="idBeneficiary", required=true)Integer idBeneficiary) {
 
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
@@ -81,6 +81,8 @@ public class BeneficiaryController {
 		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
 		if(beneficiaryService.checkUser(beneficiary, principal.getName())>0) {
 			model.addAttribute("beneficiary", beneficiary);
+			model.addAttribute("grantList", grantService.getGrantsListByDateBeginDesc(idBeneficiary));
+			model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
 			model.addAttribute("donorList", donorService.getDonorList(idBeneficiary));
 			model.addAttribute("costTypeList", costTypeService.getCostTypeList(idBeneficiary));
 			return "beneficiary";

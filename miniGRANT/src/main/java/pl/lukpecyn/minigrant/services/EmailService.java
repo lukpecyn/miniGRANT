@@ -30,8 +30,8 @@ public class EmailService {
         message.setFrom(from);
         message.setSubject(subject); 
         message.setText(content + "\n\n"
-        		+ "Prosimy nie odpowiadać na tą wiadomość.\n"
-        		+ "---------------------------------------\n"
+        		+ "Wiadomość wygenerowana automatycznie, prosimy na nią nie odpowiadać.\n"
+        		+ "--------------------------------------------------------------------	\n"
         		+ "Z poważaniem\n"
         		+ "Administracja systemu " +appName);
         emailSender.send(message);

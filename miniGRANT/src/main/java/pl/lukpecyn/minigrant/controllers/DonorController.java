@@ -101,8 +101,8 @@ public class DonorController {
 	}
 		
 	@PostMapping("/beneficiary/{idBeneficiary}/donor_form")
-	public String addDonorFormPost(Model model, Principal principal, Donor donor, @PathVariable(value="idBeneficiary", required=true) long idBeneficiary) {
-		
+	public String addDonorFormPost(Model model, Principal principal, Donor donor, 
+			@PathVariable(value="idBeneficiary", required=true) long idBeneficiary) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				

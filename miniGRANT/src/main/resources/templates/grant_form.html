@@ -8,20 +8,16 @@
 	<div th:replace="fragments/header :: myHeader"> Test </div>
 	<div class="container">
 		 <ul class="breadcrumb">
-  			<li><a href="/">Granty</a></li>
-  			<li th:if="${grant.getId()>=0}"><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/> </li>
+  			<li><a href="/">miniGRANT</a></li>
+  			<li><a href="/beneficiary">Beneficjenci</a></li>
+  			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></li>
+  			<li>Granty</li>
+			<li th:if="${grant.getId()>=0}"><a th:href="@{/beneficiary/} + ${beneficiary.getId()} + @{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/></li>
   			<li class="active">Definicja grantu</li>
 		</ul>
-		<form class="form-horizontal" action="" th:object="${grant}" method="post">
+		<form class="form-horizontal" th:action="@{grant_form}" th:object="${grant}" method="post">
 			<input type="hidden" th:field="*{id}" />
-			<div class="form-group">
-				<label class="control-label col-sm-2" for="beneficiary">Beneficjent</label>
-				<div class="col-sm-10">
-					<select th:field="*{beneficiary.id}" class="form-control" id="beneficiary">
-						<option th:each="beneficiary : ${beneficiaryList}" th:value="${beneficiary.getId()}" th:text="${beneficiary.getName()}" />
-					</select>
-				</div>
-			</div>
+			<input type="hidden" th:field="*{idBeneficiary}" />
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="donor">Grantodawca</label>
 				<div class="col-sm-10">

@@ -6,7 +6,7 @@ public class Grant {
 
 	private Integer id;
 	private String name;
-	private Beneficiary beneficiary;
+	private Integer idBeneficiary;
 	private Donor donor;
 	private String dateBegin;
 	private String dateEnd;
@@ -35,11 +35,11 @@ public class Grant {
 		return this.name;
 	}
 
-	public void setBeneficiary(Beneficiary beneficiary) {
-		this.beneficiary = beneficiary;
+	public void setIdBeneficiary(Integer idBeneficiary) {
+		this.idBeneficiary = idBeneficiary;
 	}
-	public Beneficiary getBeneficiary() {
-		return this.beneficiary;
+	public Integer getIdBeneficiary() {
+		return this.idBeneficiary;
 	}
 	
 	public void setDonor(Donor donor) {

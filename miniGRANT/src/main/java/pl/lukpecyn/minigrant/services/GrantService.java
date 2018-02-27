@@ -26,12 +26,12 @@ public class GrantService {
 
 	public int addGrant(Grant grant) {
 		String sql = "INSERT INTO grants(donor_id,beneficiary_id,name,description,date_begin,date_end,status) VALUES(?,?,?,?,?,?,?)";
-		return jdbcTemplate.update(sql,grant.getDonor().getId(),grant.getBeneficiary().getId(),grant.getName(),grant.getDescription(),grant.getDateBegin(),grant.getDateEnd(),grant.getStatus());
+		return jdbcTemplate.update(sql,grant.getDonor().getId(),grant.getIdBeneficiary(),grant.getName(),grant.getDescription(),grant.getDateBegin(),grant.getDateEnd(),grant.getStatus());
 	}
 	
 	public int updateGrant(Grant grant) {
 		String sql = "UPDATE grants SET donor_id=?, beneficiary_id=?, name=?, description=?, date_begin=?,date_end=?,status=? WHERE id=?";
-		return jdbcTemplate.update(sql,grant.getDonor().getId(),grant.getBeneficiary().getId(),grant.getName(), grant.getDescription(), grant.getDateBegin(),grant.getDateEnd(),grant.getStatus(),grant.getId());
+		return jdbcTemplate.update(sql,grant.getDonor().getId(),grant.getIdBeneficiary(),grant.getName(), grant.getDescription(), grant.getDateBegin(),grant.getDateEnd(),grant.getStatus(),grant.getId());
 	}
 	
 	public int delGrant(Integer id) {
@@ -46,7 +46,7 @@ public class GrantService {
 				Grant g = new Grant();
 				g.setId(rs.getInt("id"));
 				g.setDonor(donorService.getDonor(rs.getInt("donor_id")));
-				g.setBeneficiary(beneficiaryService.getBeneficiary(rs.getInt("beneficiary_id")));
+				g.setIdBeneficiary(rs.getInt("beneficiary_id"));
 				g.setName(rs.getString("name"));
 				g.setDescription(rs.getString("description"));
 				g.setDateBegin(rs.getString("date_begin"));
@@ -61,13 +61,14 @@ public class GrantService {
 		}); 		
 	}
 	
-	public List<Grant> getGrantsListByDateBegin() {
-		return jdbcTemplate.query("SELECT * FROM grants ORDER BY date_begin DESC,name", new RowMapper<Grant>(){
+	public List<Grant> getGrantsListByDateBeginDesc(Integer idBeneficiary) {
+		String sql = "SELECT * FROM grants WHERE beneficiary_id=? ORDER BY date_begin DESC,name";
+		return jdbcTemplate.query(sql, new Object[]{idBeneficiary}, new RowMapper<Grant>(){
 		      public Grant mapRow(ResultSet rs, int arg1) throws SQLException {
 		        Grant g = new Grant();
 		        g.setId(rs.getInt("id"));
 				g.setDonor(donorService.getDonor(rs.getInt("donor_id")));
-				g.setBeneficiary(beneficiaryService.getBeneficiary(rs.getInt("beneficiary_id")));
+				g.setIdBeneficiary(rs.getInt("beneficiary_id"));
 		        g.setName(rs.getString("name"));
 				g.setDescription(rs.getString("description"));
 		        g.setDateBegin(rs.getString("date_begin"));
@@ -78,13 +79,14 @@ public class GrantService {
 		    });
 	}
 	
-	public List<Grant> getGrantsListByName() {
-		return jdbcTemplate.query("SELECT * FROM grants ORDER BY name", new RowMapper<Grant>(){
+	public List<Grant> getGrantsListByName(Integer idBeneficiary) {
+		String sql = "SELECT * FROM grants WHERE beneficiary_id=? ORDER BY name";
+		return jdbcTemplate.query(sql, new Object[]{idBeneficiary}, new RowMapper<Grant>(){
 		      public Grant mapRow(ResultSet rs, int arg1) throws SQLException {
 		        Grant g = new Grant();
 		        g.setId(rs.getInt("id"));
 				g.setDonor(donorService.getDonor(rs.getInt("donor_id")));
-				g.setBeneficiary(beneficiaryService.getBeneficiary(rs.getInt("beneficiary_id")));
+				g.setIdBeneficiary(rs.getInt("beneficiary_id"));
 		        g.setName(rs.getString("name"));
 				g.setDescription(rs.getString("description"));
 		        g.setDateBegin(rs.getString("date_begin"));

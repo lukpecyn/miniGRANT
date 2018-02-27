@@ -8,12 +8,16 @@
 	<div th:replace="fragments/header :: myHeader"> Test </div>
 	<div class="container">
 		 <ul class="breadcrumb">
-  			<li><a href="/">Granty</a></li>
-  			<li th:if="${grant.getId()>=0}"><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/> </li>
+		 	<li><a href="/">miniGRANT</a></li>
+  			<li><a href="/beneficiary">Beneficjenci</a></li>
+  			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></li>
+  			<li>Granty</li>
+			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()} + @{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/></li>
   			<li>Dokumenty</li>
-  			<li th:if="${document!=null}" th:text="${document.getName()}"/>
+  			<li th:if="${document!=null}"><span th:text="${document.getName()}" /></li>
   			<li class="active">Definicja dokumentu</li>
 		</ul>
+
 		<form class="form-horizontal" action="document_form" th:action="@{document_form}" th:object="${document}" method="post">
 			<input type="hidden" th:field="*{id}" />
 			<input type="hidden" th:field="*{idGrant}"/>

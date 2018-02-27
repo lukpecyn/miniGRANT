@@ -8,11 +8,14 @@
 	<div th:replace="fragments/header :: myHeader"> Header </div>
 	<div class="container">
 	<ul class="breadcrumb">
-  		<li><a href="/grant">Granty</a></li>
-  		<li class="active" th:if="${grant.getId()>=0}"><span th:text="${grant.getName()}" /></li>
+  			<li><a href="/">miniGRANT</a></li>
+  			<li><a href="/beneficiary">Beneficjenci</a></li>
+  			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></li>
+  			<li>Granty</li>
+	  		<li class="active" th:if="${grant.getId()>=0}"><span th:text="${grant.getName()}" /></li>
 	</ul>
 	<a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-warning" >Popraw grant</a>
-			
+	<p />
 		<table class="table">
 			<thead>
 				<!--tr>
@@ -20,17 +23,13 @@
 					<th width="50%">Grantodawca</th>
 				</tr-->
 				<tr>
-					<th>Beneficjent</th>
-					<td width="90%" th:text="${grant.getBeneficiary().getName()}" />
+					<th width="10%">Grantodawca</th>
+					<td th:text="${grant.getDonor().getName()}" />
 				</tr>
 			</thead>
 			<tbody>
 				<tr>
-					<th>Grantodawca</th>
-					<td th:text="${grant.getDonor().getName()}" />
-				</tr>
-				<tr>
-					<th>Opis</th>
+					<th width="10%">Opis</th>
 					<td th:text="${grant.getDescription()}" />
 				</tr>
 			</tbody>

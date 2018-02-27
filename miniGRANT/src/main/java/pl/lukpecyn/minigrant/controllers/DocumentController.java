@@ -1,6 +1,7 @@
 package pl.lukpecyn.minigrant.controllers;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pl.lukpecyn.minigrant.models.Beneficiary;
 import pl.lukpecyn.minigrant.models.Document;
 import pl.lukpecyn.minigrant.models.Grant;
 import pl.lukpecyn.minigrant.models.Payment;
@@ -61,33 +63,46 @@ public class DocumentController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@GetMapping("/grant/{idGrant}/document_form")
-	public String addDocumentFormGet(Model model, @PathVariable(value="idGrant", required=true) Integer idGrant) {
+	@GetMapping("/beneficiary/{idBeneficiary}/grant/{idGrant}/document_form")
+	public String addDocumentFormGet(Model model, Principal principal,
+			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary, 
+			@PathVariable(value="idGrant", required=true) Integer idGrant) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
 		Grant grant = grantService.getGrant(idGrant);
-		model.addAttribute("grant", grant);
+		if ((beneficiaryService.checkUser(beneficiary, principal.getName())>0) && (grant.getIdBeneficiary()==beneficiary.getId())) {
+			model.addAttribute("beneficiary", beneficiary);
+			model.addAttribute("grant", grant);		
+			
+			Document document = new Document();
+			document.setIdGrant(idGrant);
+			model.addAttribute("document", document);
 		
-		Document document = new Document();
-		document.setIdGrant(idGrant);
-		model.addAttribute("document", document);
-		
-		return "document_form";
+			return "document_form";
+		} else {
+			return "redirect:/";
+		}
 	}
 
-	@PostMapping("/grant/{idGrant}/document_form")
-	public String addDocumentFormPost(Model model,Document document,@PathVariable(value="idGrant", required=true) Integer idGrant) {
+	@PostMapping("/beneficiary/{idBeneficiary}/grant/{idGrant}/document_form")
+	public String addDocumentFormPost(Model model, Principal principal, Document document, 
+			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary,
+			@PathVariable(value="idGrant", required=true) Integer idGrant) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
-		if(document.getId()!=null){			
-			if((document.getId()<0) && (idGrant==document.getIdGrant())){
-				documentService.addDocument(document);
-				return "redirect:/grant/"+document.getIdGrant();
-			}
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		Grant grant = grantService.getGrant(idGrant);
+		if ((beneficiaryService.checkUser(beneficiary, principal.getName())>0) && 
+				(grant.getIdBeneficiary()==beneficiary.getId()) &&
+				(document.getIdGrant()==grant.getId())) {
+			documentService.addDocument(document);
+			return "redirect:/beneficiary/{idBeneficiary}/grant/"+document.getIdGrant();
+		} else {
+			return "redirect:/";
 		}
-		return "redirect:/grant/";	
 	}
 
 	@GetMapping("/grant/{idGrant}/document/{idDocument}/document_form")
