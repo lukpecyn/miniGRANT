@@ -8,14 +8,16 @@
 	<div th:replace="fragments/header :: myHeader"> Test </div>
 	<div class="container">
 		 <ul class="breadcrumb">
-  			<li><a href="/">Granty</a></li>
-  			<li><a href="/admin">Administracja</a></li>
+  			<li><a href="/">miniGRANT</a></li>
+  			<li><a href="/beneficiary">Beneficjenci</a></li>
+  			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></li>
   			<li>Rodzaje kosztów</li>
   			<li th:if="${costType.getId()>=0}"><a th:href="@{/admin/cost_type/} + ${costType.getId()}" th:text="${costType.getName()}"/> </li>
   			<li class="active">Definicja rodzaju kosztu</li>
 		</ul>
 		<form class="form-horizontal" th:action="@{cost_type_form}" th:object="${costType}" method="post">
 			<input type="hidden" th:field="*{id}" />
+			<input type="hidden" th:field="*{idBeneficiary}" />
 			<div class="form-group">
 				<label class="control-label col-sm-2" for="name">Nazwa</label>
 				<div class="col-sm-10">

@@ -74,7 +74,7 @@
 		    		</thead>
     				<tbody>
 						<tr th:each="costType : ${costTypeList}">
-							<td> <a th:href="@{/admin/cost_type/} + ${costType.getId()}" th:text="${costType.getName()}" /></td>
+							<td> <a th:href="${beneficiary.getId()} + @{/cost_type/} + ${costType.getId()}" th:text="${costType.getName()}" /></td>
 							<td th:text="${costType.getDescription()}" />
 						</tr>    	
 		    		</tbody>

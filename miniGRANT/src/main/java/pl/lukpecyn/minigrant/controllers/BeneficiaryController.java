@@ -82,6 +82,7 @@ public class BeneficiaryController {
 		if(beneficiaryService.checkUser(beneficiary, principal.getName())>0) {
 			model.addAttribute("beneficiary", beneficiary);
 			model.addAttribute("donorList", donorService.getDonorList(idBeneficiary));
+			model.addAttribute("costTypeList", costTypeService.getCostTypeList(idBeneficiary));
 			return "beneficiary";
 		} else {
 			return "redirect:/";

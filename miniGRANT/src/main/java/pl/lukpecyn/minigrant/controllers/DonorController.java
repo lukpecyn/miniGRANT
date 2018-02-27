@@ -136,7 +136,7 @@ public class DonorController {
 	}
 
 	@PostMapping("/beneficiary/{idBeneficiary}/donor/{idDonor}/donor_form")
-	public String updateDonorFormPost(Model model, Donor donor, Principal principal, 
+	public String updateDonorFormPost(Model model, Principal principal, Donor donor,  
 			@PathVariable(value="idBeneficiary", required=true) long idBeneficiary,
 			@PathVariable(value="idDonor", required=true) Integer idDonor) {
 		

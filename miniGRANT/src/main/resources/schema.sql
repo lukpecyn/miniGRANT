@@ -1,15 +1,15 @@
 --DROP TABLE IF EXISTS authorities CASCADE;
 --DROP TABLE IF EXISTS users CASCADE;
-/*
-DROP TABLE IF EXISTS beneficiaries CASCADE;
-DROP TABLE IF EXISTS bau CASCADE;
-DROP TABLE IF EXISTS donors CASCADE;
-DROP TABLE IF EXISTS grants CASCADE;
-DROP TABLE IF EXISTS cost_types CASCADE;
-DROP TABLE IF EXISTS budgets CASCADE;
-DROP TABLE IF EXISTS documents CASCADE;
-DROP TABLE IF EXISTS payments CASCADE;
-*/
+
+--DROP TABLE IF EXISTS beneficiaries CASCADE;
+--DROP TABLE IF EXISTS bau CASCADE;
+--DROP TABLE IF EXISTS donors CASCADE;
+--DROP TABLE IF EXISTS grants CASCADE;
+--DROP TABLE IF EXISTS cost_types CASCADE;
+--DROP TABLE IF EXISTS budgets CASCADE;
+--DROP TABLE IF EXISTS documents CASCADE;
+--DROP TABLE IF EXISTS payments CASCADE;
+
 
 CREATE TABLE IF NOT EXISTS users(
 	username varchar_ignorecase(50) NOT NULL PRIMARY KEY,
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS donors(
 	name VARCHAR_IGNORECASE(128) NOT NULL,
 	beneficiary_id INTEGER NOT NULL,
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ix_donors_name ON donors(name);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_donors_name_beneficiary ON donors(name,beneficiary_id);
 /*
 -- AKtualizacja struktury 'donors'
 IF NOT EXISTS (SELECT * FROM information_schema.system_columns WHERE table_name='donors' AND column_name='beneficiary_id')
@@ -81,9 +81,12 @@ CREATE UNIQUE INDEX IF NOT EXISTS ix_grants_date_begin_name ON grants(date_begin
 CREATE TABLE IF NOT EXISTS cost_types (
 	id INTEGER IDENTITY PRIMARY KEY,
 	name VARCHAR_IGNORECASE(64) NOT NULL,
-	description LONGVARCHAR
+	description LONGVARCHAR,
+	beneficiary_id INTEGER NOT NULL,
+	
+	CONSTRAINT fk_cost_type_beneficiary FOREIGN KEY(beneficiary_id) REFERENCES beneficiaries(id)
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ix_cost_types_name ON cost_types(name);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_cost_types_name_beneficiary ON cost_types(name,beneficiary_id);
 
 CREATE TABLE IF NOT EXISTS budgets (
 	id INTEGER IDENTITY PRIMARY KEY,

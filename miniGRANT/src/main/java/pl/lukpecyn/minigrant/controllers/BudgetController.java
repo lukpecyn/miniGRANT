@@ -73,8 +73,8 @@ public class BudgetController {
 		grant = grantService.getGrant(idGrant);					
 		model.addAttribute("grant", grant);				
 
-		List<CostType> costTypeList = costTypeService.getCostTypeList();
-		model.addAttribute("costTypeList", costTypeList);
+		//List<CostType> costTypeList = costTypeService.getCostTypeList();
+		//model.addAttribute("costTypeList", costTypeList);
 		
 		return "budget_form";
 	}
@@ -107,8 +107,8 @@ public class BudgetController {
 		Grant grant = grantService.getGrant(budget.getIdGrant());
 		model.addAttribute("grant", grant);				
 			
-		List<CostType> costTypeList = costTypeService.getCostTypeList();
-		model.addAttribute("costTypeList", costTypeList);
+		//List<CostType> costTypeList = costTypeService.getCostTypeList();
+		//model.addAttribute("costTypeList", costTypeList);
 		return "budget_form";
 	}
 

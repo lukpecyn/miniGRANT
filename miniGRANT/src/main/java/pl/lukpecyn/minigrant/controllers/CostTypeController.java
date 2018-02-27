@@ -1,6 +1,7 @@
 package pl.lukpecyn.minigrant.controllers;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pl.lukpecyn.minigrant.models.Beneficiary;
 import pl.lukpecyn.minigrant.models.CostType;
 import pl.lukpecyn.minigrant.services.BeneficiaryService;
 import pl.lukpecyn.minigrant.services.BudgetService;
@@ -58,68 +60,90 @@ public class CostTypeController {
 
 	@Autowired
 	PaymentService paymentService;
-	
-	@GetMapping("/admin/cost_type_form")
-	public String addCostTypeFormGet(Model model) {
-		
-		model.addAttribute("appVersion", appVersion);
-		model.addAttribute("appName", appName);
-		
-		model.addAttribute("costType", new CostType());
 
-		return "cost_type_form";
-	}
-		
-	@PostMapping("/admin/cost_type_form")
-	public String addCostTypeFormPost(Model model, CostType costType) {
-		model.addAttribute("appVersion", appVersion);
-		model.addAttribute("appName", appName);
-				
-		if(costType.getId()!=null)
-				costTypeService.addCostType(costType);
-
-		return "redirect:/admin";
-	}
-
-	@GetMapping("/admin/cost_type/{idCostType}/cost_type_form")
-	public String updateCostTypeFormGet(Model model, @PathVariable(value="idCostType", required=false) Integer idCostType) {
-		
-		model.addAttribute("appVersion", appVersion);
-		model.addAttribute("appName", appName);
-		
-		if(idCostType!=null){
-			CostType costType = costTypeService.getCostType(idCostType);
-			
-			if(costType.getId()!=null) {
-				model.addAttribute("costType", costType);
-			}
-		}
-		return "cost_type_form";
-	}
-
-	@PostMapping("/admin/cost_type/{idCostType}/cost_type_form")
-	public String updateCostTypeFormPost(Model model, CostType costType, @PathVariable(value="idCostType", required=false) Integer idCostType) {		
-		model.addAttribute("appVersion", appVersion);
-		model.addAttribute("appName", appName);
-				
-		if(idCostType == costType.getId())
-			costTypeService.updateCostType(costType);
-		else
-			return "redirect:/grant";
-		
-		return "redirect:/admin";
-	}
-
-	@RequestMapping(value = "/admin/cost_type/{idCostType}")
-	public String showDocument(Model model, 
+	@RequestMapping(value = "/beneficiary/{idBeneficiary}/cost_type/{idCostType}")
+	public String showDocument(Model model, Principal principal,
+			@PathVariable(value="idBeneficiary", required=true)long idBeneficiary,
 			@PathVariable(value="idCostType", required=true) long idCostType) {
 
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
 		CostType costType = costTypeService.getCostType(idCostType);
-		model.addAttribute("costType", costType);
-
-		return "cost_type";
+		if ((beneficiaryService.checkUser(beneficiary, principal.getName())>0) && (costType.getIdBeneficiary()==beneficiary.getId())) {
+			model.addAttribute("beneficiary", beneficiary);
+			model.addAttribute("costType", costType);
+			return "cost_type";
+		} else {
+			return "redirect:/";
+		}
 	}	
+
+	@GetMapping("/beneficiary/{idBeneficiary}/cost_type_form")
+	public String addCostTypeFormGet(Model model, Principal principal,
+			@PathVariable(value="idBeneficiary", required=true)long idBeneficiary) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		if(beneficiaryService.checkUser(beneficiary, principal.getName())>0) {
+			model.addAttribute("beneficiary", beneficiary);
+			CostType costType = new CostType();
+			costType.setIdBeneficiary(beneficiary.getId());
+			model.addAttribute("costType", costType);	
+			return "cost_type_form";
+		} else {
+			return "redirect:/";
+		}
+	}
+		
+	@PostMapping("/beneficiary/{idBeneficiary}/cost_type_form")
+	public String addCostTypeFormPost(Model model, Principal principal,CostType costType, 
+			@PathVariable(value="idBeneficiary", required=true)long idBeneficiary) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+				
+		if(costType.getId()<0) {
+			if((costType.getIdBeneficiary()==idBeneficiary) && (beneficiaryService.checkUser(beneficiaryService.getBeneficiary(idBeneficiary), principal.getName())>0)) {
+				costTypeService.addCostType(costType);
+				logger.info("idBeneficiary=" + String.valueOf(idBeneficiary) + ", costType.getBeneficiary=" + costType.getIdBeneficiary());
+			} else logger.info("costType NOT added!!!");
+		}
+		return "redirect:/beneficiary/" + idBeneficiary;
+	}
+
+	@GetMapping("/beneficiary/{idBeneficiary}/cost_type/{idCostType}/cost_type_form")
+	public String updateCostTypeFormGet(Model model, Principal principal, 
+			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary,
+			@PathVariable(value="idCostType", required=true) Integer idCostType) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		CostType costType = costTypeService.getCostType(idCostType);
+		if((costType.getIdBeneficiary()==beneficiary.getId()) && (beneficiaryService.checkUser(beneficiaryService.getBeneficiary(idBeneficiary), principal.getName())>0)) {
+				model.addAttribute("beneficiary", beneficiary);
+				model.addAttribute("costType", costType);
+				return "cost_type_form";
+		} else {
+			return "redirect:/";
+		}
+	}
+
+	@PostMapping("/beneficiary/{idBeneficiary}/cost_type/{idCostType}/cost_type_form")
+	public String updateCostTypeFormPost(Model model, Principal principal, CostType costType,  
+			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary,
+			@PathVariable(value="idCostType", required=true) Integer idCostType) {		
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+		
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		if((costType.getId()==idCostType) && (costType.getIdBeneficiary()==beneficiary.getId()) && (beneficiaryService.checkUser(beneficiaryService.getBeneficiary(idBeneficiary), principal.getName())>0)) {
+			costTypeService.updateCostType(costType);			
+			return "redirect:/beneficiary/{idBeneficiary}";
+		} else {
+			return "redirect:/";
+		}
+	}
 }

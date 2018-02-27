@@ -4,6 +4,7 @@ public class CostType {
 	Integer id;
 	String name;
 	String description;
+	Integer idBeneficiary;
 	
 	public CostType() {
 		id=-1;
@@ -28,5 +29,12 @@ public class CostType {
 	}
 	public String getDescription() {
 		return this.description;
+	}
+
+	public void setIdBeneficiary(Integer i) {
+		this.idBeneficiary=i;
+	}
+	public Integer getIdBeneficiary() {
+		return this.idBeneficiary;
 	}
 }
