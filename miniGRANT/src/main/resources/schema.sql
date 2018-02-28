@@ -2,7 +2,7 @@
 --DROP TABLE IF EXISTS users CASCADE;
 
 --DROP TABLE IF EXISTS beneficiaries CASCADE;
---DROP TABLE IF EXISTS bau CASCADE;
+--DROP TABLE IF EXISTS coworkers CASCADE;
 --DROP TABLE IF EXISTS donors CASCADE;
 --DROP TABLE IF EXISTS grants CASCADE;
 --DROP TABLE IF EXISTS cost_types CASCADE;
@@ -38,14 +38,14 @@ CREATE TABLE IF NOT EXISTS beneficiaries(
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_beneficiaries_name ON beneficiaries(name);
 
-CREATE TABLE IF NOT EXISTS bau(
+CREATE TABLE IF NOT EXISTS coworkers( --coworkers
 	username VARCHAR_IGNORECASE(50) NOT NULL,
 	beneficiary_id INTEGER NOT NULL,
 	
-	CONSTRAINT fk_bau_user FOREIGN KEY(username) REFERENCES users(username) ON DELETE CASCADE,
-	CONSTRAINT fk_bau_beneficiary FOREIGN KEY(beneficiary_id) REFERENCES beneficiaries(id) ON DELETE CASCADE
+	CONSTRAINT fk_coworkers_user FOREIGN KEY(username) REFERENCES users(username) ON DELETE CASCADE,
+	CONSTRAINT fk_coworkers_beneficiary FOREIGN KEY(beneficiary_id) REFERENCES beneficiaries(id) ON DELETE CASCADE
 );
-CREATE UNIQUE INDEX IF NOT EXISTS ix_bau ON bau(username,beneficiary_id);
+CREATE UNIQUE INDEX IF NOT EXISTS ix_coworkers ON coworkers(username,beneficiary_id);
 
 CREATE TABLE IF NOT EXISTS donors(
 	id INTEGER IDENTITY PRIMARY KEY,

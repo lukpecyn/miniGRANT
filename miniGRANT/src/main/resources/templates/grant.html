@@ -137,7 +137,7 @@
     				</thead>
     				<tbody>
     					<tr th:each="document : ${documentList}">
-    						<td> <a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()}" th:text="${document.getName()}" /> </td>
+    						<td> <a th:href="${grant.getId()} + @{/document/} + ${document.getId()}" th:text="${document.getName()}" /> </td>
     						<td th:text="${document.getDescription()}" />
     						<td th:text="${document.getValue()}" align="right"/>
     					</tr>

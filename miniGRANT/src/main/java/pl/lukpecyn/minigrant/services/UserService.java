@@ -87,7 +87,24 @@ public class UserService {
 	      }
 
 	    });
-	  }
+	}
+	
+	public List<User> getUserListForBeneficiary(Integer idBeneficiary) {
+		String sql = "SELECT users.username,users.fullname,users.fullname,users.email,users.registration_timestamp,users.guid,users.confirmed,users.enabled FROM coworkers LEFT JOIN users ON coworkers.username=users.username WHERE coworkers.beneficiary_id=?";
+		return jdbcTemplate.query(sql, new Object[]{idBeneficiary}, new RowMapper<User>() {
+			public User mapRow(ResultSet rs, int arg1) throws SQLException {
+		  		User u = new User();
+		        u.setUsername(rs.getString("username"));
+		        u.setFullname(rs.getString("fullname"));
+		        u.setEmail(rs.getString("email"));
+		        u.setRegistrationTimestamp(rs.getTimestamp("registration_timestamp"));
+		        u.setGuid(UUID.fromString(rs.getString("guid")));
+		        u.setConfirmed(rs.getBoolean("confirmed"));
+		        u.setEnabled(rs.getBoolean("enabled"));
+		        return u;
+		    }
+		});
+	}
 
 	public User getUser(String username) {
 		return (User)jdbcTemplate.queryForObject("SELECT * FROM users WHERE username=?", new Object[] {username}, new RowMapper<User>(){

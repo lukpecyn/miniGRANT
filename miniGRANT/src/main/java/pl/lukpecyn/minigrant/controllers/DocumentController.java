@@ -63,6 +63,39 @@ public class DocumentController {
 	@Autowired
 	PaymentService paymentService;
 	
+	@RequestMapping(value = "/beneficiary/{idBeneficiary}/grant/{idGrant}/document/{idDocument}")
+	public String showDocument(Model model, Principal principal,
+			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary,
+			@PathVariable(value="idGrant", required=true) Integer idGrant, 
+			@PathVariable(value="idDocument", required=true) Integer idDocument) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		Grant grant = grantService.getGrant(idGrant);
+		Document document = documentService.getDocument(idDocument);
+		if ((beneficiaryService.checkUser(beneficiary, principal.getName())>0) 
+				&& (grant.getIdBeneficiary()==beneficiary.getId())
+				&& (document.getIdGrant()==grant.getId())) {
+			model.addAttribute("beneficiary", beneficiary);
+			model.addAttribute("grant", grant);		
+			model.addAttribute("document", document);
+
+			List<Payment> paymentList = paymentService.getPaymentForDocumentList(idDocument);
+			model.addAttribute("paymentList", paymentList);
+		
+			BigDecimal paid = new BigDecimal("0.00");
+			for (Payment payment : paymentList) {
+				paid = paid.add(payment.getSum());
+			}
+			model.addAttribute("paid", paid);
+			model.addAttribute("unpaid", (document.getValue().subtract(paid)));
+			return "document";
+		} else {
+			return "redirect:/";
+		}
+	}	
+
 	@GetMapping("/beneficiary/{idBeneficiary}/grant/{idGrant}/document_form")
 	public String addDocumentFormGet(Model model, Principal principal,
 			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary, 
@@ -104,7 +137,7 @@ public class DocumentController {
 			return "redirect:/";
 		}
 	}
-
+/*poprawa dokumentu
 	@GetMapping("/grant/{idGrant}/document/{idDocument}/document_form")
 	public String updateDocumentFormGet(Model model, @PathVariable(value="idGrant", required=true) Integer idGrant, @PathVariable(value="idDocument", required=false) Integer idDocument) {
 		model.addAttribute("appVersion", appVersion);
@@ -136,48 +169,25 @@ public class DocumentController {
 		}
 		return "redirect:/grant";
 	}
-
-	@RequestMapping(value = "/grant/{idGrant}/document/{idDocument}")
-	public String showDocument(Model model, 
-			@PathVariable("idGrant") long idGrant, 
-			@PathVariable("idDocument") long idDocument) {
-
-		model.addAttribute("appVersion", appVersion);
-		model.addAttribute("appName", appName);
-		
-		Document document = documentService.getDocument(idDocument);
-		model.addAttribute("document", document);
-
-		Grant grant = grantService.getGrant(document.getIdGrant());
-		model.addAttribute("grant", grant);
-
-		List<Payment> paymentList = paymentService.getPaymentForDocumentList(idDocument);
-		model.addAttribute("paymentList", paymentList);
-		
-		BigDecimal paid = new BigDecimal("0.00");
-		for (Payment payment : paymentList) {
-			paid = paid.add(payment.getSum());
-		}
-		model.addAttribute("paid", paid);
-		model.addAttribute("unpaid", (document.getValue().subtract(paid)));
-		return "document";
-	}	
-
-	@RequestMapping("/grant/{idGrant}/document/{idDocument}/document_delete")
-	public String deleteDocument(Model model, 
+*/
+	@RequestMapping("/beneficiary/{idBeneficiary}/grant/{idGrant}/document/{idDocument}/document_delete")
+	public String deleteDocument(Model model, Principal principal,
+			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary,
 			@PathVariable(value="idGrant", required=true) Integer idGrant, 
 			@PathVariable(value="idDocument", required=true) Integer idDocument) {
-
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 
-		if(idDocument!=null) {
-			Document document = documentService.getDocument(idDocument);
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		Grant grant = grantService.getGrant(idGrant);
+		Document document = documentService.getDocument(idDocument);
+		if ((beneficiaryService.checkUser(beneficiary, principal.getName())>0) 
+				&& (grant.getIdBeneficiary()==beneficiary.getId())
+				&& (document.getIdGrant()==grant.getId())) {
+			model.addAttribute("beneficiary", beneficiary);
+			model.addAttribute("grant", grant);		
 			model.addAttribute("document", document);
-			
-			Grant grant = grantService.getGrant(document.getIdGrant());
-			model.addAttribute("grant", grant);
-			
+
 			if(paymentService.getPaymentForDocumentCount(document.getId())>0) {
 				model.addAttribute("message", "Nie można usunąć dokumentu!!! Najpierw wycofaj istniejące rozliczenia dla tego dokumentu z listy poniżej.");
 				
@@ -191,11 +201,9 @@ public class DocumentController {
 				model.addAttribute("paid", paid);
 				model.addAttribute("unpaid", (document.getValue().subtract(paid)));
 				return "document";
-				
-				//return "redirect:/grant/" + idGrant + "/document/" +idDocument;
 			} else {
 				documentService.deleteDocument(idDocument);
-				return "redirect:/grant/" + idGrant;
+				return "redirect:/beneficiary/{idBeneficiary}/grant/{idGrant}";
 			}			
 		}
 		

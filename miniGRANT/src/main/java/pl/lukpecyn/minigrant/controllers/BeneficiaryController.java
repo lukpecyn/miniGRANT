@@ -22,11 +22,13 @@ import pl.lukpecyn.minigrant.models.Grant;
 import pl.lukpecyn.minigrant.services.BeneficiaryService;
 import pl.lukpecyn.minigrant.services.BudgetService;
 import pl.lukpecyn.minigrant.services.CostTypeService;
+import pl.lukpecyn.minigrant.services.CoworkerService;
 import pl.lukpecyn.minigrant.services.DocumentService;
 import pl.lukpecyn.minigrant.services.DonorService;
 import pl.lukpecyn.minigrant.services.GrantService;
 import pl.lukpecyn.minigrant.services.GrantStatusService;
 import pl.lukpecyn.minigrant.services.PaymentService;
+import pl.lukpecyn.minigrant.services.UserService;
 
 @Controller
 public class BeneficiaryController {
@@ -62,6 +64,9 @@ public class BeneficiaryController {
 	@Autowired
 	PaymentService paymentService;
 
+	@Autowired
+	UserService userService;
+	
 	@RequestMapping("/beneficiary")
 	public String beneficiaryList(Model model,Principal principal) {
 		model.addAttribute("appVersion", appVersion);
@@ -85,6 +90,7 @@ public class BeneficiaryController {
 			model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
 			model.addAttribute("donorList", donorService.getDonorList(idBeneficiary));
 			model.addAttribute("costTypeList", costTypeService.getCostTypeList(idBeneficiary));
+			model.addAttribute("userList", userService.getUserListForBeneficiary(idBeneficiary));
 			return "beneficiary";
 		} else {
 			return "redirect:/";

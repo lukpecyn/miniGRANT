@@ -92,7 +92,7 @@
     		</thead>
     		<tbody>
 				<tr th:each="payment : ${paymentList}">
-					<td><a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${payment.getDocument().getId()}" th:text="${payment.getDocument().getName()}" /> </td>
+					<td><a th:href="@{/beneficiary/} + ${beneficiary.getId()} + @{/grant/} + ${grant.getId()} + @{/document/} + ${payment.getDocument().getId()}" th:text="${payment.getDocument().getName()}" /> </td>
 					<td th:text="${payment.getDocument().getDescription()}" />
 					<td class="info text-info" align="right"><strong th:text="${payment.getDocument().getValue()}" /> </td>
 					<td class="success text-success" align="right" th:text="${payment.getDotation()}" />

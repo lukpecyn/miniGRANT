@@ -8,8 +8,11 @@
 	<div th:replace="fragments/header :: myHeader"> Header </div>
 	<div class="container">
 		<ul class="breadcrumb">
-  			<li><a href="/">Granty</a></li>
-  			<li><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/> </li>
+		 	<li><a href="/">miniGRANT</a></li>
+  			<li><a href="/beneficiary">Beneficjenci</a></li>
+  			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></li>
+  			<li>Granty</li>
+			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()} + @{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/></li>
   			<li>Dokumenty</li>
   			<li class="active" th:text="${document.getName()}"/>
 		</ul>
@@ -60,7 +63,7 @@
     				</thead>
     				<tbody>
 						<tr th:each="payment: ${paymentList}">
-							<td><a th:href="@{/grant/} + ${grant.getId()} + @{/budget/} + ${payment.getBudget().getId()}" th:text="${payment.getBudget().getCostType().getName()}"/> </td>
+							<td><a th:href="@{/beneficiary/} + ${beneficiary.getId()} + @{/grant/} + ${grant.getId()} + @{/budget/} + ${payment.getBudget().getId()}" th:text="${payment.getBudget().getCostType().getName()}"/> </td>
 							<td th:text="${payment.getBudget().getDescription()}" />
 							<td align="right" th:text="${payment.getDotation()}" />
 							<td align="right" th:text="${payment.getContributionOwn()}" />
@@ -70,7 +73,7 @@
 							<td>
 								<nobr>
 									<!--a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()} + @{/payment/} + ${payment.getId()} + @{/payment_form}" class="btn btn-warning" >Popraw</a-->
-									<a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()} + @{/payment/} + ${payment.getId()} + @{/payment_delete}" class="btn btn-danger" >Wycofaj</a>
+									<a th:href="@{/beneficiary/} + ${beneficiary.getId()} + @{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()} + @{/payment/} + ${payment.getId()} + @{/payment_delete}" class="btn btn-danger" >Wycofaj</a>
 								</nobr>
 							</td>	
 						</tr>    	

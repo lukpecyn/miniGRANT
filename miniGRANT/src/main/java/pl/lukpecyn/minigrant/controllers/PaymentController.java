@@ -1,6 +1,7 @@
 package pl.lukpecyn.minigrant.controllers;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import pl.lukpecyn.minigrant.models.Beneficiary;
 import pl.lukpecyn.minigrant.models.Budget;
 import pl.lukpecyn.minigrant.models.CostType;
 import pl.lukpecyn.minigrant.models.Document;
@@ -63,65 +65,55 @@ public class PaymentController {
 	@Autowired
 	PaymentService paymentService;
 	
-	@GetMapping("/grant/{idGrant}/document/{idDocument}/payment_form")
-	public String addPaymentFormGet(Model model,
+	@GetMapping("/beneficiary/{idBeneficiary}/grant/{idGrant}/document/{idDocument}/payment_form")
+	public String addPaymentFormGet(Model model, Principal principal,
+			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary,
 			@PathVariable(value="idGrant", required=true) Integer idGrant, 
 			@PathVariable(value="idDocument", required=true) Integer idDocument) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 				
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		Grant grant = grantService.getGrant(idGrant);
 		Document document = documentService.getDocument(idDocument);
-		model.addAttribute("document", document);
-			
-		Payment payment = new Payment();
-		payment.setDocument(document);
-		model.addAttribute("payment", payment);
-				
-		Grant grant = grantService.getGrant(document.getIdGrant());
-		model.addAttribute("grant", grant);
-
-		List<Budget> budgetList = budgetService.getBudgetForGrantList(grant.getId());
-		model.addAttribute("budgetList", budgetList);
-
-		return "payment_form";
-	}
-
-	@GetMapping("/grant/{idGrant}/document/{idDocument}/payment/{idPayment}/payment_form")
-	public String updatePaymentFormGet(Model model, Payment payment, Document document,
-			@PathVariable(value="idGrant", required=true) Integer idGrant, 
-			@PathVariable(value="idDocument", required=true) Integer idDocument,
-			@PathVariable(value="idPayment", required=true) Integer idPayment) {
-		model.addAttribute("appVersion", appVersion);
-		model.addAttribute("appName", appName);
-				
-		if(idPayment!=null) {
-			payment = paymentService.getPayment(idPayment);
-			model.addAttribute("payment", payment);
-			
-			document = documentService.getDocument(payment.getDocument().getId());
+		if ((beneficiaryService.checkUser(beneficiary, principal.getName())>0) 
+				&& (grant.getIdBeneficiary()==beneficiary.getId())
+				&& (document.getIdGrant()==grant.getId())) {
+			model.addAttribute("beneficiary", beneficiary);
+			model.addAttribute("grant", grant);		
 			model.addAttribute("document", document);
-			
-			Grant grant = grantService.getGrant(document.getIdGrant());
-			model.addAttribute("grant", grant);
 
+			Payment payment = new Payment();
+			payment.setDocument(document);
+			model.addAttribute("payment", payment);
+				
 			List<Budget> budgetList = budgetService.getBudgetForGrantList(grant.getId());
 			model.addAttribute("budgetList", budgetList);
 
 			return "payment_form";
-		} 
-		return "redirect:/grant";
+		} else {
+			return "redirect:/";
+		}
 	}
 
-	@PostMapping("/grant/{idGrant}/document/{idDocument}/payment_form")
-	public String addPaymentFormPost(Model model, Payment payment,
+	@PostMapping("/beneficiary/{idBeneficiary}/grant/{idGrant}/document/{idDocument}/payment_form")
+	public String addPaymentFormPost(Model model, Principal principal, Payment payment, 
+			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary,
 			@PathVariable(value="idGrant", required=true) Integer idGrant, 
 			@PathVariable(value="idDocument", required=true) Integer idDocument) {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 
-		if(payment!=null) {
-			Document document = documentService.getDocument(payment.getDocument().getId());
-			Grant grant = grantService.getGrant(document.getIdGrant());
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		Grant grant = grantService.getGrant(idGrant);
+		Document document = documentService.getDocument(idDocument);
+		if ((beneficiaryService.checkUser(beneficiary, principal.getName())>0) 
+				&& (grant.getIdBeneficiary()==beneficiary.getId())
+				&& (document.getIdGrant()==grant.getId())) {
+			model.addAttribute("beneficiary", beneficiary);
+			model.addAttribute("grant", grant);		
+			model.addAttribute("document", document);
+
 			Budget budget = budgetService.getBudget(payment.getBudget().getId());
 
 			BigDecimal unpaidDotation = budget.getDotation().subtract(budget.getPaidDotation());
@@ -159,9 +151,35 @@ public class PaymentController {
 			} else {
 				paymentService.addPayment(payment);
 			}
-			return "redirect:/grant/" + grant.getId() + "/document/" + document.getId();
+			return "redirect:/beneficiary/{idBeneficiary}/grant/{idGrant}/document/{idDocument}";
 		}
 		return "redirect:/";
+	}
+/* poprawa rozliczenia
+	@GetMapping("/grant/{idGrant}/document/{idDocument}/payment/{idPayment}/payment_form")
+	public String updatePaymentFormGet(Model model, Payment payment, Document document,
+			@PathVariable(value="idGrant", required=true) Integer idGrant, 
+			@PathVariable(value="idDocument", required=true) Integer idDocument,
+			@PathVariable(value="idPayment", required=true) Integer idPayment) {
+		model.addAttribute("appVersion", appVersion);
+		model.addAttribute("appName", appName);
+				
+		if(idPayment!=null) {
+			payment = paymentService.getPayment(idPayment);
+			model.addAttribute("payment", payment);
+			
+			document = documentService.getDocument(payment.getDocument().getId());
+			model.addAttribute("document", document);
+			
+			Grant grant = grantService.getGrant(document.getIdGrant());
+			model.addAttribute("grant", grant);
+
+			List<Budget> budgetList = budgetService.getBudgetForGrantList(grant.getId());
+			model.addAttribute("budgetList", budgetList);
+
+			return "payment_form";
+		} 
+		return "redirect:/grant";
 	}
 
 	@PostMapping("/grant/{idGrant}/document/{idDocument}/payment/{idPayment}/payment_form")
@@ -220,22 +238,27 @@ public class PaymentController {
 		}
 		return "redirect:/";
 	}
-
-	@RequestMapping("/grant/{idGrant}/document/{idDocument}/payment/{idPayment}/payment_delete")
-	public String deletePayment(Model model, 
+*/
+	@RequestMapping("/beneficiary/{idBeneficiary}/grant/{idGrant}/document/{idDocument}/payment/{idPayment}/payment_delete")
+	public String deletePayment(Model model, Principal principal,
+			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary, 
 			@PathVariable(value="idGrant", required=true) Integer idGrant, 
 			@PathVariable(value="idDocument", required=true) Integer idDocument,
 			@PathVariable(value="idPayment", required=true) Integer idPayment) {
 		
-		if(idPayment!=null) {
-			Payment payment = paymentService.getPayment(idPayment);
-			Document document = payment.getDocument();
-			Grant grant = grantService.getGrant(document.getIdGrant());
+		Beneficiary beneficiary = beneficiaryService.getBeneficiary(idBeneficiary);
+		Grant grant = grantService.getGrant(idGrant);
+		Document document = documentService.getDocument(idDocument);
+		Payment payment = paymentService.getPayment(idPayment);
+		if ((beneficiaryService.checkUser(beneficiary, principal.getName())>0) 
+				&& (grant.getIdBeneficiary()==beneficiary.getId())
+				&& (document.getIdGrant()==grant.getId())
+				&& (payment.getDocument().getId()==document.getId())) {
 			paymentService.deletePayment(idPayment);
 			
-			return "redirect:/grant/" + grant.getId() + "/document/" + document.getId();
+			return "redirect:/beneficiary/{idBeneficiary}/grant/{idGrant}/document/{idDocument}";
+		} else {
+			return "redirect:/";
 		}
-		
-		return "redirect:/";
 	}
 }
