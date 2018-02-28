@@ -29,8 +29,9 @@
 			
 		<div class="tab-content">
 			<div id="grants" class="tab-pane fade in active">
-				<p th:unless="${donorList.size()>0}" />
+				<p th:unless="${donorList.size()>0} AND ${costTypeList.size()>0}" />
 				<div th:unless="${donorList.size()>0}" class="alert alert-danger">Najpierw musisz dodać conajmniej jednego <u>grantodawcę</u>!</div> 
+				<div th:unless="${costTypeList.size()>0}" class="alert alert-danger">Najpierw musisz dodać conajmniej jednen <u>rodzaj kosztu</u>!</div>
 				<table th:if="${donorList.size()>0}" class="table">
     				<thead>
     					<tr>

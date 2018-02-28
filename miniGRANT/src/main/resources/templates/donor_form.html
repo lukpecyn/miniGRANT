@@ -12,7 +12,7 @@
   			<li><a href="/beneficiary">Beneficjenci</a></li>
   			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}"/></li>
 			<li th:if="${donor.getId()>=0}">Grantodawcy</li>
-			<li th:if="${donor.getId()>=0}"><a th:href="@{/admin/donor/} + ${donor.getId()}" th:text="${donor.getName()}"/> </li>
+			<li th:if="${donor.getId()>=0}"><a th:href="@{/beneficiary/} + ${beneficiary.getId()} + @{/donor/} + ${donor.getId()}" th:text="${donor.getName()}"/> </li>
   			<li class="active">Definicja grantodawcy</li>
 		</ul>
 		<form class="form-horizontal" th:action="@{donor_form}" th:object="${donor}" method="post">

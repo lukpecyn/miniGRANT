@@ -8,10 +8,13 @@
 	<div th:replace="fragments/header :: myHeader"> Test </div>
 	<div class="container">
 		<ul class="breadcrumb">
-  			<li><a href="/">Granty</a></li>
-  			<li><a th:href="@{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/></li>
+  			<li><a href="/">miniGRANT</a></li>
+  			<li><a href="/beneficiary">Beneficjenci</a></li>
+  			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></li>
+  			<li>Granty</li>
+			<li th:if="${grant.getId()>=0}"><a th:href="@{/beneficiary/} + ${beneficiary.getId()} + @{/grant/} + ${grant.getId()}" th:text="${grant.getName()}"/></li>
   			<li>Dokumenty</li>
-  			<li><a th:href="@{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()}" th:text="${document.getName()}"/></li>
+  			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()} + @{/grant/} + ${grant.getId()} + @{/document/} + ${document.getId()}" th:text="${document.getName()}"/></li>
   			<li class="active">Rozliczenie</li>
   			<li th:if="${payment.getId()>=0}" th:text="${payment.getBudget().getCostType().getName()}" />
 		</ul>		
