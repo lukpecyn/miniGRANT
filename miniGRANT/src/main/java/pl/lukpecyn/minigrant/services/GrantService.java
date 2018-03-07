@@ -5,16 +5,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import pl.lukpecyn.minigrant.MiniGrantApplication;
 import pl.lukpecyn.minigrant.models.Grant;
 
 @Service
 public class GrantService {
 
+	private static final Logger logger = LoggerFactory.getLogger(GrantService.class);
+	
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
@@ -80,7 +86,8 @@ public class GrantService {
 	}
 	
 	public List<Grant> getGrantsListByName(Integer idBeneficiary) {
-		String sql = "SELECT * FROM grants WHERE beneficiary_id=? ORDER BY name";
+		String sql = "SELECT id, donor_id, beneficiary_id, name, description, date_begin, date_end, statu"
+				+ " FROM grants WHERE beneficiary_id=? ORDER BY name";
 		return jdbcTemplate.query(sql, new Object[]{idBeneficiary}, new RowMapper<Grant>(){
 		      public Grant mapRow(ResultSet rs, int arg1) throws SQLException {
 		        Grant g = new Grant();
@@ -95,5 +102,15 @@ public class GrantService {
 		        return g;
 		      }
 		    });
-	}	
+	}
+	
+	@Scheduled(fixedDelay=60000)
+	public void autoStatus() {
+		String sql = "UPDATE grants SET status=10 WHERE DATEDIFF('DD', date_begin,CURDATE())>=0 AND status=0";
+		logger.info("Ustawiono status 10 dla " + jdbcTemplate.update(sql) + " grantów");
+
+		sql = "UPDATE grants SET status=20 WHERE DATEDIFF('DD', date_end,CURDATE())>=0 AND status=10";
+		logger.info("Ustawiono status 20 dla " + jdbcTemplate.update(sql) + " grantów");
+
+	}
 }

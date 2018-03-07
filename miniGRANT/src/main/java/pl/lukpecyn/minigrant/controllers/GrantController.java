@@ -2,6 +2,9 @@ package pl.lukpecyn.minigrant.controllers;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -67,7 +70,7 @@ public class GrantController {
 	@RequestMapping(value = "/beneficiary/{idBeneficiary}/grant/{idGrant}")
 	public String showGrant(Model model, Principal principal,
 			@PathVariable(value="idBeneficiary", required=true) Integer idBeneficiary, 
-			@PathVariable(value="idGrant",required=true) Integer idGrant) {
+			@PathVariable(value="idGrant",required=true) Integer idGrant) throws ParseException {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
@@ -75,6 +78,7 @@ public class GrantController {
 		Grant grant = grantService.getGrant(idGrant);
 		if ((beneficiaryService.checkUser(beneficiary, principal.getName())>0) && (grant.getIdBeneficiary()==beneficiary.getId())) {
 			model.addAttribute("beneficiary", beneficiary);
+
 			model.addAttribute("grant", grant);
 			model.addAttribute("grantStatusList", grantStatusService.getGrantStatusList());
 			
