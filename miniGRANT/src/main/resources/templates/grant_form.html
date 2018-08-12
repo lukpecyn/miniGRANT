@@ -69,5 +69,20 @@
 		
     </div>
     <div th:replace="fragments/footer :: myFooter"> Test </div>
+ <script>
+    $(document).ready(function(){
+      var date_input_begin=$('input[id="date-begin"]'); //our date input has the name "date"
+      var date_input_end=$('input[id="date-end"]'); //our date input has the name "date"
+      var container=$('.container form').length>0 ? $('.container form').parent() : "body";
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+      };
+      date_input_begin.datepicker(options);
+      date_input_end.datepicker(options);
+    })
+ </script>
 </body>
 </html>
