@@ -107,10 +107,12 @@ public class GrantService {
 	@Scheduled(fixedDelay=60000)
 	public void autoStatus() {
 		String sql = "UPDATE grants SET status=10 WHERE DATEDIFF('DD', date_begin,CURDATE())>=0 AND status=0";
-		logger.info("Ustawiono status 10 dla " + jdbcTemplate.update(sql) + " grantów");
+		Integer count = jdbcTemplate.update(sql);
+		if(count!=0) logger.info("Ustawiono status 10 dla " + count + " grantów");
 
 		sql = "UPDATE grants SET status=20 WHERE DATEDIFF('DD', date_end,CURDATE())>=0 AND status=10";
-		logger.info("Ustawiono status 20 dla " + jdbcTemplate.update(sql) + " grantów");
+		count = jdbcTemplate.update(sql);
+		if(count!=0) logger.info("Ustawiono status 20 dla " + jdbcTemplate.update(sql) + " grantów");
 
 	}
 }

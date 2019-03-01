@@ -34,7 +34,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS ix_auth_username ON authorities (username,auth
 
 CREATE TABLE IF NOT EXISTS beneficiaries(
 	id INTEGER IDENTITY PRIMARY KEY,
-	name VARCHAR_IGNORECASE(128) NOT NULL,
+	name VARCHAR_IGNORECASE(128) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_beneficiaries_name ON beneficiaries(name);
 

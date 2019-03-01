@@ -93,7 +93,7 @@ public class SecurityController {
 				role.setRole("ROLE_ADMIN");
 			} else {
 				user.setEnabled(false);
-				role.setRole("ROLE_ADMIN");
+				role.setRole("ROLE_USER");
 			}		
 			role.setUsername(user.getUsername());
 			user.setRole(role);
