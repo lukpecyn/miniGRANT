@@ -1,1 +1,0 @@
-web: java -Dserver.port=$PORT -jar miniGRANT/target/minigrant.jar
