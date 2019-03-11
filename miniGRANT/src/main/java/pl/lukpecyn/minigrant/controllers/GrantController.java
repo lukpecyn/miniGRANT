@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -134,7 +135,7 @@ public class GrantController {
 	
 	@PostMapping("/beneficiary/{idBeneficiary}/grant_form")
 	public String addGrantFormPost(Model model, Principal principal, Grant grant, 
-			@PathVariable(value="idBeneficiary", required=true)Integer idBeneficiary) {
+			@PathVariable(value="idBeneficiary", required=true)Integer idBeneficiary) throws DataAccessException, ParseException {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 		
@@ -173,7 +174,7 @@ public class GrantController {
 	@PostMapping("/beneficiary/{idBeneficiary}/grant/{idGrant}/grant_form")
 	public String updateGrantFormPost(Model model, Principal principal, Grant grant,  
 			@PathVariable(value="idBeneficiary", required=true)Integer idBeneficiary,
-			@PathVariable(value="idGrant", required=true) Integer idGrant) {
+			@PathVariable(value="idGrant", required=true) Integer idGrant) throws DataAccessException, ParseException {
 		model.addAttribute("appVersion", appVersion);
 		model.addAttribute("appName", appName);
 

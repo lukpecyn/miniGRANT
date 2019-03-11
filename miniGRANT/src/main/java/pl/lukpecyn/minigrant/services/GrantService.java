@@ -3,11 +3,16 @@ package pl.lukpecyn.minigrant.services;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -29,15 +34,17 @@ public class GrantService {
 	
 	@Autowired
 	private BeneficiaryService beneficiaryService;
-
-	public int addGrant(Grant grant) {
+	
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	
+	public int addGrant(Grant grant) throws DataAccessException, ParseException {
 		String sql = "INSERT INTO grants(donor_id,beneficiary_id,name,description,date_begin,date_end,status) VALUES(?,?,?,?,?,?,?)";
-		return jdbcTemplate.update(sql,grant.getDonor().getId(),grant.getIdBeneficiary(),grant.getName(),grant.getDescription(),grant.getDateBegin(),grant.getDateEnd(),grant.getStatus());
+		return jdbcTemplate.update(sql,grant.getDonor().getId(),grant.getIdBeneficiary(),grant.getName(),grant.getDescription(),sdf.parse(grant.getDateBegin()),sdf.parse(grant.getDateEnd()),grant.getStatus());
 	}
 	
-	public int updateGrant(Grant grant) {
+	public int updateGrant(Grant grant) throws DataAccessException, ParseException {
 		String sql = "UPDATE grants SET donor_id=?, beneficiary_id=?, name=?, description=?, date_begin=?,date_end=?,status=? WHERE id=?";
-		return jdbcTemplate.update(sql,grant.getDonor().getId(),grant.getIdBeneficiary(),grant.getName(), grant.getDescription(), grant.getDateBegin(),grant.getDateEnd(),grant.getStatus(),grant.getId());
+		return jdbcTemplate.update(sql,grant.getDonor().getId(),grant.getIdBeneficiary(),grant.getName(), grant.getDescription(), sdf.parse(grant.getDateBegin()),sdf.parse(grant.getDateEnd()),grant.getStatus(),grant.getId());
 	}
 	
 	public int delGrant(Integer id) {
@@ -104,14 +111,16 @@ public class GrantService {
 		    });
 	}
 	
-	@Scheduled(fixedDelay=60000)
+	//@Scheduled(fixedDelay=60000)
+	@Scheduled(cron="0 10 0 * * *")
 	public void autoStatus() {
-		String sql = "UPDATE grants SET status=10 WHERE DATEDIFF('DD', date_begin,CURDATE())>=0 AND status=0";
-		Integer count = jdbcTemplate.update(sql);
+		//String sql = "UPDATE grants SET status=10 WHERE DATEDIFF('DD', date_begin,CURDATE())>=0 AND status=0";
+		String sql = "UPDATE grants SET status=10 WHERE date_begin<=? AND status=0";
+		Integer count = jdbcTemplate.update(sql, new Object[] {new Date()});
 		if(count!=0) logger.info("Ustawiono status 10 dla " + count + " grantów");
 
-		sql = "UPDATE grants SET status=20 WHERE DATEDIFF('DD', date_end,CURDATE())>=0 AND status=10";
-		count = jdbcTemplate.update(sql);
+		sql = "UPDATE grants SET status=20 WHERE date_end<=? AND status=10";
+		count = jdbcTemplate.update(sql, new Object[] {new Date()});
 		if(count!=0) logger.info("Ustawiono status 20 dla " + jdbcTemplate.update(sql) + " grantów");
 
 	}

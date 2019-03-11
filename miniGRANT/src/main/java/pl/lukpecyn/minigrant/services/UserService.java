@@ -159,7 +159,7 @@ public class UserService {
 	}
 
 	//@Scheduled(fixedDelay=60000)
-	@Scheduled(cron="0 0 0 * * *")
+	@Scheduled(cron="0 5 0 * * *")
 	public Integer deleteUnconfirmedUsers() {
 		LocalDate localDate = LocalDate.now().minusDays(1);
 		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
