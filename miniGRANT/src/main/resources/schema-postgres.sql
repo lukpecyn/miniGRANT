@@ -50,7 +50,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS ix_coworkers ON coworkers(username,beneficiary
 CREATE TABLE IF NOT EXISTS donors(
 	id SERIAL PRIMARY KEY,
 	name VARCHAR(128) NOT NULL,
-	beneficiary_id INTEGER NOT NULL,
+	beneficiary_id INTEGER NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_donors_name_beneficiary ON donors(name,beneficiary_id);
 /*
@@ -74,13 +74,13 @@ CREATE TABLE IF NOT EXISTS grants(
 	description TEXT,
 	status INTEGER NOT NULL,
 	CONSTRAINT fk_grants_donor FOREIGN KEY(donor_id) REFERENCES donors(id),
-	CONSTRAINT fk_grants_beneficiary FOREIGN KEY(beneficiary_id) REFERENCES beneficiaries(id),
+	CONSTRAINT fk_grants_beneficiary FOREIGN KEY(beneficiary_id) REFERENCES beneficiaries(id)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_grants_date_begin_name_beneficiary ON grants(date_begin, date_end, name, beneficiary_id);
 
 CREATE TABLE IF NOT EXISTS cost_types (
 	id SERIAL PRIMARY KEY,
-	name VARCHAR_IGNORECASE(64) NOT NULL,
+	name VARCHAR(64) NOT NULL,
 	description TEXT,
 	beneficiary_id INTEGER NOT NULL,
 	

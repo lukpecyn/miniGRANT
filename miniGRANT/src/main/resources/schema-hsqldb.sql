@@ -50,7 +50,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS ix_coworkers ON coworkers(username,beneficiary
 CREATE TABLE IF NOT EXISTS donors(
 	id INTEGER IDENTITY PRIMARY KEY,
 	name VARCHAR_IGNORECASE(128) NOT NULL,
-	beneficiary_id INTEGER NOT NULL,
+	beneficiary_id INTEGER NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_donors_name_beneficiary ON donors(name,beneficiary_id);
 /*
