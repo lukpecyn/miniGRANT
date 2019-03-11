@@ -12,10 +12,10 @@
 
 
 CREATE TABLE IF NOT EXISTS users(
-	username varchar_ignorecase(50) NOT NULL PRIMARY KEY,
-	password varchar_ignorecase(50) NOT NULL,
+	username varchar(20) NOT NULL PRIMARY KEY,
+	password varchar(60) NOT NULL,
 	fullname varchar(50) NOT NULL,
-	email varchar_ignorecase(50) NOT NULL,
+	email varchar(50) NOT NULL,
 	registration_timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	guid UUID,
 	confirmed BOOLEAN DEFAULT FALSE NOT NULL,
@@ -25,21 +25,21 @@ CREATE UNIQUE INDEX IF NOT EXISTS ix_users_username ON users(username);
 CREATE UNIQUE INDEX IF NOT EXISTS ix_users_email ON users(email);
 
 CREATE TABLE IF NOT EXISTS authorities(
-	username varchar_ignorecase(50) NOT NULL,
-	authority varchar_ignorecase(50) not null,
+	username varchar(50) NOT NULL,
+	authority varchar(50) not null,
 	CONSTRAINT fk_authorities_users FOREIGN KEY(username) REFERENCES users(username) ON DELETE CASCADE 
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_auth_username ON authorities (username,authority);
 
 
 CREATE TABLE IF NOT EXISTS beneficiaries(
-	id INTEGER IDENTITY PRIMARY KEY,
-	name VARCHAR_IGNORECASE(128) NOT NULL
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(128) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_beneficiaries_name ON beneficiaries(name);
 
 CREATE TABLE IF NOT EXISTS coworkers( --coworkers
-	username VARCHAR_IGNORECASE(50) NOT NULL,
+	username VARCHAR(50) NOT NULL,
 	beneficiary_id INTEGER NOT NULL,
 	
 	CONSTRAINT fk_coworkers_user FOREIGN KEY(username) REFERENCES users(username) ON DELETE CASCADE,
@@ -48,8 +48,8 @@ CREATE TABLE IF NOT EXISTS coworkers( --coworkers
 CREATE UNIQUE INDEX IF NOT EXISTS ix_coworkers ON coworkers(username,beneficiary_id);
 
 CREATE TABLE IF NOT EXISTS donors(
-	id INTEGER IDENTITY PRIMARY KEY,
-	name VARCHAR_IGNORECASE(128) NOT NULL,
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(128) NOT NULL,
 	beneficiary_id INTEGER NOT NULL,
 );
 CREATE UNIQUE INDEX IF NOT EXISTS ix_donors_name_beneficiary ON donors(name,beneficiary_id);
@@ -65,13 +65,13 @@ END;
 */
 
 CREATE TABLE IF NOT EXISTS grants(
-	id INTEGER IDENTITY PRIMARY KEY,
+	id SERIAL PRIMARY KEY,
 	donor_id INTEGER,
 	beneficiary_id INTEGER,
-	name VARCHAR_IGNORECASE(128) NOT NULL,
+	name VARCHAR(128) NOT NULL,
 	date_begin DATE NOT NULL,
 	date_end DATE NOT NULL,
-	description LONGVARCHAR,
+	description TEXT,
 	status INTEGER NOT NULL,
 	CONSTRAINT fk_grants_donor FOREIGN KEY(donor_id) REFERENCES donors(id),
 	CONSTRAINT fk_grants_beneficiary FOREIGN KEY(beneficiary_id) REFERENCES beneficiaries(id),
@@ -79,9 +79,9 @@ CREATE TABLE IF NOT EXISTS grants(
 CREATE UNIQUE INDEX IF NOT EXISTS ix_grants_date_begin_name_beneficiary ON grants(date_begin, date_end, name, beneficiary_id);
 
 CREATE TABLE IF NOT EXISTS cost_types (
-	id INTEGER IDENTITY PRIMARY KEY,
+	id SERIAL PRIMARY KEY,
 	name VARCHAR_IGNORECASE(64) NOT NULL,
-	description LONGVARCHAR,
+	description TEXT,
 	beneficiary_id INTEGER NOT NULL,
 	
 	CONSTRAINT fk_cost_type_beneficiary FOREIGN KEY(beneficiary_id) REFERENCES beneficiaries(id)
@@ -89,10 +89,10 @@ CREATE TABLE IF NOT EXISTS cost_types (
 CREATE UNIQUE INDEX IF NOT EXISTS ix_cost_types_name_beneficiary ON cost_types(name,beneficiary_id);
 
 CREATE TABLE IF NOT EXISTS budgets (
-	id INTEGER IDENTITY PRIMARY KEY,
+	id SERIAL PRIMARY KEY,
 	grant_id INTEGER NOT NULL,
 	cost_type_id INTEGER NOT NULL,
-	description LONGVARCHAR,
+	description TEXT,
 	dotation DECIMAL(12,2),
 	contribution_own DECIMAL(12,2),
 	contribution_personal DECIMAL(12,2),
@@ -103,10 +103,10 @@ CREATE TABLE IF NOT EXISTS budgets (
 CREATE UNIQUE INDEX IF NOT EXISTS ix_budgets_grant_cost_type ON budgets(grant_id,cost_type_id);
 
 CREATE TABLE IF NOT EXISTS documents (
-	id INTEGER IDENTITY PRIMARY KEY,
+	id SERIAL PRIMARY KEY,
 	grant_id INTEGER,
-	name VARCHAR_IGNORECASE(64),
-	description LONGVARCHAR,
+	name VARCHAR(64),
+	description TEXT,
 	value DECIMAL(12,2),
 	
 	CONSTRAINT fk_documents_grant FOREIGN KEY(grant_id) REFERENCES grants(id)
@@ -114,7 +114,7 @@ CREATE TABLE IF NOT EXISTS documents (
 CREATE UNIQUE INDEX IF NOT EXISTS ix_documents_grant_name ON documents(grant_id,name);
 
 CREATE TABLE IF NOT EXISTS payments (
-	id INTEGER IDENTITY PRIMARY KEY,
+	id SERIAL PRIMARY KEY,
 	budget_id INTEGER,
 	document_id INTEGER,
 	dotation DECIMAL(12,2), --dotacja
