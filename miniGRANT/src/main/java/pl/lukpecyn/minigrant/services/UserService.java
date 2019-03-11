@@ -3,6 +3,8 @@ package pl.lukpecyn.minigrant.services;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -156,9 +158,14 @@ public class UserService {
 		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users WHERE email=?", new Object[]{email}, Integer.class);
 	}
 
-	@Scheduled(fixedDelay=60000)
+	//@Scheduled(fixedDelay=60000)
+	@Scheduled(cron="0 0 0 * * *")
 	public Integer deleteUnconfirmedUsers() {
-		Integer i = jdbcTemplate.update("DELETE FROM users WHERE NOT confirmed AND registration_timestamp<DATEADD(DAY,-1,NOW())");
+		LocalDate localDate = LocalDate.now().minusDays(1);
+		Date date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+		
+		//Integer i = jdbcTemplate.update("DELETE FROM users WHERE NOT confirmed AND registration_timestamp<DATEADD(DAY,-1,NOW())");
+		Integer i = jdbcTemplate.update("DELETE FROM users WHERE NOT confirmed AND registration_timestamp<?", new Object[] {date});
 		if(i>0)
 			logger.info("Deleted unconfirmed users: " + i.toString());
 		return i;
