@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,9 @@ public class SecurityController {
 	
 	@Autowired
 	private EmailService emailService;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	private static final Logger logger = LoggerFactory.getLogger(SecurityController.class);
 
@@ -98,6 +102,7 @@ public class SecurityController {
 			role.setUsername(user.getUsername());
 			user.setRole(role);
 			if((userService.ChceckUsernameExists(user.getUsername())==0) && (userService.ChceckEmailExists(user.getEmail())==0)) {
+				user.setPassword(passwordEncoder.encode(user.getPassword()));
 				userService.addUser(user);
 				emailService.sendSimpleEmail(user.getEmail(), "Rejestracja w systemie " +appName, "Adres do potwierdzenia konta: " + appAddress + "/activation/" + user.getGuid().toString()+ " \nBrak potwierdzenia w ciągu 24 godzin spowoduje usunięcie konta!");
 				String infoMessage = "Na twój adres e-mail została wysłana wiadomość z linkiem do potwierdzenia rejestracji.";
