@@ -13,8 +13,8 @@
   			<li><a th:href="@{/beneficiary/} + ${beneficiary.getId()}" th:text="${beneficiary.getName()}" /></li>
   			<li>Granty</li>
 	  		<li class="active" th:if="${grant.getId()>=0}"><span th:text="${grant.getName()}" /></li>
+			<a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-warning" ><small>Popraw grant</small></a>
 	</ul>
-	<a th:href="${grant.getId()} + @{/grant_form}" class="btn btn-warning" >Popraw grant</a>
 	<p />
 		<table class="table">
 			<thead>
