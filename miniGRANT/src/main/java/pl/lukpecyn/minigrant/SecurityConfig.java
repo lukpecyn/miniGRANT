@@ -25,9 +25,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	private DataSource dataSource;
-
-	@Autowired
-	private UserDetailsService userDetailsService;
 	
 	@Bean
 	public AuthenticationSuccessHandler successHandler() {
@@ -95,7 +92,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth.jdbcAuthentication().dataSource(dataSource)
 		   //.usersByUsernameQuery("SELECT username,password,enabled FROM users WHERE username=?");
 		   .authoritiesByUsernameQuery("select username,authority from authorities where username=?");
-		auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
+		auth.jdbcAuthentication().dataSource(dataSource)
+			.passwordEncoder(passwordEncoder());
+		
 		logger.info(">>> configureGlobal(AuthenticationManagerBuilder auth) <<<");
 	}
 	
