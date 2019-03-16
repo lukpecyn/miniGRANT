@@ -40,6 +40,63 @@ public class UserService {
 	    return i;
 	}
 	
+	public User getUser(String username) {
+		return (User)jdbcTemplate.queryForObject("SELECT username,password,fullname,email,registration_timestamp,guid,confirmed,enabled FROM users WHERE username=?", new Object[] {username}, new RowMapper<User>(){
+
+		      public User mapRow(ResultSet rs, int arg1) throws SQLException {
+		        User u = new User();
+
+		        u.setUsername(rs.getString("username"));
+		        u.setPassword(rs.getString("password"));
+		        u.setFullname(rs.getString("fullname"));
+		        u.setEmail(rs.getString("email"));
+		        u.setRegistrationTimestamp(rs.getTimestamp("registration_timestamp"));
+		        u.setGuid(UUID.fromString(rs.getString("guid")));
+		        u.setConfirmed(rs.getBoolean("confirmed"));
+		        u.setEnabled(rs.getBoolean("enabled"));
+		        return u;
+		      }
+		    });
+	}
+	
+	public User getUser(UUID guid) {
+		return (User)jdbcTemplate.queryForObject("SELECT username,password,fullname,email,registration_timestamp,guid,confirmed,enabled FROM users WHERE guid=?", new Object[] {guid}, new RowMapper<User>(){
+
+		      public User mapRow(ResultSet rs, int arg1) throws SQLException {
+		        User u = new User();
+
+		        u.setUsername(rs.getString("username"));
+		        u.setPassword(rs.getString("password"));
+		        u.setFullname(rs.getString("fullname"));
+		        u.setEmail(rs.getString("email"));
+		        u.setRegistrationTimestamp(rs.getTimestamp("registration_timestamp"));
+		        u.setGuid(UUID.fromString(rs.getString("guid")));
+		        u.setConfirmed(rs.getBoolean("confirmed"));
+		        u.setEnabled(rs.getBoolean("enabled"));
+		        return u;
+		      }
+		    });
+	}
+
+	public User getUserByEmail(String email) {
+		return (User)jdbcTemplate.queryForObject("SELECT username,password,fullname,email,registration_timestamp,guid,confirmed,enabled FROM users WHERE email=?", new Object[] {email}, new RowMapper<User>(){
+
+		      public User mapRow(ResultSet rs, int arg1) throws SQLException {
+		        User u = new User();
+		        
+		        u.setUsername(rs.getString("username"));
+		        u.setPassword(rs.getString("password"));
+		        u.setFullname(rs.getString("fullname"));
+		        u.setEmail(rs.getString("email"));
+		        u.setRegistrationTimestamp(rs.getTimestamp("registration_timestamp"));
+		        u.setGuid(UUID.fromString(rs.getString("guid")));
+		        u.setConfirmed(rs.getBoolean("confirmed"));
+		        u.setEnabled(rs.getBoolean("enabled"));
+		        return u;
+		      }
+		    });
+	}
+
 	public int updateUser(User user) {
 		String sql_user = "UPDATE users SET password=?,fullname=?,email=?,guid=?,confirmed=?,enabled=? WHERE username=?";
 	    Integer i = jdbcTemplate.update(sql_user, user.getPassword(),user.getFullname(),user.getEmail(),user.getGuid(),user.getConfirmed(),user.getEnabled(),user.getUsername());
@@ -108,45 +165,7 @@ public class UserService {
 		});
 	}
 
-	public User getUser(String username) {
-		return (User)jdbcTemplate.queryForObject("SELECT * FROM users WHERE username=?", new Object[] {username}, new RowMapper<User>(){
-
-		      public User mapRow(ResultSet rs, int arg1) throws SQLException {
-		        User u = new User();
-		        Role r = new Role();
-		        u.setUsername(rs.getString("username"));
-		        u.setPassword(rs.getString("password"));
-		        u.setFullname(rs.getString("fullname"));
-		        u.setEmail(rs.getString("email"));
-		        u.setRegistrationTimestamp(rs.getTimestamp("registration_timestamp"));
-		        u.setGuid(UUID.fromString(rs.getString("guid")));
-		        u.setConfirmed(rs.getBoolean("confirmed"));
-		        u.setEnabled(rs.getBoolean("enabled"));
-		        return u;
-		      }
-		    });
-	}
-
-	public User getUser(UUID guid) {
-		return (User)jdbcTemplate.queryForObject("SELECT * FROM users WHERE guid=?", new Object[] {guid}, new RowMapper<User>(){
-
-		      public User mapRow(ResultSet rs, int arg1) throws SQLException {
-		        User u = new User();
-		        Role r = new Role();
-		        u.setUsername(rs.getString("username"));
-		        u.setPassword(rs.getString("password"));
-		        u.setFullname(rs.getString("fullname"));
-		        u.setEmail(rs.getString("email"));
-		        u.setRegistrationTimestamp(rs.getTimestamp("registration_timestamp"));
-		        u.setGuid(UUID.fromString(rs.getString("guid")));
-		        u.setConfirmed(rs.getBoolean("confirmed"));
-		        u.setEnabled(rs.getBoolean("enabled"));
-		        return u;
-		      }
-		    });
-	}
-
-	public Integer getCount() {
+		public Integer getCount() {
 		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users", Integer.class);
 	}
 

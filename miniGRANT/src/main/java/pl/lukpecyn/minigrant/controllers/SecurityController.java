@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -73,10 +74,6 @@ public class SecurityController {
 		logger.info("IP " + getClientIp());
 		
 		List<User> userList = userService.getAllUser();
-		logger.info("User list size " + userList.size());
-		for(User user : userList) {
-			logger.info("User: " + user.getUsername() + ", timestamp: " + user.getRegistrationTimestamp().toString() + ", confirmed: " + user.getConfirmed() + ", enabled: " + user.getEnabled() + ", guid: " + user.getGuid().toString());
-		}
 		model.addAttribute("user", new User());
 
 		if(userService.getCount()==0)
@@ -88,6 +85,8 @@ public class SecurityController {
 	public String register(Model model, User user, @RequestParam(value = "pwd2", required = true) String pwd2) {
 		model.addAttribute("appVersion",appVersion);
 		model.addAttribute("appName", appName);
+		logger.info("register page");		
+		logger.info("IP " + getClientIp());
 		
 		if(user.getPassword().equals(pwd2)) {
 			Role role = new Role();
@@ -128,15 +127,80 @@ public class SecurityController {
 	
 	@RequestMapping("activation/{guid}")
 	public String activation(Model model,@PathVariable(value="guid",required=true) String guid) {
+		model.addAttribute("appVersion",appVersion);
+		model.addAttribute("appName", appName);
+		logger.info("activation page");		
+		logger.info("IP " + getClientIp());
+		
 		User user = userService.getUser(UUID.fromString(guid));
 		if(user!=null) {
 			user.setConfirmed(true);
+			user.setGuid(UUID.randomUUID());
 			userService.updateUser(user);
 			model.addAttribute("user", new User());
 			model.addAttribute("infoMessage", "Adres e-mail został potwierdzony. Konto oczekuje na aktywację przez administratora.");
+			return "login";
 		} else {
 			return "redirect:/";
 		}
-		return "login";
+	}
+	
+	@RequestMapping("passwordreset")
+	public String passwordReset(Model model, @RequestParam(value = "email", required = true) String email) {
+		model.addAttribute("appVersion",appVersion);
+		model.addAttribute("appName", appName);
+		logger.info("passwordreset page");		
+		logger.info("IP " + getClientIp());
+
+		try {
+			User user = userService.getUserByEmail(email);
+			user.setGuid(UUID.randomUUID());
+			userService.updateUser(user);
+				
+			emailService.sendSimpleEmail(user.getEmail(), "Reset hasła w systemie " +appName, "Adres do zresetowania hasła dla użytkownika '" + user.getUsername() +"': " + appAddress + "/passwordreset/" + user.getGuid().toString()+ "\nStare hasło pozostanie aktywne do czasu zmiany na nowe.");
+			model.addAttribute("infoMessage", "Na adres <strong>" + email + "</strong>  została wysłana instrukcja resetowania hasła.");
+		
+		} catch (Exception e) {
+			model.addAttribute("errorMessage", "Wystąpił problem z wysyłką na adres <strong>" + email + "</strong>.");
+		}
+		model.addAttribute("email", email);
+		return "password_reset";
+	}
+	
+	@GetMapping("passwordreset/{guid}")
+	public String passwordResetGuidGet(Model model, @PathVariable(value="guid",required=true) String guid) {
+		model.addAttribute("appVersion",appVersion);
+		model.addAttribute("appName", appName);
+		logger.info("passwordresetguid GET page");		
+		logger.info("IP " + getClientIp());
+
+		User user = userService.getUser(UUID.fromString(guid));
+		if(user!=null) {
+			//model.addAttribute("user", user);
+			return "password_reset_form";
+		} else {
+			return "login";
+		}
+	}
+	
+	@PostMapping("passwordreset/{guid}")
+	public String passwordResetGuidPost(Model model, @PathVariable(value="guid", required=true) String guid, @RequestParam(value = "password1", required = true) String password1, @RequestParam(value = "password2", required = true) String password2) {
+		model.addAttribute("appVersion",appVersion);
+		model.addAttribute("appName", appName);
+		logger.info("passwordresetguid POST page");		
+		logger.info("IP " + getClientIp());
+
+		User user = userService.getUser(UUID.fromString(guid));
+		if(password1.equals(password2)) {
+			user.setPassword(passwordEncoder.encode(password1));
+			user.setGuid(UUID.randomUUID());
+			userService.updateUser(user);
+			model.addAttribute("infoMessage", "Hasło zostało zresetowane.");
+			model.addAttribute("user",new User());
+			return "login";
+		} else {
+			model.addAttribute("errorMessage", "Hasła różnią się od siebie.");
+			return "password_reset_form";
+		}
 	}
 }
