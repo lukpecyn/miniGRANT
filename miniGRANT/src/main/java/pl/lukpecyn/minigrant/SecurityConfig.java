@@ -16,6 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @EnableWebSecurity
 @Configuration
@@ -55,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http
 		.authorizeRequests()
-			.antMatchers("/beneficiary/**")
+			.antMatchers("/beneficiary/**","/logout")
 				.authenticated();
 
 		http
@@ -79,12 +80,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 			.formLogin()
 				.permitAll();
+		/*
 		http
 			.logout()
 				.permitAll();
-		
+		*/
+		/*
+		http
+			.logout()
+			.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+				.logoutSuccessUrl("/login?logout");
+		*/
 		// add this line to use H2 web console
-		http.headers().frameOptions().disable();
+		http
+			.headers()
+				.frameOptions()
+					.disable();
 	}
   
 	@Autowired

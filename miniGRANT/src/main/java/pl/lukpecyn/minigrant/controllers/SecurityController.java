@@ -10,6 +10,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -168,7 +170,7 @@ public class SecurityController {
 	}
 	
 	@GetMapping("passwordreset/{guid}")
-	public String passwordResetGuidGet(Model model, @PathVariable(value="guid",required=true) String guid) {
+	public String passwordResetGuid(Model model, @PathVariable(value="guid",required=true) String guid) {
 		model.addAttribute("appVersion",appVersion);
 		model.addAttribute("appName", appName);
 		logger.info("passwordresetguid GET page");		
@@ -184,7 +186,7 @@ public class SecurityController {
 	}
 	
 	@PostMapping("passwordreset/{guid}")
-	public String passwordResetGuidPost(Model model, @PathVariable(value="guid", required=true) String guid, @RequestParam(value = "password1", required = true) String password1, @RequestParam(value = "password2", required = true) String password2) {
+	public String passwordResetGuid(Model model, @PathVariable(value="guid", required=true) String guid, @RequestParam(value = "password1", required = true) String password1, @RequestParam(value = "password2", required = true) String password2) {
 		model.addAttribute("appVersion",appVersion);
 		model.addAttribute("appName", appName);
 		logger.info("passwordresetguid POST page");		
@@ -202,5 +204,46 @@ public class SecurityController {
 			model.addAttribute("errorMessage", "Hasła różnią się od siebie.");
 			return "password_reset_form";
 		}
+	}
+	
+	@GetMapping("/account")
+	public String account(Model model) {
+		System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+		model.addAttribute("fullname", user.getFullname());
+		model.addAttribute("email", user.getEmail());
+		return "account";
+	}
+	
+	@PostMapping("/account")
+	public String account(Model model, @RequestParam(value = "fullname") String fullname, @RequestParam(value = "email") String email) {
+		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+		user.setFullname(fullname);
+		user.setEmail(email);
+		userService.updateUser(user);
+		
+		model.addAttribute("infoMessage", "Zmiany zostały zapisane");
+		model.addAttribute("fullname", user.getFullname());
+		model.addAttribute("email", user.getEmail());
+		return "account";
+	}
+	
+	@PostMapping("/passwordchange")
+	public String passwordchange(Model model, @RequestParam(value = "oldpassword") String oldPassword, @RequestParam(value = "password1") String password1, @RequestParam(value = "password2") String password2) {
+		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
+		if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+			if (password1.equals(password2)) {
+				user.setPassword(passwordEncoder.encode(password1));
+				userService.updateUser(user);
+				model.addAttribute("infoMessage", "Hasło zostało zmienione");
+				return "password_reset";
+			} else {
+				model.addAttribute("errorMessage", "'Nowe hasło' i 'Powtórz hasło' nie pasują do siebie.");
+			}
+		} else {
+			model.addAttribute("errorMessage", "Obecne hasło jest inne.");
+		}
+		
+		return "account";
 	}
 }
