@@ -147,7 +147,7 @@ public class SecurityController {
 		}
 	}
 	
-	@RequestMapping("passwordreset")
+	@PostMapping("passwordreset")
 	public String passwordReset(Model model, @RequestParam(value = "email", required = true) String email) {
 		model.addAttribute("appVersion",appVersion);
 		model.addAttribute("appName", appName);
@@ -157,9 +157,10 @@ public class SecurityController {
 		try {
 			User user = userService.getUserByEmail(email);
 			user.setGuid(UUID.randomUUID());
+			user.setPassword(passwordEncoder.encode(user.getGuid().toString()));
 			userService.updateUser(user);
 				
-			emailService.sendSimpleEmail(user.getEmail(), "Reset hasła w systemie " +appName, "Adres do zresetowania hasła dla użytkownika '" + user.getUsername() +"': " + appAddress + "/passwordreset/" + user.getGuid().toString()+ "\nStare hasło pozostanie aktywne do czasu zmiany na nowe.");
+			emailService.sendSimpleEmail(user.getEmail(), "Reset hasła w systemie " +appName, "Adres do zresetowania hasła dla użytkownika '" + user.getUsername() +"': " + appAddress + "/passwordreset/" + user.getGuid().toString());
 			model.addAttribute("infoMessage", "Na adres <strong>" + email + "</strong>  została wysłana instrukcja resetowania hasła.");
 		
 		} catch (Exception e) {
