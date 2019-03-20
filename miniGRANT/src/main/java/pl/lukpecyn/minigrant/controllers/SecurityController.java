@@ -208,6 +208,8 @@ public class SecurityController {
 	
 	@GetMapping("/account")
 	public String account(Model model) {
+		model.addAttribute("appVersion",appVersion);
+		model.addAttribute("appName", appName);
 		System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
 		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
 		model.addAttribute("fullname", user.getFullname());
@@ -217,6 +219,8 @@ public class SecurityController {
 	
 	@PostMapping("/account")
 	public String account(Model model, @RequestParam(value = "fullname") String fullname, @RequestParam(value = "email") String email) {
+		model.addAttribute("appVersion",appVersion);
+		model.addAttribute("appName", appName);
 		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
 		user.setFullname(fullname);
 		user.setEmail(email);
@@ -230,6 +234,8 @@ public class SecurityController {
 	
 	@PostMapping("/passwordchange")
 	public String passwordchange(Model model, @RequestParam(value = "oldpassword") String oldPassword, @RequestParam(value = "password1") String password1, @RequestParam(value = "password2") String password2) {
+		model.addAttribute("appVersion",appVersion);
+		model.addAttribute("appName", appName);
 		User user = userService.getUser(SecurityContextHolder.getContext().getAuthentication().getName());
 		if (passwordEncoder.matches(oldPassword, user.getPassword())) {
 			if (password1.equals(password2)) {
