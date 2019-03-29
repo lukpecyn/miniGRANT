@@ -23,4 +23,3 @@ INSERT INTO documents(grant_id,name,description,value) VALUES(1,'124/2018','Jaka
 INSERT INTO payments(budget_id,document_id,dotation,contribution_own,contribution_personal,contribution_inkind) VALUES(0,0,10.00,10.00,0.00,10.00);
 INSERT INTO payments(budget_id,document_id,dotation,contribution_own,contribution_personal,contribution_inkind) VALUES(1,0,20.00,30.00,0.00,10.00);
 */
-
