@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 		http
 		.authorizeRequests()
-			.antMatchers("/beneficiary/**","/logout")
+			.antMatchers("/beneficiary/**","/account","/logout")
 				.authenticated();
 
 		http
