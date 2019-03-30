@@ -22,7 +22,7 @@ public class User {
     }
 
     public void setUsername(String u) {
-        this.username = u;
+        this.username = u.toLowerCase();
     }
 
     public String getPassword() {
@@ -45,7 +45,7 @@ public class User {
         return this.email;
     }
     public void setEmail(String p) {
-        this.email = p;
+        this.email = p.toLowerCase();
     }
 
     public Timestamp getRegistrationTimestamp() {

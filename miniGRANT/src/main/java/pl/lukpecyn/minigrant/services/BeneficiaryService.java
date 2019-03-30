@@ -75,4 +75,12 @@ public class BeneficiaryService {
 			}
 		});
 	}
+	
+	public Integer CoworkersCount(Beneficiary beneficiary) {
+		return (Integer)jdbcTemplate.queryForObject("SELECT COUNT(*) AS count FROM coworkers WHERE beneficiary_id=?", new Object[]{beneficiary.getId()}, new RowMapper<Integer>() {
+			public Integer mapRow(ResultSet rs, int arg1) throws SQLException {
+				return rs.getInt("count");
+			}
+		});
+	}
 }

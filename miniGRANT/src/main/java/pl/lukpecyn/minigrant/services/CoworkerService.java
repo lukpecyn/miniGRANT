@@ -17,6 +17,9 @@ public class CoworkerService {
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
+	
+	@Autowired 
+	BeneficiaryService beneficiaryService;
 
 	public int addCoworker(Coworker coworker) {
 		String sql ="INSERT INTO coworkers(username,beneficiary_id) VALUES(?,?)";
@@ -25,8 +28,12 @@ public class CoworkerService {
 	
 	public int delCoworker(Coworker coworker) {
 		//TODO: Chceck if Beneficiary is used
-		String sql = "DELETE FROM coworkers WHERE username=? AND beneficiary_id=?";
-		return jdbcTemplate.update(sql,coworker.getUsername(),coworker.getIdBeneficiary());
+		if (beneficiaryService.CoworkersCount(beneficiaryService.getBeneficiary(coworker.getIdBeneficiary()))>1) {
+			String sql = "DELETE FROM coworkers WHERE username=? AND beneficiary_id=?";
+			return jdbcTemplate.update(sql,coworker.getUsername(),coworker.getIdBeneficiary());
+		} else {
+			return -1;
+		}
 	}
 
 	public List<Coworker> getCoworkerList(Integer idBeneficiary) {

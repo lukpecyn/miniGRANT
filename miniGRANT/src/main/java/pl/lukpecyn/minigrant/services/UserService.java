@@ -31,7 +31,7 @@ public class UserService {
 	
 	public int addUser(User user) {
 		String sql_user = "INSERT INTO users(username,password,fullname,email,guid,confirmed,enabled) VALUES(?,?,?,?,?,?,?)";
-	    Integer i = jdbcTemplate.update(sql_user, user.getUsername(),user.getPassword(),user.getFullname(),user.getEmail(),user.getGuid(),user.getConfirmed(),user.getEnabled());
+	    Integer i = jdbcTemplate.update(sql_user, user.getUsername().toLowerCase(),user.getPassword(),user.getFullname(),user.getEmail().toLowerCase(),user.getGuid(),user.getConfirmed(),user.getEnabled());
 		
 	    String sql_role = "INSERT INTO authorities(username,authority) VALUES(?,?)";
 	    jdbcTemplate.update(sql_role, user.getUsername(),user.getRole().getRole());
@@ -170,7 +170,7 @@ public class UserService {
 	}
 
 	public Integer ChceckUsernameExists(String username) {
-		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users WHERE username=?", new Object[]{username}, Integer.class);
+		return jdbcTemplate.queryForObject("SELECT COUNT(*) FROM users WHERE username=?", new Object[]{username.toLowerCase()}, Integer.class);
 	}
 
 	public Integer ChceckEmailExists(String email) {
